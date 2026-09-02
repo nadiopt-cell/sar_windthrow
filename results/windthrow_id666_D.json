@@ -1,0 +1,32 @@
+{
+  "variant": "D",
+  "desc": "stack + FIXED 3.0 dB, norm ON (combined candidate)",
+  "pre_labels": [
+    "pre1",
+    "pre2",
+    "pre3"
+  ],
+  "normalize_background": true,
+  "params": {
+    "threshold_mode": "fixed",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {
+    "VV": 0.804154634475708,
+    "VH": 1.068016529083252
+  },
+  "mean_wi": -0.07462967368496444,
+  "threshold_db": 3.0,
+  "n_objects": 9961,
+  "detected_area_ha": 5740.43,
+  "runtime_s": 26.9,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/D/id666_D_wi_norm.tif",
+    "mask": "/home/z/my-project/work_data/out/D/id666_D_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/D/id666_D.gpkg"
+  },
+  "timestamp": "2026-09-02T06:17:29"
+}

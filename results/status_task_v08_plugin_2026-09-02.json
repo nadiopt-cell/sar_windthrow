@@ -1,0 +1,15 @@
+{
+  "task": "v0.8 background normalization in plugin",
+  "date": "2026-09-02",
+  "status": "DONE",
+  "changes": {
+    "sources/windthrow.py": "normalize_background param (default True), background_mask_path kwarg, offset pass (median post-pre per pol over bg sample), *_wi_norm.tif output, offset_db diagnostics, _resolve_mask_raster helper, background_offset_db helper",
+    "sentinel1_plugin_dialog.py": "checkbox 'Background normalization' (default ON), wired to detector",
+    "tests/test_windthrow.py": "+4 tests (offset unit, shift removal+blob, norm=False regression, bg mask stats)",
+    "metadata.txt": "0.8.0",
+    "docs": "RELEASE_NOTES_v0.8.0.md, README/METHOD updated",
+    "sources/__init__.py": "+background_offset_db export"
+  },
+  "tests": "76 passed (72 old + 4 new), Python 3.13.5, GDAL 3.10.3",
+  "artifact": "download/sentinel1_windthrow_plugin_v0.8.0.zip (29 files)"
+}

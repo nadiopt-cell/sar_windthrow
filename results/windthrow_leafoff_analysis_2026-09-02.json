@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-02",
+  "experiment": "step8 LEAF-OFF (autumn) test — user request 'run on autumn and winter windthrows'",
+  "pipeline": "scripts/run_windthrow_leafoff_step8.py (generalized step7: recon/warp/detect/report, per-event config, day-mosaic, raster ref mask via memory-layer reprojection + EDT bg ring)",
+  "winter_note": "NO winter events exist in the Shikhov DB (snow hides damage from Landsat mapping) — winter detection is untestable against reference polygons. Autumn S1-era events: S425 cluster 08.10.2015 + tornado S486 ~19.09.2017.",
+  "events": {
+    "590_S425": {
+      "what": "snowstorm 08.10.2015, 31.66 km2, 1062 polygons, Sverdlovsk N (largest autumn S1-era event)",
+      "result": "NOT FEASIBLE via PC sentinel-1-rtc: only 2 scenes (one pass, 21.09.2015, two slices) in the 2015-08-21..2015-11-06 window — RTC collection lacks 2015 Urals coverage. Would require raw-GRD + SNAP Range-Doppler RTC chain.",
+      "recon": {"orbit": "descending rel=35 (S1A)", "scenes_found": 2, "pre_available": 0, "post_available": 0}
+    },
+    "694_S486": {
+      "what": "tornado ~19.09.2017 (Date_1 04.09 - Date_2 02.10), 1.61 km2 / 21 polygons, Perm Krai; ref rasterized 161.2 ha (DB 1:1)",
+      "scenes": {"orbit": "descending rel=152 (S1B)", "pre": ["2017-08-07", "2017-08-19", "2017-08-31"], "post": ["2017-09-24", "2017-10-06"]},
+      "wi_contrast_db": {"base->post": 0.024, "base->post2": 0.021},
+      "variants": {"A_pair_adaptive": {"PA": 0.059, "UA": 0.024}, "B_pair_fixed_norm": {"PA": 0.059, "UA": 0.025}, "C_stack_adaptive": {"PA": 0.0, "UA": 0.023}, "D_stack_fixed_norm": {"PA": 0.0, "UA": 0.029}, "E_pair_post2_adaptive": {"PA": 0.059, "UA": 0.016}, "F_stack_post2_adaptive": {"PA": 0.059, "UA": 0.02}}
+    },
+    "6660_leafoff_differential": {
+      "what": "annual leaf-off differential for ID666 (squall 30.07.2017, 950 ha): pre = 07.10.2016, post = 02.10.2017 / 14.10.2017, same rel-orbit-94 descending; same-season pair removes phenology confound; ref rasterized 950.1 ha (DB 1:1)",
+      "scenes": {"base": "2016-10-07", "post": "2017-10-02", "post2": "2017-10-14"},
+      "wi_contrast_db": {"base->post": 0.012, "base->post2": 0.017},
+      "october_weather_shift": {"offsets_B_norm_vv_vh": [0.77, 0.71], "mean_wi_adaptive_A": 1.529, "mean_wi_adaptive_E": 2.472},
+      "variants": {"A_pair_adaptive": {"PA": 0.093, "UA": 0.008, "area_ha": 23148}, "B_pair_fixed_norm": {"PA": 0.086, "UA": 0.008, "area_ha": 22262}, "E_pair_post2_adaptive": {"PA": 0.116, "UA": 0.008, "area_ha": 27151}}
+    }
+  },
+  "findings": [
+    "LF1 WINTER UNTESTABLE: DB has zero mappable winter windthrows (Landsat blind spot under snow) — a methodological gap of the reference itself.",
+    "LF2 AUTUMN-2015 UNFEASIBLE ON PC RTC: sentinel-1-rtc coverage for Urals 2015 is essentially absent (2 slices in 2.5 months). Raw-GRD+SNAP chain required for ID590.",
+    "LF3 SIGN FLIPS, SIGNAL DOES NOT APPEAR: leaf-off/annual-differential WI contrast is +0.01..+0.02 dB (vs -1.0 dB leaf-on for the same ID666). The leaf-on confound (forest rises more than damage) is removed, and the sign is now positive as the debris-roughness hypothesis predicts, but the magnitude is 100-300x below the 2.9 dB threshold. C-band @10 m RTC sees no practical windthrow contrast in Ural mixed forests in EITHER season.",
+    "LF4 OCTOBER WEATHER SHIFT IS HUGE: interannual Oct2016->Oct2017 offsets +0.7..0.8 dB per pol, adaptive mean_wi 1.5..2.5 dB -> threshold 4.4..5.4 dB; fixed3.0+norm still floods with non-forest false alarms (22-27 kha, UA 0.008). October is the WORST month for fixed-threshold monitoring without a forest mask.",
+    "LF5 ALPINE->URAL TRANSFER FAILS: Rüetschi 2019 (PA 0.85-0.88, Swiss mountain conifer) does not transfer to Ural deciduous-mixed lowland forests with PC RTC gamma0. Candidate causes: forest structure (spruce vs birch/aspen), RTC processing chain, background sampling. Any operational detection needs: forest mask (UA), longer wavelength (PALSAR-2/ALOS-4 L-band, ROSE-L), higher resolution (ICEYE/Capella X-band), or index redesign (VH-only, VH/VV ratio, log-ratio) validated locally.",
+    "LF6 INFRASTRUCTURE: generalized step8 (recon/warp/detect/report; per-event config incl. annual-differential windows; day-mosaic across RTC frame boundary; raster ref mask + EDT ring — vector union OOM-killed on 1062-part multipolygon even with UnionCascaded). Ref areas match DB 1:1 (161.2 / 950.1 ha)."
+  ],
+  "next_steps": [
+    "1. v0.9 forest mask (GWL_FCS30-2020 or PALSAR FNF) for bg sampling AND detection restriction — mandatory before any further threshold work",
+    "2. Index study on ID666/ID694: VH-only dVH, VH/VV ratio, log-ratio (post/pre), longer post window — cheap: scenes already cached in work_data/warp_id*",
+    "3. L-band feasibility probe: PALSAR/PALSAR-2 annual mosaics (SV, 2017) over ID666 — different physics, 25-100 m",
+    "4. If 2015 autumn (ID590) still wanted: raw GRD via CDSE + SNAP RTC (documented pipeline) — est. 1-2 sessions",
+    "5. Paper angle: negative/control result = regional validity study of the Rüetschi method (3 experiments, 1 DB, PA/UA + contrast diagnostics)"
+  ],
+  "artifacts": [
+    "download/step8_id694_warp_manifest.json", "download/step8_id6660_warp_manifest.json",
+    "download/windthrow_id694_{A,B,C,D,E,F}.json", "download/windthrow_id6660_{A,B,E}.json",
+    "download/windthrow_id694_leafoff_baselines_2026-09-02.json", "download/windthrow_id6660_leafoff_baselines_2026-09-02.json",
+    "download/windthrow_leafoff_analysis_2026-09-02.json (this file)",
+    "scripts/run_windthrow_leafoff_step8.py"
+  ],
+  "updated": "2026-09-02"
+}

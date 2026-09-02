@@ -1,0 +1,56 @@
+{
+  "forest_proxy_vv_thresh_db": -8.77,
+  "forest_proxy_ha": 22561.5,
+  "contrast": {
+    "post": {
+      "wi_median_ref": 3.25,
+      "wi_median_forest_ring": 4.28,
+      "contrast_db": -1.03,
+      "share_ref_gt_3db": 0.524,
+      "share_ref_gt_contrast_plus_a": 0.162
+    },
+    "post2": {
+      "wi_median_ref": 2.48,
+      "wi_median_forest_ring": 3.46,
+      "contrast_db": -0.99,
+      "share_ref_gt_3db": 0.449,
+      "share_ref_gt_contrast_plus_a": 0.168
+    }
+  },
+  "patch_hit_rate_by_size_A": {
+    "0-2 ha": {
+      "n": 452,
+      "hit_rate": 0.139
+    },
+    "2-5 ha": {
+      "n": 42,
+      "hit_rate": 0.071
+    },
+    "5-10 ha": {
+      "n": 17,
+      "hit_rate": 0.0
+    },
+    "10-max ha": {
+      "n": 13,
+      "hit_rate": 0.0
+    }
+  },
+  "patch_hit_rate_by_size_F": {
+    "0-2 ha": {
+      "n": 452,
+      "hit_rate": 0.126
+    },
+    "2-5 ha": {
+      "n": 42,
+      "hit_rate": 0.071
+    },
+    "5-10 ha": {
+      "n": 17,
+      "hit_rate": 0.0
+    },
+    "10-max ha": {
+      "n": 13,
+      "hit_rate": 0.0
+    }
+  }
+}

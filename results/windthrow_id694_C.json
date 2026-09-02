@@ -1,0 +1,31 @@
+{
+  "event_id": 694,
+  "storm": "tornado S486 ~19.09.2017, Perm Krai (1.61 km2, 21 polygons; Date_1 04.09 - Date_2 02.10)",
+  "variant": "C",
+  "desc": "stack ['pre2', 'pre1']->post adaptive, norm OFF",
+  "pre_labels": [
+    "pre2",
+    "pre1"
+  ],
+  "post_label": "post",
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": -0.25873466319328703,
+  "threshold_db": 2.641265336806713,
+  "n_objects": 1531,
+  "detected_area_ha": 734.53,
+  "runtime_s": 1.8,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out_id694/C/id694_C_wi.tif",
+    "mask": "/home/z/my-project/work_data/out_id694/C/id694_C_mask.tif",
+    "vector": "/home/z/my-project/work_data/out_id694/C/id694_C.gpkg"
+  },
+  "timestamp": "2026-09-02T09:10:59"
+}

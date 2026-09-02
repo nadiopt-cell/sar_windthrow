@@ -1,0 +1,15 @@
+{
+  "task": "step7 warp stage",
+  "date": "2026-09-02",
+  "status": "DONE",
+  "grid": "5245x5108 px, EPSG:32638, 10 m, buffer 3 km around ID666",
+  "scenes": {
+    "pre3": "S1B 2017-06-16 orbit 6070", "pre2": "S1B 2017-06-28 orbit 6245",
+    "pre1": "S1B 2017-07-10 orbit 6420", "base": "S1B 2017-07-22 orbit 6595",
+    "post": "S1B 2017-08-03 orbit 6770"
+  },
+  "orbit_correction": "worklog said BASE 6420=22.07; actual: 10.07=6420, 22.07=6595, 03.08=6770 (rel orbit 94, descending, S1B — consistent across all 5)",
+  "method": "parallel windowed copy from PC COG via /vsicurl (4 workers, ~55 s per band); no raw storage",
+  "sanity": "valid=1.000 everywhere; whole-AOI mean dB: VV base -8.14 -> post -7.22 (+0.92), VH base -14.51 -> post -13.27 (+1.24) — wet shift CONFIRMED",
+  "masks": {"ref_ha": 950.0, "bg_ha": 56403.9}
+}

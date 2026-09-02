@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Rasters / heavy GIS outputs (regenerable by pipeline)
+work_data/
+*.tif
+*.tiff
+*.gpkg
+
+# Local archives and env
+*.tar.gz
+.DS_Store
+*.swp
+.venv/
+
+# GitHub push helper state
+.gh_resp.json

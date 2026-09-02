@@ -1,0 +1,30 @@
+{
+  "variant": "F",
+  "desc": "stack 3-pre ->15.08 (DRY), adaptive, norm OFF",
+  "pre_labels": [
+    "pre1",
+    "pre2",
+    "pre3"
+  ],
+  "post_label": "post2",
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": 0.9146807273462296,
+  "threshold_db": 3.8146807273462295,
+  "n_objects": 12061,
+  "detected_area_ha": 7130.8,
+  "runtime_s": 25.0,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/F/id666_F_wi.tif",
+    "mask": "/home/z/my-project/work_data/out/F/id666_F_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/F/id666_F.gpkg"
+  },
+  "timestamp": "2026-09-02T07:04:44"
+}

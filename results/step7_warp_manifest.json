@@ -1,0 +1,88 @@
+{
+  "masks": {
+    "ref": "/home/z/my-project/work_data/warp/ref_mask.tif",
+    "bg": "/home/z/my-project/work_data/warp/bg_mask.tif"
+  },
+  "aoi_bounds_32638": [
+    379250.0,
+    6836060.0,
+    431700.0,
+    6887140.0
+  ],
+  "grid_w": 5245,
+  "grid_h": 5108,
+  "epsg": 32638,
+  "pixel_m": 10.0,
+  "buffer_m": 3000.0,
+  "event_id": 666,
+  "reference_shp": "/home/z/my-project/research/shikhov_db/GIS/Windthrows.shp",
+  "updated": "2026-09-02T07:03:59",
+  "scenes": {
+    "base": {
+      "expected_date": "2017-07-22",
+      "id": "S1B_IW_GRDH_1SDV_20170722T033448_20170722T033513_006595_00B994_rtc",
+      "datetime": "2017-07-22T03:35:01.288118+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/base_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/base_vh.tif"
+    },
+    "post": {
+      "expected_date": "2017-08-03",
+      "id": "S1B_IW_GRDH_1SDV_20170803T033449_20170803T033514_006770_00BE98_rtc",
+      "datetime": "2017-08-03T03:35:01.858278+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/post_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/post_vh.tif"
+    },
+    "pre1": {
+      "expected_date": "2017-07-10",
+      "id": "S1B_IW_GRDH_1SDV_20170710T033448_20170710T033512_006420_00B493_rtc",
+      "datetime": "2017-07-10T03:35:00.499424+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre1_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre1_vh.tif"
+    },
+    "pre2": {
+      "expected_date": "2017-06-28",
+      "id": "S1B_IW_GRDH_1SDV_20170628T033447_20170628T033512_006245_00AFA4_rtc",
+      "datetime": "2017-06-28T03:34:59.779200+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre2_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre2_vh.tif"
+    },
+    "pre3": {
+      "expected_date": "2017-06-16",
+      "id": "S1B_IW_GRDH_1SDV_20170616T033446_20170616T033511_006070_00AA91_rtc",
+      "datetime": "2017-06-16T03:34:59.156007+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre3_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre3_vh.tif"
+    },
+    "post2": {
+      "expected_date": "2017-08-15",
+      "id": "S1B_IW_GRDH_1SDV_20170815T033449_20170815T033514_006945_00C3B5_rtc",
+      "datetime": "2017-08-15T03:35:02.397530+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/post2_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/post2_vh.tif"
+    }
+  }
+}

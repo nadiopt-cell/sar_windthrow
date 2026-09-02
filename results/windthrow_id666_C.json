@@ -1,0 +1,29 @@
+{
+  "variant": "C",
+  "desc": "stack 10.07+28.06+16.06->03.08, adaptive, norm OFF",
+  "pre_labels": [
+    "pre1",
+    "pre2",
+    "pre3"
+  ],
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": 1.7975412301503277,
+  "threshold_db": 4.697541230150327,
+  "n_objects": 13130,
+  "detected_area_ha": 7334.83,
+  "runtime_s": 24.8,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/C/id666_C_wi.tif",
+    "mask": "/home/z/my-project/work_data/out/C/id666_C_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/C/id666_C.gpkg"
+  },
+  "timestamp": "2026-09-02T06:17:02"
+}

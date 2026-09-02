@@ -1,0 +1,29 @@
+{
+  "event": "ID666 (Shikhov ESSD 2020), squall 29.07-02.08.2017, north Sverdlovsk oblast, 950 ha / 553 polygons",
+  "date": "2026-09-02",
+  "pipeline": "plugin v0.8.0 WindthrowDetector on 6 S1B IW RTC scenes (PC COG, parallel windowed copy), grid 5245x5108 (3 km buffer), bg sample = ring minus polygons",
+  "variants": {
+    "A_pair_wet_adaptive": {"thr": 5.66, "n_obj": 18684, "area_ha": 9506, "PA": 0.126, "UA": 0.015},
+    "B_pair_wet_fixed_norm": {"thr": 3.00, "n_obj": 17230, "area_ha": 8648, "PA": 0.109, "UA": 0.015},
+    "C_stack_wet_adaptive": {"thr": 4.70, "n_obj": 13130, "area_ha": 7335, "PA": 0.111, "UA": 0.020},
+    "D_stack_wet_fixed_norm": {"thr": 3.00, "n_obj": 9961, "area_ha": 5740, "PA": 0.084, "UA": 0.023},
+    "E_pair_dry_adaptive": {"thr": 4.78, "n_obj": 18041, "area_ha": 9238, "PA": 0.137, "UA": 0.017},
+    "F_stack_dry_adaptive": {"thr": 3.82, "n_obj": 12061, "area_ha": 7131, "PA": 0.115, "UA": 0.023}
+  },
+  "reference": "PA/UA object-based, 8-conn components, TP at >=30% overlap; 524 ref components",
+  "findings": [
+    "F1 WET SHIFT CONFIRMED: post 03.08 vs base 22.07 whole-AOI means +0.92 dB (VV) / +1.24 dB (VH); forest-bg median offsets +1.18/+1.56 dB; 10.07 also wet (+0.6..0.8 dB)",
+    "F2 ADAPTIVE-THRESHOLD INVARIANCE (negative result): adaptive mode (mean_bg + a) is mathematically invariant to uniform additive normalization - pair+norm+adaptive gave pixel-identical output to no-norm (archived windthrow_id666_B_adaptive_invariant.json). Normalization is meaningful only for FIXED-threshold (monitoring) mode",
+    "F3 NO POSITIVE WINDTHROW SIGNAL IN LEAF-ON C-BAND FOR THIS EVENT: WI median inside reference is ~1 dB BELOW the forest-proxy ring median (wet pair -1.03 dB, dry pair -0.99 dB). Forest background rises +3..+4 dB (soil moisture + phenology) while damaged stands rise less. WI=deltaVV+deltaVH with x+a thresholding cannot detect ID666 in leaf-on summer regardless of tuning",
+    "F4 FALSE ALARMS ARE DOMINATED BY NON-FOREST (UA 0.015-0.023, thousands of objects over fields/harvest): forest mask (v0.9) is mandatory for any operational use",
+    "F5 STACK HELPS MODESTLY: 3-pre median composite reduces flagged area ~20-25% (7335 vs 9506 wet; 7131 vs 9238 dry) and slightly raises UA",
+    "F6 INFRASTRUCTURE WORKS: full chain PC STAC -> COG windowed copy (55 s/band, 4 threads) -> detect (11-27 s) -> object metrics; wet-shift signature, orbit set (rel orbit 94: 6070/6245/6420/6595/6770/6945), masks and metrics all reproducible from the manifest"
+  ],
+  "next_steps": [
+    "1. Forest mask for bg sample AND detection restriction (v0.9, GWL_FCS30 or PALSAR FNF)",
+    "2. Leaf-off test: repeat detection on an October-April event from the DB (the index physics differs without canopy)",
+    "3. Index study on ID666: dVH-only, VH/VV ratio, log-ratio, longer post window (+1..+28 d)",
+    "4. Alternative events 2016-2017 (s1_era_candidates.json, 59 candidates)",
+    "5. Keep v0.8 normalization for fixed-threshold mode; document invariance in METHOD.md"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "variant": "A",
+  "desc": "pair 22.07->03.08, norm OFF (baseline P.0 regime)",
+  "pre_labels": [
+    "base"
+  ],
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": 2.7626986500648627,
+  "threshold_db": 5.662698650064863,
+  "n_objects": 18684,
+  "detected_area_ha": 9505.95,
+  "runtime_s": 10.9,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/A/id666_A_wi.tif",
+    "mask": "/home/z/my-project/work_data/out/A/id666_A_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/A/id666_A.gpkg"
+  },
+  "timestamp": "2026-09-02T06:13:03"
+}

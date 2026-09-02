@@ -1,0 +1,30 @@
+{
+  "variant": "B",
+  "desc": "pair 22.07->03.08, FIXED 3.0 dB, norm ON (monitoring mode)",
+  "pre_labels": [
+    "base"
+  ],
+  "normalize_background": true,
+  "params": {
+    "threshold_mode": "fixed",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {
+    "VV": 1.179610013961792,
+    "VH": 1.5639362335205078
+  },
+  "mean_wi": 0.019152291953366565,
+  "threshold_db": 3.0,
+  "n_objects": 17230,
+  "detected_area_ha": 8647.67,
+  "runtime_s": 13.3,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/B/id666_B_wi_norm.tif",
+    "mask": "/home/z/my-project/work_data/out/B/id666_B_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/B/id666_B.gpkg"
+  },
+  "timestamp": "2026-09-02T06:16:11"
+}

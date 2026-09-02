@@ -1,0 +1,28 @@
+{
+  "variant": "E",
+  "desc": "pair 22.07->15.08 (DRY post), adaptive, norm OFF — dry-pair control",
+  "pre_labels": [
+    "base"
+  ],
+  "post_label": "post2",
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": 1.8798381472546408,
+  "threshold_db": 4.77983814725464,
+  "n_objects": 18041,
+  "detected_area_ha": 9237.52,
+  "runtime_s": 10.8,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out/E/id666_E_wi.tif",
+    "mask": "/home/z/my-project/work_data/out/E/id666_E_mask.tif",
+    "vector": "/home/z/my-project/work_data/out/E/id666_E.gpkg"
+  },
+  "timestamp": "2026-09-02T07:04:18"
+}

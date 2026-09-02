@@ -1,0 +1,198 @@
+{
+  "event": {
+    "id": 666,
+    "storm": "squall 30.07.2017",
+    "region": "north Sverdlovsk oblast",
+    "ref_area_ha": 950.1
+  },
+  "aoi": {
+    "epsg": 32638,
+    "bounds": [
+      379250.0,
+      6836060.0,
+      431700.0,
+      6887140.0
+    ],
+    "w": 5245,
+    "h": 5108,
+    "buffer_m": 3000.0
+  },
+  "scenes": {
+    "base": {
+      "expected_date": "2017-07-22",
+      "id": "S1B_IW_GRDH_1SDV_20170722T033448_20170722T033513_006595_00B994_rtc",
+      "datetime": "2017-07-22T03:35:01.288118+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/base_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/base_vh.tif"
+    },
+    "post": {
+      "expected_date": "2017-08-03",
+      "id": "S1B_IW_GRDH_1SDV_20170803T033449_20170803T033514_006770_00BE98_rtc",
+      "datetime": "2017-08-03T03:35:01.858278+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/post_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/post_vh.tif"
+    },
+    "pre1": {
+      "expected_date": "2017-07-10",
+      "id": "S1B_IW_GRDH_1SDV_20170710T033448_20170710T033512_006420_00B493_rtc",
+      "datetime": "2017-07-10T03:35:00.499424+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre1_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre1_vh.tif"
+    },
+    "pre2": {
+      "expected_date": "2017-06-28",
+      "id": "S1B_IW_GRDH_1SDV_20170628T033447_20170628T033512_006245_00AFA4_rtc",
+      "datetime": "2017-06-28T03:34:59.779200+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre2_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre2_vh.tif"
+    },
+    "pre3": {
+      "expected_date": "2017-06-16",
+      "id": "S1B_IW_GRDH_1SDV_20170616T033446_20170616T033511_006070_00AA91_rtc",
+      "datetime": "2017-06-16T03:34:59.156007+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/pre3_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/pre3_vh.tif"
+    },
+    "post2": {
+      "expected_date": "2017-08-15",
+      "id": "S1B_IW_GRDH_1SDV_20170815T033449_20170815T033514_006945_00C3B5_rtc",
+      "datetime": "2017-08-15T03:35:02.397530+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp/post2_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp/post2_vh.tif"
+    }
+  },
+  "metric_definition": {
+    "type": "object-based, 8-connected components",
+    "pa": "reference component is TP when >=30% of its pixels are flagged",
+    "ua": "detected object is TP when >=30% of its pixels are inside reference"
+  },
+  "variants": {
+    "A": {
+      "n_ref_components": 524,
+      "n_det_objects": 18684,
+      "tp_ref": 66,
+      "tp_det": 278,
+      "pa": 0.126,
+      "ua": 0.0149,
+      "f1": 0.0266,
+      "detected_area_ha": 9505.95,
+      "n_objects": 18684,
+      "offset_db": {},
+      "mean_wi": 2.7626986500648627,
+      "threshold_db": 5.662698650064863,
+      "desc": "pair 22.07->03.08, norm OFF (baseline P.0 regime)",
+      "runtime_s": 10.9
+    },
+    "B": {
+      "n_ref_components": 524,
+      "n_det_objects": 17230,
+      "tp_ref": 57,
+      "tp_det": 264,
+      "pa": 0.1088,
+      "ua": 0.0153,
+      "f1": 0.0269,
+      "detected_area_ha": 8647.67,
+      "n_objects": 17230,
+      "offset_db": {
+        "VV": 1.179610013961792,
+        "VH": 1.5639362335205078
+      },
+      "mean_wi": 0.019152291953366565,
+      "threshold_db": 3.0,
+      "desc": "pair 22.07->03.08, FIXED 3.0 dB, norm ON (monitoring mode)",
+      "runtime_s": 13.3
+    },
+    "C": {
+      "n_ref_components": 524,
+      "n_det_objects": 13130,
+      "tp_ref": 58,
+      "tp_det": 266,
+      "pa": 0.1107,
+      "ua": 0.0203,
+      "f1": 0.0342,
+      "detected_area_ha": 7334.83,
+      "n_objects": 13130,
+      "offset_db": {},
+      "mean_wi": 1.7975412301503277,
+      "threshold_db": 4.697541230150327,
+      "desc": "stack 10.07+28.06+16.06->03.08, adaptive, norm OFF",
+      "runtime_s": 24.8
+    },
+    "D": {
+      "n_ref_components": 524,
+      "n_det_objects": 9961,
+      "tp_ref": 44,
+      "tp_det": 226,
+      "pa": 0.084,
+      "ua": 0.0227,
+      "f1": 0.0357,
+      "detected_area_ha": 5740.43,
+      "n_objects": 9961,
+      "offset_db": {
+        "VV": 0.804154634475708,
+        "VH": 1.068016529083252
+      },
+      "mean_wi": -0.07462967368496444,
+      "threshold_db": 3.0,
+      "desc": "stack + FIXED 3.0 dB, norm ON (combined candidate)",
+      "runtime_s": 26.9
+    },
+    "E": {
+      "n_ref_components": 524,
+      "n_det_objects": 18041,
+      "tp_ref": 72,
+      "tp_det": 301,
+      "pa": 0.1374,
+      "ua": 0.0167,
+      "f1": 0.0298,
+      "detected_area_ha": 9237.52,
+      "n_objects": 18041,
+      "offset_db": {},
+      "mean_wi": 1.8798381472546408,
+      "threshold_db": 4.77983814725464,
+      "desc": "pair 22.07->15.08 (DRY post), adaptive, norm OFF — dry-pair control",
+      "runtime_s": 10.8
+    },
+    "F": {
+      "n_ref_components": 524,
+      "n_det_objects": 12061,
+      "tp_ref": 60,
+      "tp_det": 275,
+      "pa": 0.1145,
+      "ua": 0.0228,
+      "f1": 0.038,
+      "detected_area_ha": 7130.8,
+      "n_objects": 12061,
+      "offset_db": {},
+      "mean_wi": 0.9146807273462296,
+      "threshold_db": 3.8146807273462295,
+      "desc": "stack 3-pre ->15.08 (DRY), adaptive, norm OFF",
+      "runtime_s": 25.0
+    }
+  },
+  "updated": "2026-09-02T07:06:14"
+}

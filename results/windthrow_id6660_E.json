@@ -1,0 +1,30 @@
+{
+  "event_id": 6660,
+  "storm": "LEAF-OFF ANNUAL DIFFERENTIAL for ID666 (squall 30.07.2017, 950 ha): pre = Oct 2016 (leaf-off, pre-event year), post = Oct 2017 (leaf-off, post-event). Same rel-orbit-94 descending track as step7; same-season pre/post kills the phenology confound, windthrow revealed by canopy removal",
+  "variant": "E",
+  "desc": "pair base->post2 adaptive (control)",
+  "pre_labels": [
+    "base"
+  ],
+  "post_label": "post2",
+  "normalize_background": false,
+  "params": {
+    "threshold_mode": "adaptive",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {},
+  "mean_wi": 2.471943212625459,
+  "threshold_db": 5.3719432126254585,
+  "n_objects": 26522,
+  "detected_area_ha": 27150.55,
+  "runtime_s": 12.7,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out_id6660/E/id6660_E_wi.tif",
+    "mask": "/home/z/my-project/work_data/out_id6660/E/id6660_E_mask.tif",
+    "vector": "/home/z/my-project/work_data/out_id6660/E/id6660_E.gpkg"
+  },
+  "timestamp": "2026-09-02T09:25:44"
+}

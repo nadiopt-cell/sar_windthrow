@@ -1,0 +1,3890 @@
+[
+ {
+  "Storm_ID": 1,
+  "Count": 1,
+  "Area_tr": 0.6867,
+  "Length_tr": 3.3,
+  "Mean_w_tr": 567.7,
+  "Max_w_tr": 1491.8
+ },
+ {
+  "Storm_ID": 2,
+  "Count": 1,
+  "Area_tr": 0.659272,
+  "Length_tr": 6.7,
+  "Mean_w_tr": 184.4,
+  "Max_w_tr": 452.5
+ },
+ {
+  "Storm_ID": 3,
+  "Count": 1,
+  "Area_tr": 0.2529,
+  "Length_tr": 7.4,
+  "Mean_w_tr": 156.8,
+  "Max_w_tr": 290.2
+ },
+ {
+  "Storm_ID": 4,
+  "Count": 2,
+  "Area_tr": 4.61847,
+  "Length_tr": 56.9,
+  "Mean_w_tr": 726.3,
+  "Max_w_tr": 1641.0
+ },
+ {
+  "Storm_ID": 5,
+  "Count": 1,
+  "Area_tr": 0.1683,
+  "Length_tr": 7.7,
+  "Mean_w_tr": 69.2,
+  "Max_w_tr": 178.4
+ },
+ {
+  "Storm_ID": 6,
+  "Count": 1,
+  "Area_tr": 1.4625,
+  "Length_tr": 7.5,
+  "Mean_w_tr": 254.4,
+  "Max_w_tr": 832.5
+ },
+ {
+  "Storm_ID": 7,
+  "Count": 1,
+  "Area_tr": 0.3042,
+  "Length_tr": 4.8,
+  "Mean_w_tr": 101.3,
+  "Max_w_tr": 219.6
+ },
+ {
+  "Storm_ID": 8,
+  "Count": 1,
+  "Area_tr": 0.9045,
+  "Length_tr": 7.8,
+  "Mean_w_tr": 165.4,
+  "Max_w_tr": 592.3
+ },
+ {
+  "Storm_ID": 9,
+  "Count": 1,
+  "Area_tr": 9.61436,
+  "Length_tr": 37.1,
+  "Mean_w_tr": 1021.4,
+  "Max_w_tr": 3378.6
+ },
+ {
+  "Storm_ID": 10,
+  "Count": 1,
+  "Area_tr": 1.42329,
+  "Length_tr": 41.1,
+  "Mean_w_tr": 148.6,
+  "Max_w_tr": 436.2
+ },
+ {
+  "Storm_ID": 11,
+  "Count": 1,
+  "Area_tr": 1.91424,
+  "Length_tr": 8.5,
+  "Mean_w_tr": 263.5,
+  "Max_w_tr": 547.5
+ },
+ {
+  "Storm_ID": 12,
+  "Count": 1,
+  "Area_tr": 0.446366,
+  "Length_tr": 6.1,
+  "Mean_w_tr": 113.9,
+  "Max_w_tr": 354.9
+ },
+ {
+  "Storm_ID": 13,
+  "Count": 5,
+  "Area_tr": 88.8916,
+  "Length_tr": 256.0,
+  "Mean_w_tr": 23269.9,
+  "Max_w_tr": 102539.0
+ },
+ {
+  "Storm_ID": 14,
+  "Count": 1,
+  "Area_tr": 0.567202,
+  "Length_tr": 6.3,
+  "Mean_w_tr": 123.3,
+  "Max_w_tr": 256.4
+ },
+ {
+  "Storm_ID": 15,
+  "Count": 1,
+  "Area_tr": 0.354426,
+  "Length_tr": 7.7,
+  "Mean_w_tr": 118.6,
+  "Max_w_tr": 447.2
+ },
+ {
+  "Storm_ID": 16,
+  "Count": 6,
+  "Area_tr": 11.4708,
+  "Length_tr": 313.1,
+  "Mean_w_tr": 347.6,
+  "Max_w_tr": 1424.8
+ },
+ {
+  "Storm_ID": 17,
+  "Count": 1,
+  "Area_tr": 1.3896,
+  "Length_tr": 5.5,
+  "Mean_w_tr": 347.0,
+  "Max_w_tr": 904.6
+ },
+ {
+  "Storm_ID": 18,
+  "Count": 1,
+  "Area_tr": 3.07434,
+  "Length_tr": 13.9,
+  "Mean_w_tr": 1485.2,
+  "Max_w_tr": 4079.5
+ },
+ {
+  "Storm_ID": 19,
+  "Count": 1,
+  "Area_tr": 0.4068,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 288.5,
+  "Max_w_tr": 704.3
+ },
+ {
+  "Storm_ID": 20,
+  "Count": 1,
+  "Area_tr": 15.9366,
+  "Length_tr": 40.1,
+  "Mean_w_tr": 6556.4,
+  "Max_w_tr": 17869.7
+ },
+ {
+  "Storm_ID": 21,
+  "Count": 1,
+  "Area_tr": 0.7344,
+  "Length_tr": 6.8,
+  "Mean_w_tr": 162.6,
+  "Max_w_tr": 468.2
+ },
+ {
+  "Storm_ID": 22,
+  "Count": 1,
+  "Area_tr": 12.0337,
+  "Length_tr": 80.5,
+  "Mean_w_tr": 2032.8,
+  "Max_w_tr": 9066.5
+ },
+ {
+  "Storm_ID": 23,
+  "Count": 1,
+  "Area_tr": 5.50384,
+  "Length_tr": 20.1,
+  "Mean_w_tr": 1400.5,
+  "Max_w_tr": 3431.2
+ },
+ {
+  "Storm_ID": 24,
+  "Count": 1,
+  "Area_tr": 1.01099,
+  "Length_tr": 5.2,
+  "Mean_w_tr": 521.7,
+  "Max_w_tr": 1370.3
+ },
+ {
+  "Storm_ID": 25,
+  "Count": 1,
+  "Area_tr": 1.3545,
+  "Length_tr": 16.6,
+  "Mean_w_tr": 451.7,
+  "Max_w_tr": 1548.5
+ },
+ {
+  "Storm_ID": 26,
+  "Count": 1,
+  "Area_tr": 0.126,
+  "Length_tr": 3.9,
+  "Mean_w_tr": 59.2,
+  "Max_w_tr": 110.1
+ },
+ {
+  "Storm_ID": 27,
+  "Count": 1,
+  "Area_tr": 24.4177,
+  "Length_tr": 49.9,
+  "Mean_w_tr": 6055.0,
+  "Max_w_tr": 22913.7
+ },
+ {
+  "Storm_ID": 28,
+  "Count": 1,
+  "Area_tr": 9.91823,
+  "Length_tr": 19.9,
+  "Mean_w_tr": 2358.3,
+  "Max_w_tr": 6611.2
+ },
+ {
+  "Storm_ID": 29,
+  "Count": 2,
+  "Area_tr": 0.4716,
+  "Length_tr": 20.1,
+  "Mean_w_tr": 82.5,
+  "Max_w_tr": 290.6
+ },
+ {
+  "Storm_ID": 30,
+  "Count": 1,
+  "Area_tr": 14.6507,
+  "Length_tr": 41.6,
+  "Mean_w_tr": 1700.9,
+  "Max_w_tr": 5158.4
+ },
+ {
+  "Storm_ID": 31,
+  "Count": 1,
+  "Area_tr": 5.60372,
+  "Length_tr": 13.0,
+  "Mean_w_tr": 2574.2,
+  "Max_w_tr": 6927.4
+ },
+ {
+  "Storm_ID": 32,
+  "Count": 1,
+  "Area_tr": 0.323107,
+  "Length_tr": 3.0,
+  "Mean_w_tr": 147.0,
+  "Max_w_tr": 272.3
+ },
+ {
+  "Storm_ID": 33,
+  "Count": 2,
+  "Area_tr": 3.48227,
+  "Length_tr": 38.3,
+  "Mean_w_tr": 237.4,
+  "Max_w_tr": 705.8
+ },
+ {
+  "Storm_ID": 34,
+  "Count": 1,
+  "Area_tr": 0.472284,
+  "Length_tr": 7.6,
+  "Mean_w_tr": 148.5,
+  "Max_w_tr": 264.8
+ },
+ {
+  "Storm_ID": 35,
+  "Count": 1,
+  "Area_tr": 0.161475,
+  "Length_tr": 2.8,
+  "Mean_w_tr": 91.6,
+  "Max_w_tr": 203.9
+ },
+ {
+  "Storm_ID": 36,
+  "Count": 1,
+  "Area_tr": 3.46658,
+  "Length_tr": 18.0,
+  "Mean_w_tr": 356.3,
+  "Max_w_tr": 1267.0
+ },
+ {
+  "Storm_ID": 37,
+  "Count": 1,
+  "Area_tr": 0.434879,
+  "Length_tr": 4.0,
+  "Mean_w_tr": 162.6,
+  "Max_w_tr": 311.2
+ },
+ {
+  "Storm_ID": 38,
+  "Count": 1,
+  "Area_tr": 1.7073,
+  "Length_tr": 11.1,
+  "Mean_w_tr": 274.3,
+  "Max_w_tr": 821.8
+ },
+ {
+  "Storm_ID": 39,
+  "Count": 1,
+  "Area_tr": 2.70294,
+  "Length_tr": 14.4,
+  "Mean_w_tr": 391.9,
+  "Max_w_tr": 932.6
+ },
+ {
+  "Storm_ID": 40,
+  "Count": 2,
+  "Area_tr": 1.8544,
+  "Length_tr": 54.9,
+  "Mean_w_tr": 200.2,
+  "Max_w_tr": 505.9
+ },
+ {
+  "Storm_ID": 41,
+  "Count": 6,
+  "Area_tr": 52.6168,
+  "Length_tr": 138.7,
+  "Mean_w_tr": 6099.2,
+  "Max_w_tr": 22255.3
+ },
+ {
+  "Storm_ID": 42,
+  "Count": 1,
+  "Area_tr": 0.9261,
+  "Length_tr": 8.8,
+  "Mean_w_tr": 215.3,
+  "Max_w_tr": 484.0
+ },
+ {
+  "Storm_ID": 43,
+  "Count": 1,
+  "Area_tr": 0.7281,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 464.8,
+  "Max_w_tr": 1116.0
+ },
+ {
+  "Storm_ID": 44,
+  "Count": 1,
+  "Area_tr": 3.63578,
+  "Length_tr": 37.5,
+  "Mean_w_tr": 224.4,
+  "Max_w_tr": 1068.4
+ },
+ {
+  "Storm_ID": 45,
+  "Count": 1,
+  "Area_tr": 1.23696,
+  "Length_tr": 9.2,
+  "Mean_w_tr": 237.6,
+  "Max_w_tr": 584.2
+ },
+ {
+  "Storm_ID": 46,
+  "Count": 1,
+  "Area_tr": 0.6759,
+  "Length_tr": 8.4,
+  "Mean_w_tr": 133.3,
+  "Max_w_tr": 339.2
+ },
+ {
+  "Storm_ID": 47,
+  "Count": 1,
+  "Area_tr": 0.1215,
+  "Length_tr": 2.0,
+  "Mean_w_tr": 107.1,
+  "Max_w_tr": 163.2
+ },
+ {
+  "Storm_ID": 48,
+  "Count": 1,
+  "Area_tr": 0.2529,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 135.0,
+  "Max_w_tr": 277.0
+ },
+ {
+  "Storm_ID": 49,
+  "Count": 1,
+  "Area_tr": 0.427333,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 165.9,
+  "Max_w_tr": 282.9
+ },
+ {
+  "Storm_ID": 50,
+  "Count": 1,
+  "Area_tr": 1.19134,
+  "Length_tr": 5.5,
+  "Mean_w_tr": 280.8,
+  "Max_w_tr": 419.2
+ },
+ {
+  "Storm_ID": 51,
+  "Count": 11,
+  "Area_tr": 61.0341,
+  "Length_tr": 210.6,
+  "Mean_w_tr": 5497.4,
+  "Max_w_tr": 35795.6
+ },
+ {
+  "Storm_ID": 52,
+  "Count": 5,
+  "Area_tr": 24.2883,
+  "Length_tr": 213.4,
+  "Mean_w_tr": 1325.1,
+  "Max_w_tr": 11493.5
+ },
+ {
+  "Storm_ID": 53,
+  "Count": 1,
+  "Area_tr": 17.9693,
+  "Length_tr": 76.1,
+  "Mean_w_tr": 1793.3,
+  "Max_w_tr": 1459.2
+ },
+ {
+  "Storm_ID": 54,
+  "Count": 1,
+  "Area_tr": 8.15175,
+  "Length_tr": 34.1,
+  "Mean_w_tr": 320.1,
+  "Max_w_tr": 842.0
+ },
+ {
+  "Storm_ID": 55,
+  "Count": 1,
+  "Area_tr": 0.889567,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 241.2,
+  "Max_w_tr": 427.8
+ },
+ {
+  "Storm_ID": 56,
+  "Count": 1,
+  "Area_tr": 0.327019,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 109.2,
+  "Max_w_tr": 192.0
+ },
+ {
+  "Storm_ID": 57,
+  "Count": 5,
+  "Area_tr": 5.239,
+  "Length_tr": 68.4,
+  "Mean_w_tr": 1431.4,
+  "Max_w_tr": 7239.6
+ },
+ {
+  "Storm_ID": 58,
+  "Count": 1,
+  "Area_tr": 0.355871,
+  "Length_tr": 11.7,
+  "Mean_w_tr": 119.9,
+  "Max_w_tr": 385.5
+ },
+ {
+  "Storm_ID": 59,
+  "Count": 2,
+  "Area_tr": 2.22514,
+  "Length_tr": 11.6,
+  "Mean_w_tr": 1231.9,
+  "Max_w_tr": 3748.6
+ },
+ {
+  "Storm_ID": 60,
+  "Count": 2,
+  "Area_tr": 1.44604,
+  "Length_tr": 37.8,
+  "Mean_w_tr": 838.3,
+  "Max_w_tr": 5781.4
+ },
+ {
+  "Storm_ID": 61,
+  "Count": 1,
+  "Area_tr": 0.978563,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 239.5,
+  "Max_w_tr": 476.0
+ },
+ {
+  "Storm_ID": 62,
+  "Count": 1,
+  "Area_tr": 9.6499,
+  "Length_tr": 13.5,
+  "Mean_w_tr": 1517.8,
+  "Max_w_tr": 4030.7
+ },
+ {
+  "Storm_ID": 63,
+  "Count": 1,
+  "Area_tr": 2.10636,
+  "Length_tr": 4.6,
+  "Mean_w_tr": 567.9,
+  "Max_w_tr": 1167.2
+ },
+ {
+  "Storm_ID": 64,
+  "Count": 1,
+  "Area_tr": 2.00277,
+  "Length_tr": 104.8,
+  "Mean_w_tr": 1080.9,
+  "Max_w_tr": 9087.7
+ },
+ {
+  "Storm_ID": 65,
+  "Count": 1,
+  "Area_tr": 2.93655,
+  "Length_tr": 27.7,
+  "Mean_w_tr": 575.5,
+  "Max_w_tr": 2694.9
+ },
+ {
+  "Storm_ID": 66,
+  "Count": 1,
+  "Area_tr": 0.3915,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 106.4,
+  "Max_w_tr": 187.7
+ },
+ {
+  "Storm_ID": 67,
+  "Count": 1,
+  "Area_tr": 0.0713086,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 63.1,
+  "Max_w_tr": 88.7
+ },
+ {
+  "Storm_ID": 68,
+  "Count": 1,
+  "Area_tr": 1.28256,
+  "Length_tr": 9.5,
+  "Mean_w_tr": 191.2,
+  "Max_w_tr": 455.6
+ },
+ {
+  "Storm_ID": 69,
+  "Count": 1,
+  "Area_tr": 0.0891,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 58.0,
+  "Max_w_tr": 98.0
+ },
+ {
+  "Storm_ID": 70,
+  "Count": 1,
+  "Area_tr": 0.268375,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 110.4,
+  "Max_w_tr": 259.1
+ },
+ {
+  "Storm_ID": 71,
+  "Count": 2,
+  "Area_tr": 0.299845,
+  "Length_tr": 25.9,
+  "Mean_w_tr": 297.4,
+  "Max_w_tr": 864.6
+ },
+ {
+  "Storm_ID": 72,
+  "Count": 1,
+  "Area_tr": 11.597,
+  "Length_tr": 17.5,
+  "Mean_w_tr": 1925.7,
+  "Max_w_tr": 4616.2
+ },
+ {
+  "Storm_ID": 73,
+  "Count": 2,
+  "Area_tr": 7.49382,
+  "Length_tr": 51.6,
+  "Mean_w_tr": 863.9,
+  "Max_w_tr": 3697.6
+ },
+ {
+  "Storm_ID": 74,
+  "Count": 1,
+  "Area_tr": 1.60387,
+  "Length_tr": 19.5,
+  "Mean_w_tr": 652.5,
+  "Max_w_tr": 3316.4
+ },
+ {
+  "Storm_ID": 75,
+  "Count": 2,
+  "Area_tr": 1.17,
+  "Length_tr": 49.3,
+  "Mean_w_tr": 370.3,
+  "Max_w_tr": 937.5
+ },
+ {
+  "Storm_ID": 76,
+  "Count": 1,
+  "Area_tr": 0.400302,
+  "Length_tr": 4.8,
+  "Mean_w_tr": 118.0,
+  "Max_w_tr": 236.2
+ },
+ {
+  "Storm_ID": 77,
+  "Count": 1,
+  "Area_tr": 0.1305,
+  "Length_tr": 2.8,
+  "Mean_w_tr": 86.3,
+  "Max_w_tr": 181.5
+ },
+ {
+  "Storm_ID": 78,
+  "Count": 1,
+  "Area_tr": 4.851,
+  "Length_tr": 9.0,
+  "Mean_w_tr": 788.8,
+  "Max_w_tr": 1490.8
+ },
+ {
+  "Storm_ID": 79,
+  "Count": 1,
+  "Area_tr": 7.17904,
+  "Length_tr": 52.2,
+  "Mean_w_tr": 763.4,
+  "Max_w_tr": 3142.6
+ },
+ {
+  "Storm_ID": 80,
+  "Count": 1,
+  "Area_tr": 1.02879,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 224.1,
+  "Max_w_tr": 506.5
+ },
+ {
+  "Storm_ID": 81,
+  "Count": 1,
+  "Area_tr": 0.461037,
+  "Length_tr": 3.3,
+  "Mean_w_tr": 184.1,
+  "Max_w_tr": 455.0
+ },
+ {
+  "Storm_ID": 82,
+  "Count": 1,
+  "Area_tr": 1.26991,
+  "Length_tr": 10.1,
+  "Mean_w_tr": 161.6,
+  "Max_w_tr": 348.9
+ },
+ {
+  "Storm_ID": 83,
+  "Count": 1,
+  "Area_tr": 0.197998,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 83.6,
+  "Max_w_tr": 170.0
+ },
+ {
+  "Storm_ID": 84,
+  "Count": 1,
+  "Area_tr": 0.227515,
+  "Length_tr": 7.0,
+  "Mean_w_tr": 90.9,
+  "Max_w_tr": 190.9
+ },
+ {
+  "Storm_ID": 85,
+  "Count": 3,
+  "Area_tr": 42.3952,
+  "Length_tr": 267.4,
+  "Mean_w_tr": 3085.4,
+  "Max_w_tr": 17272.3
+ },
+ {
+  "Storm_ID": 86,
+  "Count": 2,
+  "Area_tr": 0.6192,
+  "Length_tr": 19.8,
+  "Mean_w_tr": 99.2,
+  "Max_w_tr": 364.2
+ },
+ {
+  "Storm_ID": 87,
+  "Count": 1,
+  "Area_tr": 0.131596,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 61.1,
+  "Max_w_tr": 112.6
+ },
+ {
+  "Storm_ID": 88,
+  "Count": 1,
+  "Area_tr": 0.274978,
+  "Length_tr": 5.9,
+  "Mean_w_tr": 115.8,
+  "Max_w_tr": 304.7
+ },
+ {
+  "Storm_ID": 89,
+  "Count": 1,
+  "Area_tr": 1.33263,
+  "Length_tr": 17.1,
+  "Mean_w_tr": 114.5,
+  "Max_w_tr": 408.6
+ },
+ {
+  "Storm_ID": 90,
+  "Count": 1,
+  "Area_tr": 1.13496,
+  "Length_tr": 5.9,
+  "Mean_w_tr": 415.9,
+  "Max_w_tr": 966.7
+ },
+ {
+  "Storm_ID": 91,
+  "Count": 1,
+  "Area_tr": 1.7775,
+  "Length_tr": 15.8,
+  "Mean_w_tr": 676.9,
+  "Max_w_tr": 3359.3
+ },
+ {
+  "Storm_ID": 92,
+  "Count": 1,
+  "Area_tr": 5.43973,
+  "Length_tr": 16.4,
+  "Mean_w_tr": 443.3,
+  "Max_w_tr": 963.8
+ },
+ {
+  "Storm_ID": 93,
+  "Count": 1,
+  "Area_tr": 0.328892,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 109.7,
+  "Max_w_tr": 285.0
+ },
+ {
+  "Storm_ID": 94,
+  "Count": 1,
+  "Area_tr": 2.3013,
+  "Length_tr": 6.5,
+  "Mean_w_tr": 1294.2,
+  "Max_w_tr": 3377.9
+ },
+ {
+  "Storm_ID": 95,
+  "Count": 3,
+  "Area_tr": 0.805405,
+  "Length_tr": 31.2,
+  "Mean_w_tr": 96.0,
+  "Max_w_tr": 605.1
+ },
+ {
+  "Storm_ID": 96,
+  "Count": 1,
+  "Area_tr": 1.59338,
+  "Length_tr": 4.7,
+  "Mean_w_tr": 362.2,
+  "Max_w_tr": 902.5
+ },
+ {
+  "Storm_ID": 97,
+  "Count": 1,
+  "Area_tr": 0.454497,
+  "Length_tr": 2.3,
+  "Mean_w_tr": 540.6,
+  "Max_w_tr": 1063.4
+ },
+ {
+  "Storm_ID": 98,
+  "Count": 1,
+  "Area_tr": 0.55004,
+  "Length_tr": 2.6,
+  "Mean_w_tr": 238.9,
+  "Max_w_tr": 303.5
+ },
+ {
+  "Storm_ID": 99,
+  "Count": 1,
+  "Area_tr": 0.409522,
+  "Length_tr": 3.9,
+  "Mean_w_tr": 120.7,
+  "Max_w_tr": 373.0
+ },
+ {
+  "Storm_ID": 100,
+  "Count": 1,
+  "Area_tr": 0.366775,
+  "Length_tr": 7.2,
+  "Mean_w_tr": 390.9,
+  "Max_w_tr": 1402.7
+ },
+ {
+  "Storm_ID": 101,
+  "Count": 1,
+  "Area_tr": 0.6768,
+  "Length_tr": 10.1,
+  "Mean_w_tr": 277.5,
+  "Max_w_tr": 1860.9
+ },
+ {
+  "Storm_ID": 102,
+  "Count": 1,
+  "Area_tr": 2.06703,
+  "Length_tr": 14.8,
+  "Mean_w_tr": 362.6,
+  "Max_w_tr": 1717.7
+ },
+ {
+  "Storm_ID": 103,
+  "Count": 3,
+  "Area_tr": 8.48754,
+  "Length_tr": 134.3,
+  "Mean_w_tr": 1831.0,
+  "Max_w_tr": 5883.2
+ },
+ {
+  "Storm_ID": 104,
+  "Count": 1,
+  "Area_tr": 0.948043,
+  "Length_tr": 3.2,
+  "Mean_w_tr": 347.7,
+  "Max_w_tr": 742.9
+ },
+ {
+  "Storm_ID": 105,
+  "Count": 1,
+  "Area_tr": 0.981612,
+  "Length_tr": 21.6,
+  "Mean_w_tr": 359.2,
+  "Max_w_tr": 1862.3
+ },
+ {
+  "Storm_ID": 106,
+  "Count": 1,
+  "Area_tr": 9.05185,
+  "Length_tr": 38.2,
+  "Mean_w_tr": 2119.4,
+  "Max_w_tr": 8662.4
+ },
+ {
+  "Storm_ID": 107,
+  "Count": 1,
+  "Area_tr": 0.408089,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 106.1,
+  "Max_w_tr": 229.6
+ },
+ {
+  "Storm_ID": 108,
+  "Count": 1,
+  "Area_tr": 0.61395,
+  "Length_tr": 7.9,
+  "Mean_w_tr": 195.3,
+  "Max_w_tr": 573.7
+ },
+ {
+  "Storm_ID": 109,
+  "Count": 1,
+  "Area_tr": 0.4851,
+  "Length_tr": 3.6,
+  "Mean_w_tr": 158.4,
+  "Max_w_tr": 273.5
+ },
+ {
+  "Storm_ID": 110,
+  "Count": 1,
+  "Area_tr": 2.11578,
+  "Length_tr": 8.8,
+  "Mean_w_tr": 1142.8,
+  "Max_w_tr": 5171.0
+ },
+ {
+  "Storm_ID": 111,
+  "Count": 1,
+  "Area_tr": 0.51165,
+  "Length_tr": 13.2,
+  "Mean_w_tr": 106.9,
+  "Max_w_tr": 277.7
+ },
+ {
+  "Storm_ID": 112,
+  "Count": 1,
+  "Area_tr": 1.47843,
+  "Length_tr": 16.6,
+  "Mean_w_tr": 171.1,
+  "Max_w_tr": 397.6
+ },
+ {
+  "Storm_ID": 113,
+  "Count": 1,
+  "Area_tr": 0.298063,
+  "Length_tr": 3.5,
+  "Mean_w_tr": 144.8,
+  "Max_w_tr": 410.7
+ },
+ {
+  "Storm_ID": 114,
+  "Count": 1,
+  "Area_tr": 0.753111,
+  "Length_tr": 5.0,
+  "Mean_w_tr": 668.3,
+  "Max_w_tr": 2288.3
+ },
+ {
+  "Storm_ID": 115,
+  "Count": 1,
+  "Area_tr": 0.141392,
+  "Length_tr": 2.3,
+  "Mean_w_tr": 73.9,
+  "Max_w_tr": 124.3
+ },
+ {
+  "Storm_ID": 116,
+  "Count": 1,
+  "Area_tr": 11.4692,
+  "Length_tr": 23.6,
+  "Mean_w_tr": 1899.0,
+  "Max_w_tr": 4707.3
+ },
+ {
+  "Storm_ID": 117,
+  "Count": 1,
+  "Area_tr": 0.634547,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 277.6,
+  "Max_w_tr": 712.4
+ },
+ {
+  "Storm_ID": 118,
+  "Count": 1,
+  "Area_tr": 2.60599,
+  "Length_tr": 12.5,
+  "Mean_w_tr": 503.7,
+  "Max_w_tr": 1397.0
+ },
+ {
+  "Storm_ID": 119,
+  "Count": 2,
+  "Area_tr": 12.4364,
+  "Length_tr": 60.8,
+  "Mean_w_tr": 1399.5,
+  "Max_w_tr": 13866.6
+ },
+ {
+  "Storm_ID": 120,
+  "Count": 2,
+  "Area_tr": 2.02074,
+  "Length_tr": 22.6,
+  "Mean_w_tr": 511.7,
+  "Max_w_tr": 2289.0
+ },
+ {
+  "Storm_ID": 121,
+  "Count": 1,
+  "Area_tr": 1.38766,
+  "Length_tr": 7.8,
+  "Mean_w_tr": 697.6,
+  "Max_w_tr": 2325.1
+ },
+ {
+  "Storm_ID": 122,
+  "Count": 1,
+  "Area_tr": 0.512194,
+  "Length_tr": 4.8,
+  "Mean_w_tr": 250.2,
+  "Max_w_tr": 823.3
+ },
+ {
+  "Storm_ID": 123,
+  "Count": 1,
+  "Area_tr": 14.4375,
+  "Length_tr": 41.8,
+  "Mean_w_tr": 2933.3,
+  "Max_w_tr": 10571.0
+ },
+ {
+  "Storm_ID": 124,
+  "Count": 1,
+  "Area_tr": 0.562239,
+  "Length_tr": 6.6,
+  "Mean_w_tr": 154.1,
+  "Max_w_tr": 392.0
+ },
+ {
+  "Storm_ID": 125,
+  "Count": 1,
+  "Area_tr": 0.988183,
+  "Length_tr": 13.0,
+  "Mean_w_tr": 821.6,
+  "Max_w_tr": 4667.5
+ },
+ {
+  "Storm_ID": 126,
+  "Count": 1,
+  "Area_tr": 2.47757,
+  "Length_tr": 6.1,
+  "Mean_w_tr": 1382.4,
+  "Max_w_tr": 2495.1
+ },
+ {
+  "Storm_ID": 127,
+  "Count": 2,
+  "Area_tr": 7.30861,
+  "Length_tr": 49.7,
+  "Mean_w_tr": 263.5,
+  "Max_w_tr": 673.2
+ },
+ {
+  "Storm_ID": 128,
+  "Count": 1,
+  "Area_tr": 0.548118,
+  "Length_tr": 8.9,
+  "Mean_w_tr": 130.9,
+  "Max_w_tr": 308.9
+ },
+ {
+  "Storm_ID": 129,
+  "Count": 1,
+  "Area_tr": 18.1086,
+  "Length_tr": 27.5,
+  "Mean_w_tr": 2656.4,
+  "Max_w_tr": 7977.4
+ },
+ {
+  "Storm_ID": 130,
+  "Count": 1,
+  "Area_tr": 0.455678,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 163.4,
+  "Max_w_tr": 267.8
+ },
+ {
+  "Storm_ID": 131,
+  "Count": 2,
+  "Area_tr": 5.32254,
+  "Length_tr": 52.1,
+  "Mean_w_tr": 380.0,
+  "Max_w_tr": 1468.1
+ },
+ {
+  "Storm_ID": 132,
+  "Count": 2,
+  "Area_tr": 2.49969,
+  "Length_tr": 27.2,
+  "Mean_w_tr": 269.7,
+  "Max_w_tr": 1024.9
+ },
+ {
+  "Storm_ID": 133,
+  "Count": 2,
+  "Area_tr": 2.37085,
+  "Length_tr": 71.9,
+  "Mean_w_tr": 670.6,
+  "Max_w_tr": 3385.2
+ },
+ {
+  "Storm_ID": 134,
+  "Count": 1,
+  "Area_tr": 0.336048,
+  "Length_tr": 3.8,
+  "Mean_w_tr": 124.0,
+  "Max_w_tr": 277.2
+ },
+ {
+  "Storm_ID": 135,
+  "Count": 1,
+  "Area_tr": 0.5769,
+  "Length_tr": 6.2,
+  "Mean_w_tr": 127.4,
+  "Max_w_tr": 274.1
+ },
+ {
+  "Storm_ID": 136,
+  "Count": 1,
+  "Area_tr": 0.101256,
+  "Length_tr": 1.3,
+  "Mean_w_tr": 83.4,
+  "Max_w_tr": 188.2
+ },
+ {
+  "Storm_ID": 137,
+  "Count": 1,
+  "Area_tr": 0.241675,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 122.7,
+  "Max_w_tr": 233.9
+ },
+ {
+  "Storm_ID": 138,
+  "Count": 1,
+  "Area_tr": 0.738266,
+  "Length_tr": 5.7,
+  "Mean_w_tr": 163.4,
+  "Max_w_tr": 591.4
+ },
+ {
+  "Storm_ID": 139,
+  "Count": 2,
+  "Area_tr": 1.37338,
+  "Length_tr": 23.0,
+  "Mean_w_tr": 203.9,
+  "Max_w_tr": 731.4
+ },
+ {
+  "Storm_ID": 140,
+  "Count": 1,
+  "Area_tr": 0.822034,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 357.0,
+  "Max_w_tr": 962.4
+ },
+ {
+  "Storm_ID": 141,
+  "Count": 2,
+  "Area_tr": 0.794558,
+  "Length_tr": 60.8,
+  "Mean_w_tr": 141.7,
+  "Max_w_tr": 462.5
+ },
+ {
+  "Storm_ID": 142,
+  "Count": 1,
+  "Area_tr": 0.640718,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 711.6,
+  "Max_w_tr": 2671.7
+ },
+ {
+  "Storm_ID": 143,
+  "Count": 1,
+  "Area_tr": 0.0918548,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 92.1,
+  "Max_w_tr": 129.4
+ },
+ {
+  "Storm_ID": 144,
+  "Count": 1,
+  "Area_tr": 5.17169,
+  "Length_tr": 13.3,
+  "Mean_w_tr": 1011.1,
+  "Max_w_tr": 2648.3
+ },
+ {
+  "Storm_ID": 145,
+  "Count": 1,
+  "Area_tr": 0.086518,
+  "Length_tr": 2.8,
+  "Mean_w_tr": 60.1,
+  "Max_w_tr": 117.6
+ },
+ {
+  "Storm_ID": 146,
+  "Count": 1,
+  "Area_tr": 0.151348,
+  "Length_tr": 2.7,
+  "Mean_w_tr": 60.9,
+  "Max_w_tr": 107.7
+ },
+ {
+  "Storm_ID": 147,
+  "Count": 1,
+  "Area_tr": 2.7528,
+  "Length_tr": 9.7,
+  "Mean_w_tr": 424.5,
+  "Max_w_tr": 971.7
+ },
+ {
+  "Storm_ID": 148,
+  "Count": 1,
+  "Area_tr": 0.944026,
+  "Length_tr": 6.0,
+  "Mean_w_tr": 247.2,
+  "Max_w_tr": 601.9
+ },
+ {
+  "Storm_ID": 149,
+  "Count": 1,
+  "Area_tr": 0.223946,
+  "Length_tr": 2.2,
+  "Mean_w_tr": 91.5,
+  "Max_w_tr": 142.4
+ },
+ {
+  "Storm_ID": 150,
+  "Count": 1,
+  "Area_tr": 0.46959,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 153.0,
+  "Max_w_tr": 290.3
+ },
+ {
+  "Storm_ID": 151,
+  "Count": 1,
+  "Area_tr": 0.144874,
+  "Length_tr": 2.1,
+  "Mean_w_tr": 101.9,
+  "Max_w_tr": 160.3
+ },
+ {
+  "Storm_ID": 152,
+  "Count": 1,
+  "Area_tr": 1.78383,
+  "Length_tr": 9.1,
+  "Mean_w_tr": 674.7,
+  "Max_w_tr": 1947.5
+ },
+ {
+  "Storm_ID": 153,
+  "Count": 1,
+  "Area_tr": 0.971818,
+  "Length_tr": 12.4,
+  "Mean_w_tr": 320.9,
+  "Max_w_tr": 1730.7
+ },
+ {
+  "Storm_ID": 154,
+  "Count": 1,
+  "Area_tr": 0.667682,
+  "Length_tr": 4.4,
+  "Mean_w_tr": 251.1,
+  "Max_w_tr": 612.4
+ },
+ {
+  "Storm_ID": 155,
+  "Count": 2,
+  "Area_tr": 1.58901,
+  "Length_tr": 19.4,
+  "Mean_w_tr": 772.9,
+  "Max_w_tr": 2955.6
+ },
+ {
+  "Storm_ID": 156,
+  "Count": 1,
+  "Area_tr": 0.372755,
+  "Length_tr": 2.7,
+  "Mean_w_tr": 145.4,
+  "Max_w_tr": 278.7
+ },
+ {
+  "Storm_ID": 157,
+  "Count": 1,
+  "Area_tr": 1.77324,
+  "Length_tr": 7.3,
+  "Mean_w_tr": 1071.6,
+  "Max_w_tr": 3530.4
+ },
+ {
+  "Storm_ID": 158,
+  "Count": 1,
+  "Area_tr": 1.40762,
+  "Length_tr": 11.3,
+  "Mean_w_tr": 1886.1,
+  "Max_w_tr": 5154.7
+ },
+ {
+  "Storm_ID": 159,
+  "Count": 1,
+  "Area_tr": 2.78872,
+  "Length_tr": 6.1,
+  "Mean_w_tr": 1083.8,
+  "Max_w_tr": 1904.5
+ },
+ {
+  "Storm_ID": 160,
+  "Count": 2,
+  "Area_tr": 0.662222,
+  "Length_tr": 5.1,
+  "Mean_w_tr": 276.1,
+  "Max_w_tr": 677.6
+ },
+ {
+  "Storm_ID": 161,
+  "Count": 1,
+  "Area_tr": 15.3883,
+  "Length_tr": 21.9,
+  "Mean_w_tr": 4321.8,
+  "Max_w_tr": 9773.3
+ },
+ {
+  "Storm_ID": 162,
+  "Count": 1,
+  "Area_tr": 0.582818,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 828.2,
+  "Max_w_tr": 2570.2
+ },
+ {
+  "Storm_ID": 163,
+  "Count": 2,
+  "Area_tr": 4.62468,
+  "Length_tr": 87.4,
+  "Mean_w_tr": 1414.6,
+  "Max_w_tr": 6348.1
+ },
+ {
+  "Storm_ID": 164,
+  "Count": 1,
+  "Area_tr": 2.44404,
+  "Length_tr": 20.5,
+  "Mean_w_tr": 171.9,
+  "Max_w_tr": 483.4
+ },
+ {
+  "Storm_ID": 165,
+  "Count": 1,
+  "Area_tr": 0.382849,
+  "Length_tr": 6.9,
+  "Mean_w_tr": 327.0,
+  "Max_w_tr": 1413.9
+ },
+ {
+  "Storm_ID": 166,
+  "Count": 1,
+  "Area_tr": 0.261764,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 98.2,
+  "Max_w_tr": 223.0
+ },
+ {
+  "Storm_ID": 167,
+  "Count": 1,
+  "Area_tr": 0.0923559,
+  "Length_tr": 3.8,
+  "Mean_w_tr": 73.7,
+  "Max_w_tr": 88.8
+ },
+ {
+  "Storm_ID": 168,
+  "Count": 2,
+  "Area_tr": 0.947162,
+  "Length_tr": 63.8,
+  "Mean_w_tr": 119.7,
+  "Max_w_tr": 546.8
+ },
+ {
+  "Storm_ID": 169,
+  "Count": 1,
+  "Area_tr": 0.338966,
+  "Length_tr": 12.0,
+  "Mean_w_tr": 118.8,
+  "Max_w_tr": 372.5
+ },
+ {
+  "Storm_ID": 170,
+  "Count": 2,
+  "Area_tr": 5.69566,
+  "Length_tr": 70.1,
+  "Mean_w_tr": 239.9,
+  "Max_w_tr": 1114.9
+ },
+ {
+  "Storm_ID": 171,
+  "Count": 1,
+  "Area_tr": 0.0824432,
+  "Length_tr": 3.1,
+  "Mean_w_tr": 86.7,
+  "Max_w_tr": 228.6
+ },
+ {
+  "Storm_ID": 172,
+  "Count": 1,
+  "Area_tr": 0.251069,
+  "Length_tr": 2.1,
+  "Mean_w_tr": 133.1,
+  "Max_w_tr": 237.7
+ },
+ {
+  "Storm_ID": 173,
+  "Count": 1,
+  "Area_tr": 0.421378,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 402.4,
+  "Max_w_tr": 1598.4
+ },
+ {
+  "Storm_ID": 174,
+  "Count": 1,
+  "Area_tr": 0.621258,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 154.5,
+  "Max_w_tr": 415.9
+ },
+ {
+  "Storm_ID": 175,
+  "Count": 1,
+  "Area_tr": 0.595081,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 154.8,
+  "Max_w_tr": 341.7
+ },
+ {
+  "Storm_ID": 176,
+  "Count": 1,
+  "Area_tr": 0.185401,
+  "Length_tr": 2.8,
+  "Mean_w_tr": 91.6,
+  "Max_w_tr": 200.1
+ },
+ {
+  "Storm_ID": 177,
+  "Count": 1,
+  "Area_tr": 0.335011,
+  "Length_tr": 12.1,
+  "Mean_w_tr": 70.6,
+  "Max_w_tr": 143.3
+ },
+ {
+  "Storm_ID": 178,
+  "Count": 1,
+  "Area_tr": 2.29415,
+  "Length_tr": 15.1,
+  "Mean_w_tr": 299.2,
+  "Max_w_tr": 1108.1
+ },
+ {
+  "Storm_ID": 179,
+  "Count": 1,
+  "Area_tr": 0.332505,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 146.3,
+  "Max_w_tr": 316.2
+ },
+ {
+  "Storm_ID": 180,
+  "Count": 1,
+  "Area_tr": 0.30306,
+  "Length_tr": 3.4,
+  "Mean_w_tr": 135.8,
+  "Max_w_tr": 434.3
+ },
+ {
+  "Storm_ID": 181,
+  "Count": 1,
+  "Area_tr": 0.674132,
+  "Length_tr": 7.9,
+  "Mean_w_tr": 195.6,
+  "Max_w_tr": 379.4
+ },
+ {
+  "Storm_ID": 182,
+  "Count": 1,
+  "Area_tr": 0.786844,
+  "Length_tr": 7.2,
+  "Mean_w_tr": 372.9,
+  "Max_w_tr": 1782.1
+ },
+ {
+  "Storm_ID": 183,
+  "Count": 2,
+  "Area_tr": 2.26153,
+  "Length_tr": 23.3,
+  "Mean_w_tr": 178.2,
+  "Max_w_tr": 541.5
+ },
+ {
+  "Storm_ID": 184,
+  "Count": 1,
+  "Area_tr": 0.14859,
+  "Length_tr": 5.1,
+  "Mean_w_tr": 87.3,
+  "Max_w_tr": 158.7
+ },
+ {
+  "Storm_ID": 185,
+  "Count": 2,
+  "Area_tr": 2.68428,
+  "Length_tr": 26.8,
+  "Mean_w_tr": 1133.5,
+  "Max_w_tr": 3383.4
+ },
+ {
+  "Storm_ID": 186,
+  "Count": 2,
+  "Area_tr": 1.3095,
+  "Length_tr": 86.2,
+  "Mean_w_tr": 108.8,
+  "Max_w_tr": 322.0
+ },
+ {
+  "Storm_ID": 187,
+  "Count": 1,
+  "Area_tr": 2.18864,
+  "Length_tr": 27.4,
+  "Mean_w_tr": 652.4,
+  "Max_w_tr": 2780.5
+ },
+ {
+  "Storm_ID": 188,
+  "Count": 1,
+  "Area_tr": 0.0556919,
+  "Length_tr": 2.7,
+  "Mean_w_tr": 37.5,
+  "Max_w_tr": 102.7
+ },
+ {
+  "Storm_ID": 189,
+  "Count": 3,
+  "Area_tr": 0.463459,
+  "Length_tr": 30.6,
+  "Mean_w_tr": 160.9,
+  "Max_w_tr": 2205.3
+ },
+ {
+  "Storm_ID": 190,
+  "Count": 1,
+  "Area_tr": 0.523413,
+  "Length_tr": 5.5,
+  "Mean_w_tr": 431.1,
+  "Max_w_tr": 1787.6
+ },
+ {
+  "Storm_ID": 191,
+  "Count": 1,
+  "Area_tr": 0.286132,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 93.5,
+  "Max_w_tr": 252.9
+ },
+ {
+  "Storm_ID": 192,
+  "Count": 1,
+  "Area_tr": 0.0994531,
+  "Length_tr": 1.5,
+  "Mean_w_tr": 76.0,
+  "Max_w_tr": 122.8
+ },
+ {
+  "Storm_ID": 193,
+  "Count": 1,
+  "Area_tr": 0.880541,
+  "Length_tr": 10.6,
+  "Mean_w_tr": 142.8,
+  "Max_w_tr": 235.2
+ },
+ {
+  "Storm_ID": 194,
+  "Count": 1,
+  "Area_tr": 8.60554,
+  "Length_tr": 31.3,
+  "Mean_w_tr": 981.8,
+  "Max_w_tr": 3714.8
+ },
+ {
+  "Storm_ID": 195,
+  "Count": 1,
+  "Area_tr": 0.258356,
+  "Length_tr": 6.2,
+  "Mean_w_tr": 120.2,
+  "Max_w_tr": 299.7
+ },
+ {
+  "Storm_ID": 196,
+  "Count": 1,
+  "Area_tr": 0.141119,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 96.5,
+  "Max_w_tr": 129.1
+ },
+ {
+  "Storm_ID": 197,
+  "Count": 1,
+  "Area_tr": 2.43279,
+  "Length_tr": 20.2,
+  "Mean_w_tr": 216.9,
+  "Max_w_tr": 742.1
+ },
+ {
+  "Storm_ID": 198,
+  "Count": 1,
+  "Area_tr": 0.319454,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 175.3,
+  "Max_w_tr": 284.1
+ },
+ {
+  "Storm_ID": 199,
+  "Count": 1,
+  "Area_tr": 0.919756,
+  "Length_tr": 5.0,
+  "Mean_w_tr": 228.5,
+  "Max_w_tr": 469.2
+ },
+ {
+  "Storm_ID": 200,
+  "Count": 1,
+  "Area_tr": 3.96142,
+  "Length_tr": 38.2,
+  "Mean_w_tr": 2533.7,
+  "Max_w_tr": 9756.6
+ },
+ {
+  "Storm_ID": 201,
+  "Count": 1,
+  "Area_tr": 0.260988,
+  "Length_tr": 5.5,
+  "Mean_w_tr": 84.0,
+  "Max_w_tr": 141.8
+ },
+ {
+  "Storm_ID": 202,
+  "Count": 1,
+  "Area_tr": 12.4792,
+  "Length_tr": 17.1,
+  "Mean_w_tr": 2833.5,
+  "Max_w_tr": 5736.2
+ },
+ {
+  "Storm_ID": 203,
+  "Count": 1,
+  "Area_tr": 1.19414,
+  "Length_tr": 6.8,
+  "Mean_w_tr": 237.9,
+  "Max_w_tr": 425.0
+ },
+ {
+  "Storm_ID": 204,
+  "Count": 1,
+  "Area_tr": 0.26616,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 136.5,
+  "Max_w_tr": 844.5
+ },
+ {
+  "Storm_ID": 205,
+  "Count": 1,
+  "Area_tr": 1.15656,
+  "Length_tr": 11.2,
+  "Mean_w_tr": 438.9,
+  "Max_w_tr": 1445.3
+ },
+ {
+  "Storm_ID": 206,
+  "Count": 1,
+  "Area_tr": 0.815154,
+  "Length_tr": 11.7,
+  "Mean_w_tr": 524.4,
+  "Max_w_tr": 4436.1
+ },
+ {
+  "Storm_ID": 207,
+  "Count": 1,
+  "Area_tr": 2.66114,
+  "Length_tr": 10.8,
+  "Mean_w_tr": 1223.0,
+  "Max_w_tr": 2586.7
+ },
+ {
+  "Storm_ID": 208,
+  "Count": 2,
+  "Area_tr": 0.496897,
+  "Length_tr": 53.8,
+  "Mean_w_tr": 119.9,
+  "Max_w_tr": 281.7
+ },
+ {
+  "Storm_ID": 209,
+  "Count": 1,
+  "Area_tr": 0.161853,
+  "Length_tr": 10.6,
+  "Mean_w_tr": 54.7,
+  "Max_w_tr": 104.2
+ },
+ {
+  "Storm_ID": 210,
+  "Count": 1,
+  "Area_tr": 0.778216,
+  "Length_tr": 8.5,
+  "Mean_w_tr": 153.9,
+  "Max_w_tr": 439.2
+ },
+ {
+  "Storm_ID": 211,
+  "Count": 1,
+  "Area_tr": 3.55708,
+  "Length_tr": 15.4,
+  "Mean_w_tr": 1387.4,
+  "Max_w_tr": 4756.0
+ },
+ {
+  "Storm_ID": 212,
+  "Count": 1,
+  "Area_tr": 0.218039,
+  "Length_tr": 8.9,
+  "Mean_w_tr": 77.5,
+  "Max_w_tr": 160.3
+ },
+ {
+  "Storm_ID": 213,
+  "Count": 1,
+  "Area_tr": 0.591835,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 263.7,
+  "Max_w_tr": 689.2
+ },
+ {
+  "Storm_ID": 214,
+  "Count": 1,
+  "Area_tr": 0.769823,
+  "Length_tr": 9.1,
+  "Mean_w_tr": 955.5,
+  "Max_w_tr": 4043.9
+ },
+ {
+  "Storm_ID": 215,
+  "Count": 1,
+  "Area_tr": 0.970895,
+  "Length_tr": 10.9,
+  "Mean_w_tr": 306.3,
+  "Max_w_tr": 1130.4
+ },
+ {
+  "Storm_ID": 216,
+  "Count": 2,
+  "Area_tr": 2.86808,
+  "Length_tr": 103.9,
+  "Mean_w_tr": 1728.1,
+  "Max_w_tr": 7310.5
+ },
+ {
+  "Storm_ID": 217,
+  "Count": 1,
+  "Area_tr": 21.068,
+  "Length_tr": 17.1,
+  "Mean_w_tr": 6984.6,
+  "Max_w_tr": 11455.0
+ },
+ {
+  "Storm_ID": 218,
+  "Count": 1,
+  "Area_tr": 0.350518,
+  "Length_tr": 7.1,
+  "Mean_w_tr": 98.0,
+  "Max_w_tr": 236.6
+ },
+ {
+  "Storm_ID": 219,
+  "Count": 1,
+  "Area_tr": 0.751704,
+  "Length_tr": 9.9,
+  "Mean_w_tr": 105.3,
+  "Max_w_tr": 259.0
+ },
+ {
+  "Storm_ID": 220,
+  "Count": 1,
+  "Area_tr": 1.65631,
+  "Length_tr": 6.6,
+  "Mean_w_tr": 853.4,
+  "Max_w_tr": 2863.9
+ },
+ {
+  "Storm_ID": 221,
+  "Count": 1,
+  "Area_tr": 22.478,
+  "Length_tr": 48.8,
+  "Mean_w_tr": 2730.9,
+  "Max_w_tr": 11112.0
+ },
+ {
+  "Storm_ID": 222,
+  "Count": 1,
+  "Area_tr": 0.0931774,
+  "Length_tr": 2.2,
+  "Mean_w_tr": 51.4,
+  "Max_w_tr": 117.5
+ },
+ {
+  "Storm_ID": 223,
+  "Count": 1,
+  "Area_tr": 0.189378,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 94.6,
+  "Max_w_tr": 129.7
+ },
+ {
+  "Storm_ID": 224,
+  "Count": 1,
+  "Area_tr": 0.5843,
+  "Length_tr": 7.2,
+  "Mean_w_tr": 141.4,
+  "Max_w_tr": 486.8
+ },
+ {
+  "Storm_ID": 225,
+  "Count": 1,
+  "Area_tr": 0.28127,
+  "Length_tr": 5.9,
+  "Mean_w_tr": 77.9,
+  "Max_w_tr": 169.4
+ },
+ {
+  "Storm_ID": 226,
+  "Count": 1,
+  "Area_tr": 1.34285,
+  "Length_tr": 15.2,
+  "Mean_w_tr": 146.0,
+  "Max_w_tr": 317.5
+ },
+ {
+  "Storm_ID": 227,
+  "Count": 1,
+  "Area_tr": 10.135,
+  "Length_tr": 58.4,
+  "Mean_w_tr": 2055.4,
+  "Max_w_tr": 10771.1
+ },
+ {
+  "Storm_ID": 228,
+  "Count": 1,
+  "Area_tr": 3.3979,
+  "Length_tr": 48.9,
+  "Mean_w_tr": 471.5,
+  "Max_w_tr": 4808.5
+ },
+ {
+  "Storm_ID": 229,
+  "Count": 1,
+  "Area_tr": 2.02264,
+  "Length_tr": 16.1,
+  "Mean_w_tr": 614.0,
+  "Max_w_tr": 2187.7
+ },
+ {
+  "Storm_ID": 230,
+  "Count": 1,
+  "Area_tr": 0.146673,
+  "Length_tr": 3.2,
+  "Mean_w_tr": 101.0,
+  "Max_w_tr": 122.7
+ },
+ {
+  "Storm_ID": 231,
+  "Count": 2,
+  "Area_tr": 5.10973,
+  "Length_tr": 190.8,
+  "Mean_w_tr": 1134.0,
+  "Max_w_tr": 5656.3
+ },
+ {
+  "Storm_ID": 232,
+  "Count": 3,
+  "Area_tr": 9.38047,
+  "Length_tr": 85.3,
+  "Mean_w_tr": 1008.0,
+  "Max_w_tr": 7518.2
+ },
+ {
+  "Storm_ID": 233,
+  "Count": 1,
+  "Area_tr": 0.195914,
+  "Length_tr": 3.2,
+  "Mean_w_tr": 88.8,
+  "Max_w_tr": 163.2
+ },
+ {
+  "Storm_ID": 234,
+  "Count": 1,
+  "Area_tr": 1.04449,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 215.9,
+  "Max_w_tr": 585.4
+ },
+ {
+  "Storm_ID": 235,
+  "Count": 1,
+  "Area_tr": 0.238604,
+  "Length_tr": 2.4,
+  "Mean_w_tr": 130.9,
+  "Max_w_tr": 255.8
+ },
+ {
+  "Storm_ID": 236,
+  "Count": 3,
+  "Area_tr": 12.5976,
+  "Length_tr": 63.7,
+  "Mean_w_tr": 3056.4,
+  "Max_w_tr": 23223.2
+ },
+ {
+  "Storm_ID": 237,
+  "Count": 2,
+  "Area_tr": 1.23441,
+  "Length_tr": 56.3,
+  "Mean_w_tr": 174.9,
+  "Max_w_tr": 533.7
+ },
+ {
+  "Storm_ID": 238,
+  "Count": 1,
+  "Area_tr": 1.10862,
+  "Length_tr": 15.3,
+  "Mean_w_tr": 121.2,
+  "Max_w_tr": 340.4
+ },
+ {
+  "Storm_ID": 239,
+  "Count": 1,
+  "Area_tr": 0.784292,
+  "Length_tr": 4.0,
+  "Mean_w_tr": 304.5,
+  "Max_w_tr": 645.9
+ },
+ {
+  "Storm_ID": 240,
+  "Count": 1,
+  "Area_tr": 0.527522,
+  "Length_tr": 6.6,
+  "Mean_w_tr": 131.7,
+  "Max_w_tr": 298.4
+ },
+ {
+  "Storm_ID": 241,
+  "Count": 1,
+  "Area_tr": 0.575944,
+  "Length_tr": 12.8,
+  "Mean_w_tr": 123.8,
+  "Max_w_tr": 421.2
+ },
+ {
+  "Storm_ID": 242,
+  "Count": 1,
+  "Area_tr": 0.340934,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 141.0,
+  "Max_w_tr": 306.8
+ },
+ {
+  "Storm_ID": 243,
+  "Count": 1,
+  "Area_tr": 0.177672,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 104.6,
+  "Max_w_tr": 187.7
+ },
+ {
+  "Storm_ID": 244,
+  "Count": 1,
+  "Area_tr": 1.32667,
+  "Length_tr": 10.6,
+  "Mean_w_tr": 426.4,
+  "Max_w_tr": 1748.5
+ },
+ {
+  "Storm_ID": 245,
+  "Count": 1,
+  "Area_tr": 1.47158,
+  "Length_tr": 9.1,
+  "Mean_w_tr": 540.2,
+  "Max_w_tr": 2154.1
+ },
+ {
+  "Storm_ID": 246,
+  "Count": 2,
+  "Area_tr": 26.0689,
+  "Length_tr": 71.4,
+  "Mean_w_tr": 1224.7,
+  "Max_w_tr": 2966.6
+ },
+ {
+  "Storm_ID": 247,
+  "Count": 1,
+  "Area_tr": 1.21829,
+  "Length_tr": 7.9,
+  "Mean_w_tr": 208.9,
+  "Max_w_tr": 578.5
+ },
+ {
+  "Storm_ID": 248,
+  "Count": 1,
+  "Area_tr": 0.414792,
+  "Length_tr": 7.6,
+  "Mean_w_tr": 111.4,
+  "Max_w_tr": 243.3
+ },
+ {
+  "Storm_ID": 249,
+  "Count": 1,
+  "Area_tr": 1.9767,
+  "Length_tr": 10.0,
+  "Mean_w_tr": 396.4,
+  "Max_w_tr": 1625.2
+ },
+ {
+  "Storm_ID": 250,
+  "Count": 3,
+  "Area_tr": 1.7603,
+  "Length_tr": 69.2,
+  "Mean_w_tr": 853.6,
+  "Max_w_tr": 7934.0
+ },
+ {
+  "Storm_ID": 251,
+  "Count": 1,
+  "Area_tr": 3.50195,
+  "Length_tr": 15.9,
+  "Mean_w_tr": 573.7,
+  "Max_w_tr": 2117.9
+ },
+ {
+  "Storm_ID": 252,
+  "Count": 1,
+  "Area_tr": 0.189352,
+  "Length_tr": 4.4,
+  "Mean_w_tr": 108.9,
+  "Max_w_tr": 352.1
+ },
+ {
+  "Storm_ID": 253,
+  "Count": 1,
+  "Area_tr": 0.884277,
+  "Length_tr": 4.7,
+  "Mean_w_tr": 209.6,
+  "Max_w_tr": 371.3
+ },
+ {
+  "Storm_ID": 254,
+  "Count": 1,
+  "Area_tr": 0.168708,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 75.2,
+  "Max_w_tr": 139.0
+ },
+ {
+  "Storm_ID": 255,
+  "Count": 17,
+  "Area_tr": 27.4542,
+  "Length_tr": 276.4,
+  "Mean_w_tr": 1467.9,
+  "Max_w_tr": 22431.7
+ },
+ {
+  "Storm_ID": 256,
+  "Count": 1,
+  "Area_tr": 0.118799,
+  "Length_tr": 7.1,
+  "Mean_w_tr": 57.7,
+  "Max_w_tr": 103.3
+ },
+ {
+  "Storm_ID": 257,
+  "Count": 1,
+  "Area_tr": 0.46358,
+  "Length_tr": 6.3,
+  "Mean_w_tr": 102.7,
+  "Max_w_tr": 259.2
+ },
+ {
+  "Storm_ID": 258,
+  "Count": 1,
+  "Area_tr": 0.243878,
+  "Length_tr": 2.6,
+  "Mean_w_tr": 110.5,
+  "Max_w_tr": 187.2
+ },
+ {
+  "Storm_ID": 259,
+  "Count": 2,
+  "Area_tr": 1.75142,
+  "Length_tr": 43.1,
+  "Mean_w_tr": 1442.0,
+  "Max_w_tr": 12802.2
+ },
+ {
+  "Storm_ID": 260,
+  "Count": 1,
+  "Area_tr": 0.515146,
+  "Length_tr": 3.4,
+  "Mean_w_tr": 208.2,
+  "Max_w_tr": 563.0
+ },
+ {
+  "Storm_ID": 261,
+  "Count": 1,
+  "Area_tr": 0.740654,
+  "Length_tr": 1.7,
+  "Mean_w_tr": 755.3,
+  "Max_w_tr": 1014.7
+ },
+ {
+  "Storm_ID": 262,
+  "Count": 1,
+  "Area_tr": 1.53115,
+  "Length_tr": 10.3,
+  "Mean_w_tr": 360.3,
+  "Max_w_tr": 1295.4
+ },
+ {
+  "Storm_ID": 263,
+  "Count": 1,
+  "Area_tr": 0.294496,
+  "Length_tr": 2.4,
+  "Mean_w_tr": 142.6,
+  "Max_w_tr": 282.4
+ },
+ {
+  "Storm_ID": 264,
+  "Count": 1,
+  "Area_tr": 0.434195,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 204.7,
+  "Max_w_tr": 289.7
+ },
+ {
+  "Storm_ID": 265,
+  "Count": 1,
+  "Area_tr": 0.286124,
+  "Length_tr": 19.2,
+  "Mean_w_tr": 72.4,
+  "Max_w_tr": 295.0
+ },
+ {
+  "Storm_ID": 266,
+  "Count": 3,
+  "Area_tr": 1.24431,
+  "Length_tr": 79.3,
+  "Mean_w_tr": 113.9,
+  "Max_w_tr": 773.6
+ },
+ {
+  "Storm_ID": 267,
+  "Count": 1,
+  "Area_tr": 0.0957814,
+  "Length_tr": 1.4,
+  "Mean_w_tr": 96.6,
+  "Max_w_tr": 159.2
+ },
+ {
+  "Storm_ID": 268,
+  "Count": 4,
+  "Area_tr": 8.09955,
+  "Length_tr": 56.3,
+  "Mean_w_tr": 3992.1,
+  "Max_w_tr": 21525.7
+ },
+ {
+  "Storm_ID": 269,
+  "Count": 1,
+  "Area_tr": 0.273761,
+  "Length_tr": 6.0,
+  "Mean_w_tr": 104.7,
+  "Max_w_tr": 283.8
+ },
+ {
+  "Storm_ID": 270,
+  "Count": 1,
+  "Area_tr": 0.770065,
+  "Length_tr": 4.9,
+  "Mean_w_tr": 296.1,
+  "Max_w_tr": 615.2
+ },
+ {
+  "Storm_ID": 271,
+  "Count": 1,
+  "Area_tr": 0.676055,
+  "Length_tr": 15.7,
+  "Mean_w_tr": 104.6,
+  "Max_w_tr": 439.9
+ },
+ {
+  "Storm_ID": 272,
+  "Count": 1,
+  "Area_tr": 1.27605,
+  "Length_tr": 12.2,
+  "Mean_w_tr": 477.2,
+  "Max_w_tr": 1899.6
+ },
+ {
+  "Storm_ID": 273,
+  "Count": 1,
+  "Area_tr": 0.147671,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 98.2,
+  "Max_w_tr": 123.3
+ },
+ {
+  "Storm_ID": 274,
+  "Count": 1,
+  "Area_tr": 2.13183,
+  "Length_tr": 8.1,
+  "Mean_w_tr": 925.5,
+  "Max_w_tr": 2488.4
+ },
+ {
+  "Storm_ID": 275,
+  "Count": 8,
+  "Area_tr": 123.873,
+  "Length_tr": 283.0,
+  "Mean_w_tr": 8152.4,
+  "Max_w_tr": 43206.5
+ },
+ {
+  "Storm_ID": 276,
+  "Count": 1,
+  "Area_tr": 0.842471,
+  "Length_tr": 4.0,
+  "Mean_w_tr": 267.9,
+  "Max_w_tr": 643.4
+ },
+ {
+  "Storm_ID": 277,
+  "Count": 1,
+  "Area_tr": 3.65499,
+  "Length_tr": 26.7,
+  "Mean_w_tr": 232.9,
+  "Max_w_tr": 766.0
+ },
+ {
+  "Storm_ID": 278,
+  "Count": 1,
+  "Area_tr": 0.293774,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 129.5,
+  "Max_w_tr": 196.6
+ },
+ {
+  "Storm_ID": 279,
+  "Count": 3,
+  "Area_tr": 67.9121,
+  "Length_tr": 75.1,
+  "Mean_w_tr": 9520.0,
+  "Max_w_tr": 19896.7
+ },
+ {
+  "Storm_ID": 280,
+  "Count": 1,
+  "Area_tr": 0.199264,
+  "Length_tr": 3.4,
+  "Mean_w_tr": 97.1,
+  "Max_w_tr": 173.1
+ },
+ {
+  "Storm_ID": 281,
+  "Count": 1,
+  "Area_tr": 2.05959,
+  "Length_tr": 13.5,
+  "Mean_w_tr": 449.8,
+  "Max_w_tr": 1935.8
+ },
+ {
+  "Storm_ID": 282,
+  "Count": 2,
+  "Area_tr": 0.500013,
+  "Length_tr": 14.6,
+  "Mean_w_tr": 103.5,
+  "Max_w_tr": 225.8
+ },
+ {
+  "Storm_ID": 283,
+  "Count": 5,
+  "Area_tr": 5.90792,
+  "Length_tr": 49.6,
+  "Mean_w_tr": 1601.7,
+  "Max_w_tr": 5990.2
+ },
+ {
+  "Storm_ID": 284,
+  "Count": 1,
+  "Area_tr": 0.80801,
+  "Length_tr": 5.1,
+  "Mean_w_tr": 543.8,
+  "Max_w_tr": 1285.8
+ },
+ {
+  "Storm_ID": 285,
+  "Count": 2,
+  "Area_tr": 0.557322,
+  "Length_tr": 29.8,
+  "Mean_w_tr": 128.6,
+  "Max_w_tr": 334.6
+ },
+ {
+  "Storm_ID": 286,
+  "Count": 1,
+  "Area_tr": 0.0539026,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 42.1,
+  "Max_w_tr": 112.0
+ },
+ {
+  "Storm_ID": 287,
+  "Count": 1,
+  "Area_tr": 0.727727,
+  "Length_tr": 11.8,
+  "Mean_w_tr": 189.9,
+  "Max_w_tr": 767.4
+ },
+ {
+  "Storm_ID": 288,
+  "Count": 1,
+  "Area_tr": 0.10339,
+  "Length_tr": 4.4,
+  "Mean_w_tr": 58.7,
+  "Max_w_tr": 91.3
+ },
+ {
+  "Storm_ID": 289,
+  "Count": 1,
+  "Area_tr": 0.320195,
+  "Length_tr": 15.6,
+  "Mean_w_tr": 208.8,
+  "Max_w_tr": 2169.7
+ },
+ {
+  "Storm_ID": 290,
+  "Count": 1,
+  "Area_tr": 0.275487,
+  "Length_tr": 3.9,
+  "Mean_w_tr": 223.5,
+  "Max_w_tr": 1121.9
+ },
+ {
+  "Storm_ID": 291,
+  "Count": 1,
+  "Area_tr": 0.33483,
+  "Length_tr": 21.1,
+  "Mean_w_tr": 151.0,
+  "Max_w_tr": 490.4
+ },
+ {
+  "Storm_ID": 292,
+  "Count": 3,
+  "Area_tr": 1.84379,
+  "Length_tr": 59.1,
+  "Mean_w_tr": 146.5,
+  "Max_w_tr": 488.8
+ },
+ {
+  "Storm_ID": 293,
+  "Count": 1,
+  "Area_tr": 3.30017,
+  "Length_tr": 9.7,
+  "Mean_w_tr": 1473.6,
+  "Max_w_tr": 4541.4
+ },
+ {
+  "Storm_ID": 294,
+  "Count": 2,
+  "Area_tr": 0.804899,
+  "Length_tr": 52.8,
+  "Mean_w_tr": 114.9,
+  "Max_w_tr": 343.8
+ },
+ {
+  "Storm_ID": 295,
+  "Count": 1,
+  "Area_tr": 0.165252,
+  "Length_tr": 3.6,
+  "Mean_w_tr": 81.3,
+  "Max_w_tr": 172.5
+ },
+ {
+  "Storm_ID": 296,
+  "Count": 1,
+  "Area_tr": 2.40756,
+  "Length_tr": 43.5,
+  "Mean_w_tr": 1131.8,
+  "Max_w_tr": 8698.7
+ },
+ {
+  "Storm_ID": 297,
+  "Count": 3,
+  "Area_tr": 490.761,
+  "Length_tr": 544.6,
+  "Mean_w_tr": 21297.1,
+  "Max_w_tr": 69518.4
+ },
+ {
+  "Storm_ID": 298,
+  "Count": 1,
+  "Area_tr": 11.8007,
+  "Length_tr": 39.5,
+  "Mean_w_tr": 1559.8,
+  "Max_w_tr": 6554.4
+ },
+ {
+  "Storm_ID": 299,
+  "Count": 4,
+  "Area_tr": 34.2105,
+  "Length_tr": 77.5,
+  "Mean_w_tr": 1811.2,
+  "Max_w_tr": 10511.3
+ },
+ {
+  "Storm_ID": 300,
+  "Count": 1,
+  "Area_tr": 0.217668,
+  "Length_tr": 1.6,
+  "Mean_w_tr": 135.3,
+  "Max_w_tr": 276.7
+ },
+ {
+  "Storm_ID": 301,
+  "Count": 2,
+  "Area_tr": 3.0729,
+  "Length_tr": 51.5,
+  "Mean_w_tr": 229.6,
+  "Max_w_tr": 694.7
+ },
+ {
+  "Storm_ID": 302,
+  "Count": 5,
+  "Area_tr": 5.14729,
+  "Length_tr": 42.7,
+  "Mean_w_tr": 692.0,
+  "Max_w_tr": 9651.0
+ },
+ {
+  "Storm_ID": 303,
+  "Count": 1,
+  "Area_tr": 0.634808,
+  "Length_tr": 6.8,
+  "Mean_w_tr": 392.3,
+  "Max_w_tr": 1259.9
+ },
+ {
+  "Storm_ID": 304,
+  "Count": 3,
+  "Area_tr": 14.9758,
+  "Length_tr": 143.9,
+  "Mean_w_tr": 461.9,
+  "Max_w_tr": 8613.5
+ },
+ {
+  "Storm_ID": 305,
+  "Count": 1,
+  "Area_tr": 5.45084,
+  "Length_tr": 11.7,
+  "Mean_w_tr": 1365.3,
+  "Max_w_tr": 3276.1
+ },
+ {
+  "Storm_ID": 306,
+  "Count": 1,
+  "Area_tr": 3.09781,
+  "Length_tr": 24.5,
+  "Mean_w_tr": 602.7,
+  "Max_w_tr": 2548.4
+ },
+ {
+  "Storm_ID": 307,
+  "Count": 1,
+  "Area_tr": 1.94871,
+  "Length_tr": 20.8,
+  "Mean_w_tr": 243.0,
+  "Max_w_tr": 999.3
+ },
+ {
+  "Storm_ID": 308,
+  "Count": 1,
+  "Area_tr": 0.527053,
+  "Length_tr": 5.1,
+  "Mean_w_tr": 315.8,
+  "Max_w_tr": 956.3
+ },
+ {
+  "Storm_ID": 309,
+  "Count": 1,
+  "Area_tr": 0.163426,
+  "Length_tr": 5.7,
+  "Mean_w_tr": 108.6,
+  "Max_w_tr": 139.4
+ },
+ {
+  "Storm_ID": 310,
+  "Count": 1,
+  "Area_tr": 1.36724,
+  "Length_tr": 16.1,
+  "Mean_w_tr": 919.2,
+  "Max_w_tr": 5398.7
+ },
+ {
+  "Storm_ID": 311,
+  "Count": 4,
+  "Area_tr": 639.1,
+  "Length_tr": 393.7,
+  "Mean_w_tr": 13205.8,
+  "Max_w_tr": 39830.4
+ },
+ {
+  "Storm_ID": 312,
+  "Count": 2,
+  "Area_tr": 2.58403,
+  "Length_tr": 39.5,
+  "Mean_w_tr": 216.1,
+  "Max_w_tr": 854.6
+ },
+ {
+  "Storm_ID": 313,
+  "Count": 1,
+  "Area_tr": 0.559264,
+  "Length_tr": 2.3,
+  "Mean_w_tr": 550.3,
+  "Max_w_tr": 1317.0
+ },
+ {
+  "Storm_ID": 314,
+  "Count": 3,
+  "Area_tr": 29.2633,
+  "Length_tr": 297.7,
+  "Mean_w_tr": 1838.4,
+  "Max_w_tr": 14361.7
+ },
+ {
+  "Storm_ID": 315,
+  "Count": 1,
+  "Area_tr": 0.356747,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 231.7,
+  "Max_w_tr": 889.6
+ },
+ {
+  "Storm_ID": 316,
+  "Count": 5,
+  "Area_tr": 15.8347,
+  "Length_tr": 119.5,
+  "Mean_w_tr": 6087.7,
+  "Max_w_tr": 33549.6
+ },
+ {
+  "Storm_ID": 317,
+  "Count": 1,
+  "Area_tr": 0.914536,
+  "Length_tr": 7.5,
+  "Mean_w_tr": 180.3,
+  "Max_w_tr": 402.5
+ },
+ {
+  "Storm_ID": 318,
+  "Count": 1,
+  "Area_tr": 0.726974,
+  "Length_tr": 6.6,
+  "Mean_w_tr": 294.0,
+  "Max_w_tr": 1250.4
+ },
+ {
+  "Storm_ID": 319,
+  "Count": 1,
+  "Area_tr": 1.00683,
+  "Length_tr": 35.9,
+  "Mean_w_tr": 320.3,
+  "Max_w_tr": 3095.9
+ },
+ {
+  "Storm_ID": 320,
+  "Count": 1,
+  "Area_tr": 2.82887,
+  "Length_tr": 21.2,
+  "Mean_w_tr": 1385.9,
+  "Max_w_tr": 6343.9
+ },
+ {
+  "Storm_ID": 321,
+  "Count": 1,
+  "Area_tr": 0.532929,
+  "Length_tr": 2.4,
+  "Mean_w_tr": 652.7,
+  "Max_w_tr": 1384.7
+ },
+ {
+  "Storm_ID": 322,
+  "Count": 1,
+  "Area_tr": 0.581995,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 443.1,
+  "Max_w_tr": 1970.5
+ },
+ {
+  "Storm_ID": 323,
+  "Count": 1,
+  "Area_tr": 0.443101,
+  "Length_tr": 5.7,
+  "Mean_w_tr": 433.7,
+  "Max_w_tr": 1906.8
+ },
+ {
+  "Storm_ID": 324,
+  "Count": 1,
+  "Area_tr": 0.658488,
+  "Length_tr": 6.1,
+  "Mean_w_tr": 308.2,
+  "Max_w_tr": 1642.2
+ },
+ {
+  "Storm_ID": 325,
+  "Count": 1,
+  "Area_tr": 0.978341,
+  "Length_tr": 16.9,
+  "Mean_w_tr": 647.1,
+  "Max_w_tr": 4558.7
+ },
+ {
+  "Storm_ID": 326,
+  "Count": 1,
+  "Area_tr": 0.585535,
+  "Length_tr": 15.9,
+  "Mean_w_tr": 165.5,
+  "Max_w_tr": 473.4
+ },
+ {
+  "Storm_ID": 327,
+  "Count": 1,
+  "Area_tr": 0.515503,
+  "Length_tr": 3.8,
+  "Mean_w_tr": 205.8,
+  "Max_w_tr": 450.8
+ },
+ {
+  "Storm_ID": 328,
+  "Count": 1,
+  "Area_tr": 0.456218,
+  "Length_tr": 6.4,
+  "Mean_w_tr": 168.9,
+  "Max_w_tr": 274.7
+ },
+ {
+  "Storm_ID": 329,
+  "Count": 2,
+  "Area_tr": 0.291612,
+  "Length_tr": 28.4,
+  "Mean_w_tr": 82.9,
+  "Max_w_tr": 176.8
+ },
+ {
+  "Storm_ID": 330,
+  "Count": 1,
+  "Area_tr": 0.600927,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 202.1,
+  "Max_w_tr": 489.0
+ },
+ {
+  "Storm_ID": 331,
+  "Count": 1,
+  "Area_tr": 0.574835,
+  "Length_tr": 4.6,
+  "Mean_w_tr": 288.1,
+  "Max_w_tr": 888.7
+ },
+ {
+  "Storm_ID": 332,
+  "Count": 1,
+  "Area_tr": 0.299428,
+  "Length_tr": 6.6,
+  "Mean_w_tr": 145.2,
+  "Max_w_tr": 654.9
+ },
+ {
+  "Storm_ID": 333,
+  "Count": 1,
+  "Area_tr": 0.781034,
+  "Length_tr": 6.2,
+  "Mean_w_tr": 142.8,
+  "Max_w_tr": 350.0
+ },
+ {
+  "Storm_ID": 334,
+  "Count": 1,
+  "Area_tr": 0.306641,
+  "Length_tr": 7.1,
+  "Mean_w_tr": 104.1,
+  "Max_w_tr": 398.9
+ },
+ {
+  "Storm_ID": 335,
+  "Count": 1,
+  "Area_tr": 0.319762,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 138.7,
+  "Max_w_tr": 312.0
+ },
+ {
+  "Storm_ID": 336,
+  "Count": 2,
+  "Area_tr": 11.0251,
+  "Length_tr": 77.0,
+  "Mean_w_tr": 1307.7,
+  "Max_w_tr": 3893.0
+ },
+ {
+  "Storm_ID": 337,
+  "Count": 3,
+  "Area_tr": 0.800473,
+  "Length_tr": 20.1,
+  "Mean_w_tr": 165.4,
+  "Max_w_tr": 589.6
+ },
+ {
+  "Storm_ID": 338,
+  "Count": 1,
+  "Area_tr": 0.0883698,
+  "Length_tr": 3.2,
+  "Mean_w_tr": 113.6,
+  "Max_w_tr": 168.0
+ },
+ {
+  "Storm_ID": 339,
+  "Count": 1,
+  "Area_tr": 0.211794,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 62.4,
+  "Max_w_tr": 107.2
+ },
+ {
+  "Storm_ID": 340,
+  "Count": 1,
+  "Area_tr": 0.567115,
+  "Length_tr": 13.2,
+  "Mean_w_tr": 98.9,
+  "Max_w_tr": 435.5
+ },
+ {
+  "Storm_ID": 341,
+  "Count": 1,
+  "Area_tr": 0.0858932,
+  "Length_tr": 0.8,
+  "Mean_w_tr": 100.1,
+  "Max_w_tr": 134.3
+ },
+ {
+  "Storm_ID": 342,
+  "Count": 1,
+  "Area_tr": 0.92784,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 344.5,
+  "Max_w_tr": 851.8
+ },
+ {
+  "Storm_ID": 343,
+  "Count": 1,
+  "Area_tr": 0.283486,
+  "Length_tr": 19.3,
+  "Mean_w_tr": 98.2,
+  "Max_w_tr": 327.3
+ },
+ {
+  "Storm_ID": 344,
+  "Count": 1,
+  "Area_tr": 0.265276,
+  "Length_tr": 2.2,
+  "Mean_w_tr": 132.0,
+  "Max_w_tr": 252.3
+ },
+ {
+  "Storm_ID": 345,
+  "Count": 1,
+  "Area_tr": 0.111808,
+  "Length_tr": 2.0,
+  "Mean_w_tr": 81.6,
+  "Max_w_tr": 151.2
+ },
+ {
+  "Storm_ID": 346,
+  "Count": 1,
+  "Area_tr": 0.579769,
+  "Length_tr": 6.3,
+  "Mean_w_tr": 238.3,
+  "Max_w_tr": 1218.2
+ },
+ {
+  "Storm_ID": 347,
+  "Count": 1,
+  "Area_tr": 0.387086,
+  "Length_tr": 3.1,
+  "Mean_w_tr": 362.9,
+  "Max_w_tr": 694.7
+ },
+ {
+  "Storm_ID": 348,
+  "Count": 1,
+  "Area_tr": 0.13759,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 85.9,
+  "Max_w_tr": 145.9
+ },
+ {
+  "Storm_ID": 349,
+  "Count": 2,
+  "Area_tr": 0.22993,
+  "Length_tr": 10.8,
+  "Mean_w_tr": 82.7,
+  "Max_w_tr": 160.9
+ },
+ {
+  "Storm_ID": 350,
+  "Count": 1,
+  "Area_tr": 0.242325,
+  "Length_tr": 5.0,
+  "Mean_w_tr": 214.6,
+  "Max_w_tr": 768.4
+ },
+ {
+  "Storm_ID": 351,
+  "Count": 1,
+  "Area_tr": 1.28743,
+  "Length_tr": 9.9,
+  "Mean_w_tr": 560.6,
+  "Max_w_tr": 3219.0
+ },
+ {
+  "Storm_ID": 352,
+  "Count": 1,
+  "Area_tr": 0.197451,
+  "Length_tr": 2.3,
+  "Mean_w_tr": 107.7,
+  "Max_w_tr": 190.2
+ },
+ {
+  "Storm_ID": 353,
+  "Count": 1,
+  "Area_tr": 9.87129,
+  "Length_tr": 20.0,
+  "Mean_w_tr": 756.2,
+  "Max_w_tr": 1666.6
+ },
+ {
+  "Storm_ID": 354,
+  "Count": 3,
+  "Area_tr": 3.52068,
+  "Length_tr": 117.6,
+  "Mean_w_tr": 594.3,
+  "Max_w_tr": 8857.2
+ },
+ {
+  "Storm_ID": 355,
+  "Count": 1,
+  "Area_tr": 0.458246,
+  "Length_tr": 1.7,
+  "Mean_w_tr": 365.4,
+  "Max_w_tr": 746.9
+ },
+ {
+  "Storm_ID": 356,
+  "Count": 2,
+  "Area_tr": 8.9587,
+  "Length_tr": 153.8,
+  "Mean_w_tr": 879.3,
+  "Max_w_tr": 3824.2
+ },
+ {
+  "Storm_ID": 357,
+  "Count": 2,
+  "Area_tr": 1.05076,
+  "Length_tr": 60.5,
+  "Mean_w_tr": 985.2,
+  "Max_w_tr": 12598.0
+ },
+ {
+  "Storm_ID": 358,
+  "Count": 2,
+  "Area_tr": 0.388358,
+  "Length_tr": 12.4,
+  "Mean_w_tr": 95.4,
+  "Max_w_tr": 236.9
+ },
+ {
+  "Storm_ID": 359,
+  "Count": 2,
+  "Area_tr": 1.42358,
+  "Length_tr": 31.7,
+  "Mean_w_tr": 305.0,
+  "Max_w_tr": 3358.5
+ },
+ {
+  "Storm_ID": 360,
+  "Count": 1,
+  "Area_tr": 0.700885,
+  "Length_tr": 5.3,
+  "Mean_w_tr": 333.3,
+  "Max_w_tr": 710.8
+ },
+ {
+  "Storm_ID": 361,
+  "Count": 6,
+  "Area_tr": 89.4213,
+  "Length_tr": 202.1,
+  "Mean_w_tr": 10877.8,
+  "Max_w_tr": 50377.3
+ },
+ {
+  "Storm_ID": 362,
+  "Count": 7,
+  "Area_tr": 101.833,
+  "Length_tr": 308.9,
+  "Mean_w_tr": 10562.0,
+  "Max_w_tr": 50075.4
+ },
+ {
+  "Storm_ID": 363,
+  "Count": 1,
+  "Area_tr": 3.99947,
+  "Length_tr": 17.3,
+  "Mean_w_tr": 1367.6,
+  "Max_w_tr": 4286.4
+ },
+ {
+  "Storm_ID": 364,
+  "Count": 2,
+  "Area_tr": 1.05746,
+  "Length_tr": 74.9,
+  "Mean_w_tr": 259.4,
+  "Max_w_tr": 2250.6
+ },
+ {
+  "Storm_ID": 365,
+  "Count": 2,
+  "Area_tr": 2.27197,
+  "Length_tr": 96.4,
+  "Mean_w_tr": 511.6,
+  "Max_w_tr": 1646.7
+ },
+ {
+  "Storm_ID": 366,
+  "Count": 1,
+  "Area_tr": 0.536722,
+  "Length_tr": 6.4,
+  "Mean_w_tr": 413.4,
+  "Max_w_tr": 1667.5
+ },
+ {
+  "Storm_ID": 367,
+  "Count": 1,
+  "Area_tr": 12.924,
+  "Length_tr": 78.9,
+  "Mean_w_tr": 395.2,
+  "Max_w_tr": 1172.1
+ },
+ {
+  "Storm_ID": 368,
+  "Count": 1,
+  "Area_tr": 2.30009,
+  "Length_tr": 7.0,
+  "Mean_w_tr": 466.4,
+  "Max_w_tr": 1136.4
+ },
+ {
+  "Storm_ID": 369,
+  "Count": 1,
+  "Area_tr": 0.719735,
+  "Length_tr": 25.2,
+  "Mean_w_tr": 418.8,
+  "Max_w_tr": 2434.3
+ },
+ {
+  "Storm_ID": 370,
+  "Count": 1,
+  "Area_tr": 1.85789,
+  "Length_tr": 17.7,
+  "Mean_w_tr": 1031.9,
+  "Max_w_tr": 3984.9
+ },
+ {
+  "Storm_ID": 371,
+  "Count": 1,
+  "Area_tr": 0.559635,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 842.9,
+  "Max_w_tr": 2664.6
+ },
+ {
+  "Storm_ID": 372,
+  "Count": 1,
+  "Area_tr": 0.691124,
+  "Length_tr": 5.4,
+  "Mean_w_tr": 567.4,
+  "Max_w_tr": 2079.2
+ },
+ {
+  "Storm_ID": 373,
+  "Count": 1,
+  "Area_tr": 0.469641,
+  "Length_tr": 4.3,
+  "Mean_w_tr": 403.1,
+  "Max_w_tr": 1552.2
+ },
+ {
+  "Storm_ID": 374,
+  "Count": 3,
+  "Area_tr": 1.8863,
+  "Length_tr": 29.3,
+  "Mean_w_tr": 394.9,
+  "Max_w_tr": 1329.4
+ },
+ {
+  "Storm_ID": 375,
+  "Count": 1,
+  "Area_tr": 2.48223,
+  "Length_tr": 18.0,
+  "Mean_w_tr": 411.0,
+  "Max_w_tr": 957.7
+ },
+ {
+  "Storm_ID": 376,
+  "Count": 1,
+  "Area_tr": 0.0796092,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 76.0,
+  "Max_w_tr": 115.9
+ },
+ {
+  "Storm_ID": 377,
+  "Count": 1,
+  "Area_tr": 1.60166,
+  "Length_tr": 10.2,
+  "Mean_w_tr": 764.7,
+  "Max_w_tr": 3548.9
+ },
+ {
+  "Storm_ID": 378,
+  "Count": 1,
+  "Area_tr": 1.98159,
+  "Length_tr": 15.1,
+  "Mean_w_tr": 1188.7,
+  "Max_w_tr": 4754.7
+ },
+ {
+  "Storm_ID": 379,
+  "Count": 1,
+  "Area_tr": 4.37342,
+  "Length_tr": 28.5,
+  "Mean_w_tr": 209.3,
+  "Max_w_tr": 730.1
+ },
+ {
+  "Storm_ID": 380,
+  "Count": 2,
+  "Area_tr": 14.5738,
+  "Length_tr": 51.5,
+  "Mean_w_tr": 580.9,
+  "Max_w_tr": 1706.7
+ },
+ {
+  "Storm_ID": 381,
+  "Count": 1,
+  "Area_tr": 0.691319,
+  "Length_tr": 4.7,
+  "Mean_w_tr": 467.7,
+  "Max_w_tr": 1859.9
+ },
+ {
+  "Storm_ID": 382,
+  "Count": 1,
+  "Area_tr": 0.0721024,
+  "Length_tr": 8.2,
+  "Mean_w_tr": 39.2,
+  "Max_w_tr": 120.1
+ },
+ {
+  "Storm_ID": 383,
+  "Count": 1,
+  "Area_tr": 0.0753918,
+  "Length_tr": 6.9,
+  "Mean_w_tr": 35.5,
+  "Max_w_tr": 79.7
+ },
+ {
+  "Storm_ID": 384,
+  "Count": 1,
+  "Area_tr": 0.0740264,
+  "Length_tr": 1.2,
+  "Mean_w_tr": 86.2,
+  "Max_w_tr": 194.3
+ },
+ {
+  "Storm_ID": 385,
+  "Count": 1,
+  "Area_tr": 0.412681,
+  "Length_tr": 6.1,
+  "Mean_w_tr": 148.6,
+  "Max_w_tr": 316.9
+ },
+ {
+  "Storm_ID": 386,
+  "Count": 1,
+  "Area_tr": 0.137885,
+  "Length_tr": 2.3,
+  "Mean_w_tr": 113.7,
+  "Max_w_tr": 209.8
+ },
+ {
+  "Storm_ID": 387,
+  "Count": 1,
+  "Area_tr": 0.213,
+  "Length_tr": 1.6,
+  "Mean_w_tr": 161.5,
+  "Max_w_tr": 345.5
+ },
+ {
+  "Storm_ID": 388,
+  "Count": 2,
+  "Area_tr": 0.186552,
+  "Length_tr": 19.8,
+  "Mean_w_tr": 63.0,
+  "Max_w_tr": 144.9
+ },
+ {
+  "Storm_ID": 389,
+  "Count": 1,
+  "Area_tr": 0.0731484,
+  "Length_tr": 1.6,
+  "Mean_w_tr": 55.5,
+  "Max_w_tr": 114.5
+ },
+ {
+  "Storm_ID": 390,
+  "Count": 2,
+  "Area_tr": 0.177238,
+  "Length_tr": 9.2,
+  "Mean_w_tr": 91.9,
+  "Max_w_tr": 189.4
+ },
+ {
+  "Storm_ID": 391,
+  "Count": 1,
+  "Area_tr": 0.406855,
+  "Length_tr": 4.6,
+  "Mean_w_tr": 127.1,
+  "Max_w_tr": 215.5
+ },
+ {
+  "Storm_ID": 392,
+  "Count": 1,
+  "Area_tr": 0.0666221,
+  "Length_tr": 4.2,
+  "Mean_w_tr": 58.2,
+  "Max_w_tr": 192.2
+ },
+ {
+  "Storm_ID": 393,
+  "Count": 1,
+  "Area_tr": 0.0827511,
+  "Length_tr": 0.9,
+  "Mean_w_tr": 96.5,
+  "Max_w_tr": 184.3
+ },
+ {
+  "Storm_ID": 394,
+  "Count": 1,
+  "Area_tr": 0.692446,
+  "Length_tr": 17.1,
+  "Mean_w_tr": 110.2,
+  "Max_w_tr": 335.4
+ },
+ {
+  "Storm_ID": 395,
+  "Count": 1,
+  "Area_tr": 6.78133,
+  "Length_tr": 36.0,
+  "Mean_w_tr": 1378.3,
+  "Max_w_tr": 5276.5
+ },
+ {
+  "Storm_ID": 396,
+  "Count": 1,
+  "Area_tr": 1.35586,
+  "Length_tr": 31.9,
+  "Mean_w_tr": 307.3,
+  "Max_w_tr": 685.9
+ },
+ {
+  "Storm_ID": 397,
+  "Count": 1,
+  "Area_tr": 0.141055,
+  "Length_tr": 5.2,
+  "Mean_w_tr": 57.3,
+  "Max_w_tr": 131.9
+ },
+ {
+  "Storm_ID": 398,
+  "Count": 2,
+  "Area_tr": 7.9667,
+  "Length_tr": 44.5,
+  "Mean_w_tr": 723.5,
+  "Max_w_tr": 1955.0
+ },
+ {
+  "Storm_ID": 399,
+  "Count": 1,
+  "Area_tr": 2.99335,
+  "Length_tr": 12.3,
+  "Mean_w_tr": 605.8,
+  "Max_w_tr": 1772.2
+ },
+ {
+  "Storm_ID": 400,
+  "Count": 1,
+  "Area_tr": 0.734705,
+  "Length_tr": 15.8,
+  "Mean_w_tr": 130.4,
+  "Max_w_tr": 428.3
+ },
+ {
+  "Storm_ID": 401,
+  "Count": 1,
+  "Area_tr": 0.15537,
+  "Length_tr": 4.1,
+  "Mean_w_tr": 73.6,
+  "Max_w_tr": 137.4
+ },
+ {
+  "Storm_ID": 402,
+  "Count": 1,
+  "Area_tr": 0.671414,
+  "Length_tr": 6.5,
+  "Mean_w_tr": 340.6,
+  "Max_w_tr": 1409.5
+ },
+ {
+  "Storm_ID": 403,
+  "Count": 1,
+  "Area_tr": 1.53909,
+  "Length_tr": 11.9,
+  "Mean_w_tr": 625.1,
+  "Max_w_tr": 1181.6
+ },
+ {
+  "Storm_ID": 404,
+  "Count": 1,
+  "Area_tr": 0.185967,
+  "Length_tr": 2.2,
+  "Mean_w_tr": 93.8,
+  "Max_w_tr": 302.6
+ },
+ {
+  "Storm_ID": 405,
+  "Count": 1,
+  "Area_tr": 0.213108,
+  "Length_tr": 6.2,
+  "Mean_w_tr": 106.5,
+  "Max_w_tr": 173.8
+ },
+ {
+  "Storm_ID": 406,
+  "Count": 1,
+  "Area_tr": 0.195572,
+  "Length_tr": 2.6,
+  "Mean_w_tr": 97.6,
+  "Max_w_tr": 167.3
+ },
+ {
+  "Storm_ID": 407,
+  "Count": 1,
+  "Area_tr": 0.502555,
+  "Length_tr": 10.0,
+  "Mean_w_tr": 344.5,
+  "Max_w_tr": 1473.1
+ },
+ {
+  "Storm_ID": 408,
+  "Count": 1,
+  "Area_tr": 0.394176,
+  "Length_tr": 7.0,
+  "Mean_w_tr": 122.5,
+  "Max_w_tr": 667.1
+ },
+ {
+  "Storm_ID": 409,
+  "Count": 1,
+  "Area_tr": 1.5971,
+  "Length_tr": 11.7,
+  "Mean_w_tr": 571.3,
+  "Max_w_tr": 2531.2
+ },
+ {
+  "Storm_ID": 410,
+  "Count": 1,
+  "Area_tr": 0.426344,
+  "Length_tr": 4.6,
+  "Mean_w_tr": 157.4,
+  "Max_w_tr": 381.7
+ },
+ {
+  "Storm_ID": 411,
+  "Count": 2,
+  "Area_tr": 0.787973,
+  "Length_tr": 20.6,
+  "Mean_w_tr": 697.2,
+  "Max_w_tr": 4231.0
+ },
+ {
+  "Storm_ID": 412,
+  "Count": 1,
+  "Area_tr": 1.3023,
+  "Length_tr": 9.0,
+  "Mean_w_tr": 290.8,
+  "Max_w_tr": 1206.7
+ },
+ {
+  "Storm_ID": 413,
+  "Count": 1,
+  "Area_tr": 5.23578,
+  "Length_tr": 12.8,
+  "Mean_w_tr": 789.2,
+  "Max_w_tr": 1755.7
+ },
+ {
+  "Storm_ID": 414,
+  "Count": 1,
+  "Area_tr": 0.297888,
+  "Length_tr": 3.5,
+  "Mean_w_tr": 111.4,
+  "Max_w_tr": 197.4
+ },
+ {
+  "Storm_ID": 415,
+  "Count": 1,
+  "Area_tr": 11.1496,
+  "Length_tr": 41.9,
+  "Mean_w_tr": 963.2,
+  "Max_w_tr": 3212.4
+ },
+ {
+  "Storm_ID": 416,
+  "Count": 1,
+  "Area_tr": 2.70421,
+  "Length_tr": 15.6,
+  "Mean_w_tr": 681.3,
+  "Max_w_tr": 1974.1
+ },
+ {
+  "Storm_ID": 417,
+  "Count": 1,
+  "Area_tr": 0.972947,
+  "Length_tr": 28.3,
+  "Mean_w_tr": 386.1,
+  "Max_w_tr": 2453.6
+ },
+ {
+  "Storm_ID": 418,
+  "Count": 1,
+  "Area_tr": 0.761501,
+  "Length_tr": 7.1,
+  "Mean_w_tr": 321.0,
+  "Max_w_tr": 618.6
+ },
+ {
+  "Storm_ID": 419,
+  "Count": 1,
+  "Area_tr": 0.0895794,
+  "Length_tr": 1.3,
+  "Mean_w_tr": 71.9,
+  "Max_w_tr": 104.1
+ },
+ {
+  "Storm_ID": 420,
+  "Count": 1,
+  "Area_tr": 0.16319,
+  "Length_tr": 8.0,
+  "Mean_w_tr": 65.0,
+  "Max_w_tr": 156.3
+ },
+ {
+  "Storm_ID": 421,
+  "Count": 1,
+  "Area_tr": 1.4707,
+  "Length_tr": 29.5,
+  "Mean_w_tr": 134.3,
+  "Max_w_tr": 474.3
+ },
+ {
+  "Storm_ID": 422,
+  "Count": 2,
+  "Area_tr": 1.87969,
+  "Length_tr": 39.6,
+  "Mean_w_tr": 180.7,
+  "Max_w_tr": 632.8
+ },
+ {
+  "Storm_ID": 423,
+  "Count": 1,
+  "Area_tr": 8.41028,
+  "Length_tr": 58.6,
+  "Mean_w_tr": 1276.7,
+  "Max_w_tr": 6431.1
+ },
+ {
+  "Storm_ID": 424,
+  "Count": 1,
+  "Area_tr": 0.552654,
+  "Length_tr": 3.5,
+  "Mean_w_tr": 161.2,
+  "Max_w_tr": 415.2
+ },
+ {
+  "Storm_ID": 425,
+  "Count": 6,
+  "Area_tr": 40.9568,
+  "Length_tr": 473.2,
+  "Mean_w_tr": 2478.0,
+  "Max_w_tr": 21001.8
+ },
+ {
+  "Storm_ID": 426,
+  "Count": 1,
+  "Area_tr": 0.578895,
+  "Length_tr": 2.1,
+  "Mean_w_tr": 527.0,
+  "Max_w_tr": 1111.9
+ },
+ {
+  "Storm_ID": 427,
+  "Count": 1,
+  "Area_tr": 0.114466,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 67.8,
+  "Max_w_tr": 140.7
+ },
+ {
+  "Storm_ID": 428,
+  "Count": 1,
+  "Area_tr": 0.422672,
+  "Length_tr": 8.2,
+  "Mean_w_tr": 101.4,
+  "Max_w_tr": 274.0
+ },
+ {
+  "Storm_ID": 429,
+  "Count": 1,
+  "Area_tr": 0.20875,
+  "Length_tr": 7.4,
+  "Mean_w_tr": 68.6,
+  "Max_w_tr": 143.0
+ },
+ {
+  "Storm_ID": 430,
+  "Count": 1,
+  "Area_tr": 0.212114,
+  "Length_tr": 3.7,
+  "Mean_w_tr": 112.3,
+  "Max_w_tr": 261.8
+ },
+ {
+  "Storm_ID": 431,
+  "Count": 1,
+  "Area_tr": 0.123853,
+  "Length_tr": 7.2,
+  "Mean_w_tr": 45.5,
+  "Max_w_tr": 2221.1
+ },
+ {
+  "Storm_ID": 432,
+  "Count": 3,
+  "Area_tr": 5.40659,
+  "Length_tr": 169.3,
+  "Mean_w_tr": 638.6,
+  "Max_w_tr": 4527.3
+ },
+ {
+  "Storm_ID": 433,
+  "Count": 1,
+  "Area_tr": 0.260412,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 202.4,
+  "Max_w_tr": 782.6
+ },
+ {
+  "Storm_ID": 434,
+  "Count": 1,
+  "Area_tr": 0.267334,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 460.5,
+  "Max_w_tr": 1200.3
+ },
+ {
+  "Storm_ID": 435,
+  "Count": 1,
+  "Area_tr": 3.81047,
+  "Length_tr": 27.1,
+  "Mean_w_tr": 1338.2,
+  "Max_w_tr": 3809.0
+ },
+ {
+  "Storm_ID": 436,
+  "Count": 1,
+  "Area_tr": 0.0943792,
+  "Length_tr": 1.6,
+  "Mean_w_tr": 78.8,
+  "Max_w_tr": 162.1
+ },
+ {
+  "Storm_ID": 437,
+  "Count": 1,
+  "Area_tr": 3.75811,
+  "Length_tr": 42.0,
+  "Mean_w_tr": 1242.6,
+  "Max_w_tr": 7180.0
+ },
+ {
+  "Storm_ID": 438,
+  "Count": 2,
+  "Area_tr": 1.74556,
+  "Length_tr": 39.0,
+  "Mean_w_tr": 1043.1,
+  "Max_w_tr": 5069.0
+ },
+ {
+  "Storm_ID": 439,
+  "Count": 1,
+  "Area_tr": 0.142655,
+  "Length_tr": 2.1,
+  "Mean_w_tr": 73.9,
+  "Max_w_tr": 119.5
+ },
+ {
+  "Storm_ID": 440,
+  "Count": 2,
+  "Area_tr": 5.46873,
+  "Length_tr": 119.0,
+  "Mean_w_tr": 240.5,
+  "Max_w_tr": 1229.7
+ },
+ {
+  "Storm_ID": 441,
+  "Count": 2,
+  "Area_tr": 0.818568,
+  "Length_tr": 60.1,
+  "Mean_w_tr": 130.3,
+  "Max_w_tr": 386.1
+ },
+ {
+  "Storm_ID": 442,
+  "Count": 1,
+  "Area_tr": 0.591263,
+  "Length_tr": 8.9,
+  "Mean_w_tr": 133.0,
+  "Max_w_tr": 412.7
+ },
+ {
+  "Storm_ID": 443,
+  "Count": 1,
+  "Area_tr": 1.31691,
+  "Length_tr": 17.1,
+  "Mean_w_tr": 163.0,
+  "Max_w_tr": 521.5
+ },
+ {
+  "Storm_ID": 444,
+  "Count": 1,
+  "Area_tr": 0.341377,
+  "Length_tr": 3.6,
+  "Mean_w_tr": 116.5,
+  "Max_w_tr": 250.9
+ },
+ {
+  "Storm_ID": 445,
+  "Count": 1,
+  "Area_tr": 0.446039,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 112.9,
+  "Max_w_tr": 356.2
+ },
+ {
+  "Storm_ID": 446,
+  "Count": 1,
+  "Area_tr": 1.02419,
+  "Length_tr": 35.5,
+  "Mean_w_tr": 536.7,
+  "Max_w_tr": 5094.4
+ },
+ {
+  "Storm_ID": 447,
+  "Count": 2,
+  "Area_tr": 2.62034,
+  "Length_tr": 96.8,
+  "Mean_w_tr": 675.5,
+  "Max_w_tr": 2933.1
+ },
+ {
+  "Storm_ID": 448,
+  "Count": 1,
+  "Area_tr": 0.399086,
+  "Length_tr": 5.8,
+  "Mean_w_tr": 421.3,
+  "Max_w_tr": 2800.1
+ },
+ {
+  "Storm_ID": 449,
+  "Count": 2,
+  "Area_tr": 0.346046,
+  "Length_tr": 38.4,
+  "Mean_w_tr": 635.0,
+  "Max_w_tr": 4727.9
+ },
+ {
+  "Storm_ID": 450,
+  "Count": 2,
+  "Area_tr": 2.68195,
+  "Length_tr": 81.0,
+  "Mean_w_tr": 523.5,
+  "Max_w_tr": 1657.4
+ },
+ {
+  "Storm_ID": 451,
+  "Count": 1,
+  "Area_tr": 1.85112,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 453.7,
+  "Max_w_tr": 947.5
+ },
+ {
+  "Storm_ID": 452,
+  "Count": 1,
+  "Area_tr": 0.143179,
+  "Length_tr": 2.5,
+  "Mean_w_tr": 72.0,
+  "Max_w_tr": 143.4
+ },
+ {
+  "Storm_ID": 453,
+  "Count": 2,
+  "Area_tr": 1.82747,
+  "Length_tr": 161.4,
+  "Mean_w_tr": 280.2,
+  "Max_w_tr": 1232.9
+ },
+ {
+  "Storm_ID": 454,
+  "Count": 1,
+  "Area_tr": 0.72017,
+  "Length_tr": 29.3,
+  "Mean_w_tr": 223.2,
+  "Max_w_tr": 1238.6
+ },
+ {
+  "Storm_ID": 455,
+  "Count": 2,
+  "Area_tr": 4.71317,
+  "Length_tr": 59.4,
+  "Mean_w_tr": 379.0,
+  "Max_w_tr": 1290.7
+ },
+ {
+  "Storm_ID": 456,
+  "Count": 1,
+  "Area_tr": 0.476662,
+  "Length_tr": 1.8,
+  "Mean_w_tr": 333.4,
+  "Max_w_tr": 508.9
+ },
+ {
+  "Storm_ID": 457,
+  "Count": 1,
+  "Area_tr": 0.363233,
+  "Length_tr": 5.4,
+  "Mean_w_tr": 154.0,
+  "Max_w_tr": 402.8
+ },
+ {
+  "Storm_ID": 458,
+  "Count": 1,
+  "Area_tr": 0.133865,
+  "Length_tr": 4.0,
+  "Mean_w_tr": 65.7,
+  "Max_w_tr": 155.7
+ },
+ {
+  "Storm_ID": 459,
+  "Count": 1,
+  "Area_tr": 0.0926257,
+  "Length_tr": 2.7,
+  "Mean_w_tr": 66.2,
+  "Max_w_tr": 168.0
+ },
+ {
+  "Storm_ID": 460,
+  "Count": 1,
+  "Area_tr": 0.134113,
+  "Length_tr": 3.5,
+  "Mean_w_tr": 68.7,
+  "Max_w_tr": 105.0
+ },
+ {
+  "Storm_ID": 461,
+  "Count": 1,
+  "Area_tr": 0.124854,
+  "Length_tr": 4.5,
+  "Mean_w_tr": 67.2,
+  "Max_w_tr": 157.8
+ },
+ {
+  "Storm_ID": 462,
+  "Count": 1,
+  "Area_tr": 0.378377,
+  "Length_tr": 2.9,
+  "Mean_w_tr": 205.7,
+  "Max_w_tr": 396.4
+ },
+ {
+  "Storm_ID": 463,
+  "Count": 1,
+  "Area_tr": 0.342813,
+  "Length_tr": 5.0,
+  "Mean_w_tr": 142.3,
+  "Max_w_tr": 402.0
+ },
+ {
+  "Storm_ID": 464,
+  "Count": 2,
+  "Area_tr": 3.96344,
+  "Length_tr": 167.7,
+  "Mean_w_tr": 2205.5,
+  "Max_w_tr": 19860.6
+ },
+ {
+  "Storm_ID": 465,
+  "Count": 2,
+  "Area_tr": 0.706368,
+  "Length_tr": 22.8,
+  "Mean_w_tr": 121.0,
+  "Max_w_tr": 306.4
+ },
+ {
+  "Storm_ID": 466,
+  "Count": 3,
+  "Area_tr": 9.75087,
+  "Length_tr": 126.4,
+  "Mean_w_tr": 939.2,
+  "Max_w_tr": 4220.8
+ },
+ {
+  "Storm_ID": 467,
+  "Count": 5,
+  "Area_tr": 3.52275,
+  "Length_tr": 142.3,
+  "Mean_w_tr": 1707.4,
+  "Max_w_tr": 14343.6
+ },
+ {
+  "Storm_ID": 468,
+  "Count": 3,
+  "Area_tr": 0.7682,
+  "Length_tr": 55.1,
+  "Mean_w_tr": 175.3,
+  "Max_w_tr": 640.8
+ },
+ {
+  "Storm_ID": 469,
+  "Count": 1,
+  "Area_tr": 0.0645667,
+  "Length_tr": 1.1,
+  "Mean_w_tr": 84.6,
+  "Max_w_tr": 98.3
+ },
+ {
+  "Storm_ID": 470,
+  "Count": 1,
+  "Area_tr": 0.639745,
+  "Length_tr": 6.4,
+  "Mean_w_tr": 174.1,
+  "Max_w_tr": 337.3
+ },
+ {
+  "Storm_ID": 471,
+  "Count": 1,
+  "Area_tr": 18.177,
+  "Length_tr": 15.8,
+  "Mean_w_tr": 3520.5,
+  "Max_w_tr": 6438.8
+ },
+ {
+  "Storm_ID": 472,
+  "Count": 2,
+  "Area_tr": 2.15979,
+  "Length_tr": 14.9,
+  "Mean_w_tr": 461.9,
+  "Max_w_tr": 1525.4
+ },
+ {
+  "Storm_ID": 473,
+  "Count": 1,
+  "Area_tr": 0.118456,
+  "Length_tr": 1.9,
+  "Mean_w_tr": 77.2,
+  "Max_w_tr": 188.9
+ },
+ {
+  "Storm_ID": 474,
+  "Count": 1,
+  "Area_tr": 0.650206,
+  "Length_tr": 3.5,
+  "Mean_w_tr": 434.5,
+  "Max_w_tr": 1345.1
+ },
+ {
+  "Storm_ID": 475,
+  "Count": 1,
+  "Area_tr": 0.464033,
+  "Length_tr": 6.9,
+  "Mean_w_tr": 98.9,
+  "Max_w_tr": 261.4
+ },
+ {
+  "Storm_ID": 476,
+  "Count": 2,
+  "Area_tr": 0.44184,
+  "Length_tr": 7.9,
+  "Mean_w_tr": 105.6,
+  "Max_w_tr": 223.2
+ },
+ {
+  "Storm_ID": 477,
+  "Count": 1,
+  "Area_tr": 0.337478,
+  "Length_tr": 5.1,
+  "Mean_w_tr": 98.8,
+  "Max_w_tr": 215.4
+ },
+ {
+  "Storm_ID": 478,
+  "Count": 1,
+  "Area_tr": 0.109438,
+  "Length_tr": 3.2,
+  "Mean_w_tr": 64.8,
+  "Max_w_tr": 130.8
+ },
+ {
+  "Storm_ID": 479,
+  "Count": 2,
+  "Area_tr": 0.794414,
+  "Length_tr": 75.5,
+  "Mean_w_tr": 172.9,
+  "Max_w_tr": 410.6
+ },
+ {
+  "Storm_ID": 480,
+  "Count": 8,
+  "Area_tr": 7.6814,
+  "Length_tr": 110.2,
+  "Mean_w_tr": 406.4,
+  "Max_w_tr": 5208.0
+ },
+ {
+  "Storm_ID": 481,
+  "Count": 4,
+  "Area_tr": 12.1484,
+  "Length_tr": 243.5,
+  "Mean_w_tr": 532.1,
+  "Max_w_tr": 12277.7
+ },
+ {
+  "Storm_ID": 482,
+  "Count": 6,
+  "Area_tr": 10.6173,
+  "Length_tr": 112.4,
+  "Mean_w_tr": 492.9,
+  "Max_w_tr": 2373.0
+ },
+ {
+  "Storm_ID": 483,
+  "Count": 1,
+  "Area_tr": 0.268362,
+  "Length_tr": 5.0,
+  "Mean_w_tr": 97.3,
+  "Max_w_tr": 270.7
+ },
+ {
+  "Storm_ID": 484,
+  "Count": 1,
+  "Area_tr": 0.714422,
+  "Length_tr": 14.4,
+  "Mean_w_tr": 306.7,
+  "Max_w_tr": 1430.7
+ },
+ {
+  "Storm_ID": 485,
+  "Count": 1,
+  "Area_tr": 0.092857,
+  "Length_tr": 2.4,
+  "Mean_w_tr": 61.1,
+  "Max_w_tr": 178.5
+ },
+ {
+  "Storm_ID": 486,
+  "Count": 1,
+  "Area_tr": 1.60652,
+  "Length_tr": 10.8,
+  "Mean_w_tr": 190.4,
+  "Max_w_tr": 451.1
+ }
+]

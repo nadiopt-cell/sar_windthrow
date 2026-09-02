@@ -1,0 +1,95 @@
+{
+  "masks": {
+    "ref": "/home/z/my-project/work_data/warp_id6660/ref_mask.tif",
+    "bg": "/home/z/my-project/work_data/warp_id6660/bg_mask.tif",
+    "ref_ha": 950.0500000000001
+  },
+  "aoi_bounds": [
+    379150.0,
+    6834700.0,
+    431860.0,
+    6888460.0
+  ],
+  "grid_w": 5271,
+  "grid_h": 5376,
+  "event_id": 6660,
+  "storm": "LEAF-OFF ANNUAL DIFFERENTIAL for ID666 (squall 30.07.2017, 950 ha): pre = Oct 2016 (leaf-off, pre-event year), post = Oct 2017 (leaf-off, post-event). Same rel-orbit-94 descending track as step7; same-season pre/post kills the phenology confound, windthrow revealed by canopy removal",
+  "event_date": "2017-10-05",
+  "epsg": 32638,
+  "pixel_m": 10.0,
+  "buffer_m": 3000.0,
+  "reference_shp": "/home/z/my-project/research/shikhov_db/GIS/Windthrows.shp",
+  "collection": "sentinel-1-rtc",
+  "updated": "2026-09-02T09:23:50",
+  "plan_orbit": {
+    "direction": "descending",
+    "relative_orbit": 94
+  },
+  "plan": {
+    "base": {
+      "id": "S1B_IW_GRDH_1SDV_20161007T033445_20161007T033510_002395_0040BC_rtc",
+      "date": "2016-10-07",
+      "platform": "SENTINEL-1B",
+      "relative_orbit": 94,
+      "datetime": "2016-10-07T03:34:58.482896+00:00"
+    },
+    "post": {
+      "id": "S1B_IW_GRDH_1SDV_20171002T033451_20171002T033516_007645_00D7FF_rtc",
+      "date": "2017-10-02",
+      "platform": "SENTINEL-1B",
+      "relative_orbit": 94,
+      "datetime": "2017-10-02T03:35:04.321056+00:00"
+    },
+    "post2": {
+      "id": "S1B_IW_GRDH_1SDV_20171014T033451_20171014T033516_007820_00DCF4_rtc",
+      "date": "2017-10-14",
+      "platform": "SENTINEL-1B",
+      "relative_orbit": 94,
+      "datetime": "2017-10-14T03:35:04.487861+00:00"
+    }
+  },
+  "scenes": {
+    "base": {
+      "expected_date": "2016-10-07",
+      "ids": [
+        "S1B_IW_GRDH_1SDV_20161007T033445_20161007T033510_002395_0040BC_rtc"
+      ],
+      "id": "S1B_IW_GRDH_1SDV_20161007T033445_20161007T033510_002395_0040BC_rtc",
+      "datetime": "2016-10-07T03:34:58.482896+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp_id6660/base_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp_id6660/base_vh.tif"
+    },
+    "post": {
+      "expected_date": "2017-10-02",
+      "ids": [
+        "S1B_IW_GRDH_1SDV_20171002T033451_20171002T033516_007645_00D7FF_rtc"
+      ],
+      "id": "S1B_IW_GRDH_1SDV_20171002T033451_20171002T033516_007645_00D7FF_rtc",
+      "datetime": "2017-10-02T03:35:04.321056+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp_id6660/post_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp_id6660/post_vh.tif"
+    },
+    "post2": {
+      "expected_date": "2017-10-14",
+      "ids": [
+        "S1B_IW_GRDH_1SDV_20171014T033451_20171014T033516_007820_00DCF4_rtc"
+      ],
+      "id": "S1B_IW_GRDH_1SDV_20171014T033451_20171014T033516_007820_00DCF4_rtc",
+      "datetime": "2017-10-14T03:35:04.487861+00:00",
+      "platform": "SENTINEL-1B",
+      "orbit_direction": "descending",
+      "relative_orbit": 94,
+      "collection": "sentinel-1-rtc",
+      "warp_vv": "/home/z/my-project/work_data/warp_id6660/post2_vv.tif",
+      "warp_vh": "/home/z/my-project/work_data/warp_id6660/post2_vh.tif"
+    }
+  }
+}
