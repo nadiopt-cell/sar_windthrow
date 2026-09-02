@@ -1,0 +1,604 @@
+{
+  "purpose": "step10 index studio: pixel-level separation of reference windthrow vs forest background per candidate SAR observable",
+  "indices": {
+    "dVV": [
+      1.0,
+      0.0
+    ],
+    "dVH": [
+      0.0,
+      1.0
+    ],
+    "WI": [
+      1.0,
+      1.0
+    ],
+    "dpol": [
+      -1.0,
+      1.0
+    ],
+    "WI_vv0.5": [
+      0.5,
+      1.0
+    ],
+    "WI_vv1.5": [
+      1.5,
+      1.0
+    ],
+    "WI_vh0.5": [
+      1.0,
+      0.5
+    ],
+    "WI_vh1.5": [
+      1.0,
+      1.5
+    ]
+  },
+  "metric_notes": {
+    "contrast_db": "median(ref) - median(bg forest)",
+    "auc": "Mann-Whitney ROC AUC",
+    "adaptive_2.9": "thr = mean(bg)+2.9 dB (paper regime)",
+    "youden": "oracle threshold, not operational"
+  },
+  "events": {
+    "666_stack": {
+      "event": "666_stack",
+      "desc": "ID666 squall 30.07.2017, stack pre1-3 -> 03.08 (leaf-on, wet post)",
+      "ref_px": 95005,
+      "bg_forest_px": 4666468,
+      "stride": 3,
+      "background": "bg ring ∩ WC2020 forest",
+      "indices": {
+        "dVV": {
+          "weights_vv_vh": [
+            1.0,
+            0.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 8.131,
+          "median_bg_db": 8.156,
+          "contrast_db": -0.025,
+          "auc": 0.4945,
+          "youden": {
+            "thr": 7.872,
+            "tpr": 0.4341,
+            "fpr": 0.4229
+          },
+          "adaptive_2.9": {
+            "thr": 11.095,
+            "tpr": 0.0246,
+            "fpr": 0.0309
+          }
+        },
+        "dVH": {
+          "weights_vv_vh": [
+            0.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 13.449,
+          "median_bg_db": 13.499,
+          "contrast_db": -0.05,
+          "auc": 0.4872,
+          "youden": {
+            "thr": 14.92,
+            "tpr": 0.8593,
+            "fpr": 0.8316
+          },
+          "adaptive_2.9": {
+            "thr": 16.453,
+            "tpr": 0.0194,
+            "fpr": 0.0291
+          }
+        },
+        "WI": {
+          "weights_vv_vh": [
+            1.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 21.586,
+          "median_bg_db": 21.668,
+          "contrast_db": -0.083,
+          "auc": 0.4886,
+          "youden": {
+            "thr": 23.835,
+            "tpr": 0.8507,
+            "fpr": 0.8298
+          },
+          "adaptive_2.9": {
+            "thr": 24.648,
+            "tpr": 0.0819,
+            "fpr": 0.1003
+          }
+        },
+        "dpol": {
+          "weights_vv_vh": [
+            -1.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 5.335,
+          "median_bg_db": 5.357,
+          "contrast_db": -0.023,
+          "auc": 0.495,
+          "youden": {
+            "thr": 6.985,
+            "tpr": 0.8239,
+            "fpr": 0.8133
+          },
+          "adaptive_2.9": {
+            "thr": 8.258,
+            "tpr": 0.0543,
+            "fpr": 0.0571
+          }
+        },
+        "WI_vv0.5": {
+          "weights_vv_vh": [
+            0.5,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 17.502,
+          "median_bg_db": 17.583,
+          "contrast_db": -0.081,
+          "auc": 0.4872,
+          "youden": {
+            "thr": 19.857,
+            "tpr": 0.9204,
+            "fpr": 0.8959
+          },
+          "adaptive_2.9": {
+            "thr": 20.551,
+            "tpr": 0.0374,
+            "fpr": 0.055
+          }
+        },
+        "WI_vv1.5": {
+          "weights_vv_vh": [
+            1.5,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 25.647,
+          "median_bg_db": 25.752,
+          "contrast_db": -0.105,
+          "auc": 0.4897,
+          "youden": {
+            "thr": 28.794,
+            "tpr": 0.872,
+            "fpr": 0.8521
+          },
+          "adaptive_2.9": {
+            "thr": 28.746,
+            "tpr": 0.132,
+            "fpr": 0.1513
+          }
+        },
+        "WI_vh0.5": {
+          "weights_vv_vh": [
+            1.0,
+            0.5
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 14.85,
+          "median_bg_db": 14.915,
+          "contrast_db": -0.065,
+          "auc": 0.4906,
+          "youden": {
+            "thr": 16.553,
+            "tpr": 0.84,
+            "fpr": 0.8213
+          },
+          "adaptive_2.9": {
+            "thr": 17.872,
+            "tpr": 0.0434,
+            "fpr": 0.0562
+          }
+        },
+        "WI_vh1.5": {
+          "weights_vv_vh": [
+            1.0,
+            1.5
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 28.291,
+          "median_bg_db": 28.418,
+          "contrast_db": -0.126,
+          "auc": 0.4876,
+          "youden": {
+            "thr": 31.477,
+            "tpr": 0.878,
+            "fpr": 0.8546
+          },
+          "adaptive_2.9": {
+            "thr": 31.425,
+            "tpr": 0.1273,
+            "fpr": 0.1494
+          }
+        }
+      }
+    },
+    "666_pair": {
+      "event": "666_pair",
+      "desc": "ID666, pair 22.07 -> 03.08 (leaf-on, wet post)",
+      "ref_px": 95005,
+      "bg_forest_px": 4666468,
+      "stride": 3,
+      "background": "bg ring ∩ WC2020 forest",
+      "indices": {
+        "dVV": {
+          "weights_vv_vh": [
+            1.0,
+            0.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.063,
+          "median_bg_db": 0.05,
+          "contrast_db": 0.013,
+          "auc": 0.5314,
+          "youden": {
+            "thr": -0.106,
+            "tpr": 0.0664,
+            "fpr": 0.0572
+          },
+          "adaptive_2.9": {
+            "thr": 2.957,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "dVH": {
+          "weights_vv_vh": [
+            0.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.019,
+          "median_bg_db": 0.016,
+          "contrast_db": 0.003,
+          "auc": 0.5256,
+          "youden": {
+            "thr": -0.036,
+            "tpr": 0.0306,
+            "fpr": 0.0285
+          },
+          "adaptive_2.9": {
+            "thr": 2.919,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI": {
+          "weights_vv_vh": [
+            1.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.084,
+          "median_bg_db": 0.068,
+          "contrast_db": 0.016,
+          "auc": 0.5366,
+          "youden": {
+            "thr": -0.084,
+            "tpr": 0.0814,
+            "fpr": 0.0696
+          },
+          "adaptive_2.9": {
+            "thr": 2.976,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "dpol": {
+          "weights_vv_vh": [
+            -1.0,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": -0.042,
+          "median_bg_db": -0.032,
+          "contrast_db": -0.01,
+          "auc": 0.4764,
+          "youden": {
+            "thr": -0.105,
+            "tpr": 0.2964,
+            "fpr": 0.2492
+          },
+          "adaptive_2.9": {
+            "thr": 2.862,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vv0.5": {
+          "weights_vv_vh": [
+            0.5,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.053,
+          "median_bg_db": 0.043,
+          "contrast_db": 0.01,
+          "auc": 0.5387,
+          "youden": {
+            "thr": -0.057,
+            "tpr": 0.056,
+            "fpr": 0.0428
+          },
+          "adaptive_2.9": {
+            "thr": 2.947,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vv1.5": {
+          "weights_vv_vh": [
+            1.5,
+            1.0
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.115,
+          "median_bg_db": 0.093,
+          "contrast_db": 0.022,
+          "auc": 0.5352,
+          "youden": {
+            "thr": -0.134,
+            "tpr": 0.0766,
+            "fpr": 0.0656
+          },
+          "adaptive_2.9": {
+            "thr": 3.004,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vh0.5": {
+          "weights_vv_vh": [
+            1.0,
+            0.5
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.073,
+          "median_bg_db": 0.059,
+          "contrast_db": 0.014,
+          "auc": 0.5344,
+          "youden": {
+            "thr": -0.092,
+            "tpr": 0.0757,
+            "fpr": 0.0647
+          },
+          "adaptive_2.9": {
+            "thr": 2.966,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vh1.5": {
+          "weights_vv_vh": [
+            1.0,
+            1.5
+          ],
+          "n_ref": 10596,
+          "n_bg": 519488,
+          "median_ref_db": 0.095,
+          "median_bg_db": 0.078,
+          "contrast_db": 0.017,
+          "auc": 0.538,
+          "youden": {
+            "thr": -0.071,
+            "tpr": 0.0957,
+            "fpr": 0.0832
+          },
+          "adaptive_2.9": {
+            "thr": 2.985,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        }
+      }
+    },
+    "694_pair": {
+      "event": "694_pair",
+      "desc": "ID694 tornado ~19.09.2017, pair 31.08 -> 24.09 (leaf-off)",
+      "ref_px": 16119,
+      "bg_forest_px": 987728,
+      "stride": 1,
+      "background": "bg ring",
+      "indices": {
+        "dVV": {
+          "weights_vv_vh": [
+            1.0,
+            0.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.023,
+          "median_bg_db": 0.002,
+          "contrast_db": 0.021,
+          "auc": 0.5728,
+          "youden": {
+            "thr": 0.641,
+            "tpr": 1.0,
+            "fpr": 1.0
+          },
+          "adaptive_2.9": {
+            "thr": 2.902,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "dVH": {
+          "weights_vv_vh": [
+            0.0,
+            1.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.01,
+          "median_bg_db": 0.007,
+          "contrast_db": 0.002,
+          "auc": 0.5317,
+          "youden": {
+            "thr": -0.019,
+            "tpr": 0.0921,
+            "fpr": 0.0888
+          },
+          "adaptive_2.9": {
+            "thr": 2.908,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI": {
+          "weights_vv_vh": [
+            1.0,
+            1.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.034,
+          "median_bg_db": 0.01,
+          "contrast_db": 0.024,
+          "auc": 0.5769,
+          "youden": {
+            "thr": 0.663,
+            "tpr": 1.0,
+            "fpr": 1.0
+          },
+          "adaptive_2.9": {
+            "thr": 2.91,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "dpol": {
+          "weights_vv_vh": [
+            -1.0,
+            1.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": -0.012,
+          "median_bg_db": 0.006,
+          "contrast_db": -0.018,
+          "auc": 0.4356,
+          "youden": {
+            "thr": -0.053,
+            "tpr": 0.3349,
+            "fpr": 0.2236
+          },
+          "adaptive_2.9": {
+            "thr": 2.907,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vv0.5": {
+          "weights_vv_vh": [
+            0.5,
+            1.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.023,
+          "median_bg_db": 0.009,
+          "contrast_db": 0.014,
+          "auc": 0.5771,
+          "youden": {
+            "thr": -0.084,
+            "tpr": 0.031,
+            "fpr": 0.029
+          },
+          "adaptive_2.9": {
+            "thr": 2.909,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vv1.5": {
+          "weights_vv_vh": [
+            1.5,
+            1.0
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.046,
+          "median_bg_db": 0.011,
+          "contrast_db": 0.034,
+          "auc": 0.576,
+          "youden": {
+            "thr": 0.984,
+            "tpr": 1.0,
+            "fpr": 1.0
+          },
+          "adaptive_2.9": {
+            "thr": 2.911,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vh0.5": {
+          "weights_vv_vh": [
+            1.0,
+            0.5
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.029,
+          "median_bg_db": 0.006,
+          "contrast_db": 0.023,
+          "auc": 0.5754,
+          "youden": {
+            "thr": 0.652,
+            "tpr": 1.0,
+            "fpr": 1.0
+          },
+          "adaptive_2.9": {
+            "thr": 2.906,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        },
+        "WI_vh1.5": {
+          "weights_vv_vh": [
+            1.0,
+            1.5
+          ],
+          "n_ref": 16119,
+          "n_bg": 987728,
+          "median_ref_db": 0.039,
+          "median_bg_db": 0.014,
+          "contrast_db": 0.025,
+          "auc": 0.5774,
+          "youden": {
+            "thr": -0.152,
+            "tpr": 0.0369,
+            "fpr": 0.0364
+          },
+          "adaptive_2.9": {
+            "thr": 2.915,
+            "tpr": 0.0,
+            "fpr": 0.0
+          }
+        }
+      }
+    }
+  },
+  "updated": "2026-09-02T11:32:30"
+}
