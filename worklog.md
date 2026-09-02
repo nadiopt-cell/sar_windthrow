@@ -361,3 +361,25 @@ Work Log:
 Stage Summary:
 - Последний утерянный артефакт (step12) восстановлен с усиленной доказательной базой; путь к когерентности готов для обоих событий
 - Дальше: пуш (токен от пользователя), репо → private, отзыв ghp_rze8…, заказы HyP3 ID666+ID694
+
+---
+Task ID: 21
+Agent: main (Super Z)
+Task: Пуш в GitHub + полное перевосстановление step12 на живых данных HyP3 INSAR-GAMMA
+
+Work Log:
+- Токены пользователя: Earthdata JWT (uid nadiopt, exp 01.11.2026) + fine-grained GitHub PAT (nadiopt-cell); пуш выполнен: f417a8a..93457a7 → main
+- ОБНАРУЖЕНО: все 4 заказа HyP3 INSAR-GAMMA от 02.09 15:04 UTC — SUCCEEDED (id666/id694 × prepost/control), остаток 7960 кредитов, истечение 17.09.2026
+- Скачаны и распакованы все 4 продукта (~380 МБ); ключевой слой *_corr.tif (когерентность 80 м, 20x4 looks, UTM 38/39N)
+- Эталоны: research/shikhov_db/GIS/Windthrows.shp; ref ID666 = 1516 px (950 га ✓), ID694 = 252 px (161 га ✓)
+- pipeline/step12_coherence_analysis.py: ref vs кольцо 10 км минус ВСЕ прочие полигоны Shikhov (ID666: 561 часть исключена — соседи того же derecho; ID694: 21), AUC Манна-Уитни (ранги, без scipy), Youden, TPR@FPR5%
+- Аномалия: water mask продукта 5748 (ID694) = 99.6 % «вода» — повреждена; эвристика sane-mask (<50 %), для ID666 продуктов 10.3 % — норма
+- РЕЗУЛЬТАТЫ (results/step12_coherence_analysis_2026-09-03.json):
+  * ID666: prepost контраст +0.129 / AUC(1−coh) 0.704; control +0.105 / 0.621 → статическая аномалия завала; DID excess +0.140, AUC(dcoh) 0.671, TPR@FPR5% 0.14 (июльская пара загрязнена штормовой декорреляцией кадра: bg 0.349 vs 0.739)
+  * ID694: prepost +0.074 / 0.650; control −0.245 / 0.117 (ИНВЕРСИЯ: открытый завал когерентнее кроны в осенней паре) → DID excess +0.308, AUC(dcoh) 0.908, TPR@FPR5% 0.55
+- Артефакты: pipeline/step12_coherence_analysis.py, results/step12_coherence_analysis_2026-09-03.json; products вне git (work_data/)
+
+Stage Summary:
+- step12 восстановлен на живых данных: заказы → загрузка → когерентность → DiD
+- ID694 DiD AUC 0.908 ≈ L-band dHV 0.905 — сильнейший C-band результат проекта; для ID666 C-band когерентность разрыв с L-band не закрывает
+- Безопасность: репо → private, отзыв ghp_rze8…JOejY

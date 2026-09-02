@@ -1,0 +1,305 @@
+{
+ "step": "12b",
+ "title": "C-band coherence on HyP3 INSAR-GAMMA products (ID666, ID694)",
+ "generated": "2026-09-02T20:02:35.910266Z",
+ "method": {
+  "reference": "Shikhov et al. 2020 (ESSD) Windthrows.shp, ID filter",
+  "background": "buffer 10 km minus ALL Shikhov windthrow polygons (same-derecho neighbours excluded); product water_mask applied only when sane (<50 % of frame flagged water; mask of product 5748 is corrupt: 99.6 % -> ignored)",
+  "detection": "inverted (windthrow = coherence DROP), score = 1 - coh",
+  "did": "dcoh = coh(control pair) - coh(prepost pair), control warped onto prepost grid; cancels static debris anomaly + seasonal shift",
+  "metrics": "Mann-Whitney AUC (rank/ties-avg), Youden oracle, TPR@FPR5%",
+  "sanity_anchor": "control pairs (post-post): expect AUC ~ 0.5, contrast ~ 0"
+ },
+ "products": {
+  "id666-coh-control": {
+   "job_id": "ab5d9110-4698-40e6-a164-604294014308",
+   "status": "SUCCEEDED",
+   "request_time": "2026-09-02T15:04:03+00:00",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "credit_cost": 10,
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C",
+    "S1B_IW_SLC__1SDV_20170815T033448_20170815T033515_006945_00C3B5_87FD"
+   ],
+   "looks": "20x4",
+   "product_zip": "S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D.zip"
+  },
+  "id666-coh-prepost": {
+   "job_id": "8d80a74d-2324-4849-ab8c-cdfef716e4f8",
+   "status": "SUCCEEDED",
+   "request_time": "2026-09-02T15:04:03+00:00",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "credit_cost": 10,
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637",
+    "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C"
+   ],
+   "looks": "20x4",
+   "product_zip": "S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3.zip"
+  },
+  "id694-coh-control": {
+   "job_id": "9202f9f9-c27d-4006-b615-1fa54bad7b5c",
+   "status": "SUCCEEDED",
+   "request_time": "2026-09-02T15:04:03+00:00",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "credit_cost": 10,
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170924T030234_20170924T030302_007528_00D4A7_2A3F",
+    "S1B_IW_SLC__1SDV_20171006T030235_20171006T030303_007703_00D9AD_11C2"
+   ],
+   "looks": "20x4",
+   "product_zip": "S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E.zip"
+  },
+  "id694-coh-prepost": {
+   "job_id": "5a0e11a7-e4c0-4528-b27d-865fc5ae868d",
+   "status": "SUCCEEDED",
+   "request_time": "2026-09-02T15:04:03+00:00",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "credit_cost": 10,
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170912T030234_20170912T030302_007353_00CF97_B5B7",
+    "S1B_IW_SLC__1SDV_20170924T030234_20170924T030302_007528_00D4A7_2A3F"
+   ],
+   "looks": "20x4",
+   "product_zip": "S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748.zip"
+  }
+ },
+ "events": {
+  "ID666": {
+   "event_date": "2017-07-30",
+   "pairs": {
+    "prepost": {
+     "pair": "prepost",
+     "product": "S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3",
+     "ref_parts_in_shp": 1,
+     "grid": {
+      "w": 3663,
+      "h": 2983,
+      "posting_m": 80.0,
+      "epsg": "32638"
+     },
+     "ref": {
+      "n_px": 1516,
+      "median": 0.2202,
+      "mean": 0.2368,
+      "p25": 0.1344,
+      "p75": 0.3176
+     },
+     "background": {
+      "n_px": 283191,
+      "median": 0.3494,
+      "mean": 0.4372,
+      "p25": 0.2068,
+      "p75": 0.6687
+     },
+     "water_mask_used": true,
+     "water_mask_flagged_fraction": 0.1033,
+     "other_windthrow_parts_excluded": 561,
+     "contrast_median": 0.1292,
+     "auc_score_1minuscoh": 0.7041,
+     "youden": {
+      "thr": 0.6071,
+      "tpr": 0.8912,
+      "fpr": 0.557,
+      "j": 0.3342
+     },
+     "tpr_at_fpr5pct": 0.1082
+    },
+    "control": {
+     "pair": "control",
+     "product": "S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D",
+     "ref_parts_in_shp": 1,
+     "grid": {
+      "w": 3663,
+      "h": 2981,
+      "posting_m": 80.0,
+      "epsg": "32638"
+     },
+     "ref": {
+      "n_px": 1516,
+      "median": 0.634,
+      "mean": 0.6385,
+      "p25": 0.5099,
+      "p75": 0.7772
+     },
+     "background": {
+      "n_px": 283191,
+      "median": 0.7389,
+      "mean": 0.7104,
+      "p25": 0.5655,
+      "p75": 0.899
+     },
+     "water_mask_used": true,
+     "water_mask_flagged_fraction": 0.1034,
+     "other_windthrow_parts_excluded": 561,
+     "contrast_median": 0.1049,
+     "auc_score_1minuscoh": 0.6211,
+     "youden": {
+      "thr": 0.2143,
+      "tpr": 0.7718,
+      "fpr": 0.5752,
+      "j": 0.1965
+     },
+     "tpr_at_fpr5pct": 0.0204
+    }
+   },
+   "delta_check": {
+    "contrast_prepost_minus_control": 0.0243,
+    "auc_prepost": 0.7041,
+    "auc_control": 0.6211
+   },
+   "did": {
+    "control_warped_to_prepost_grid": true,
+    "ref": {
+     "n_px": 1516,
+     "median": 0.4077,
+     "mean": 0.4017,
+     "p25": 0.2673,
+     "p75": 0.5414
+    },
+    "background": {
+     "n_px": 283191,
+     "median": 0.268,
+     "mean": 0.2732,
+     "p25": 0.0972,
+     "p75": 0.431
+    },
+    "other_windthrow_parts_excluded": 561,
+    "did_excess_median": 0.1398,
+    "auc_dcoh": 0.671,
+    "youden": {
+     "thr": 0.268,
+     "tpr": 0.7493,
+     "fpr": 0.4999
+    },
+    "tpr_at_fpr5pct": 0.1418
+   },
+   "lband_reference": {
+    "dHH_invAUC": 0.8703,
+    "dHV_invAUC": 0.7318,
+    "src": "step11b"
+   }
+  },
+  "ID694": {
+   "event_date": "2017-09-19",
+   "pairs": {
+    "prepost": {
+     "pair": "prepost",
+     "product": "S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748",
+     "ref_parts_in_shp": 1,
+     "grid": {
+      "w": 3637,
+      "h": 2993,
+      "posting_m": 80.0,
+      "epsg": "32639"
+     },
+     "ref": {
+      "n_px": 252,
+      "median": 0.1835,
+      "mean": 0.2012,
+      "p25": 0.1274,
+      "p75": 0.271
+     },
+     "background": {
+      "n_px": 85296,
+      "median": 0.2574,
+      "mean": 0.2797,
+      "p25": 0.1665,
+      "p75": 0.3659
+     },
+     "water_mask_used": false,
+     "water_mask_flagged_fraction": 0.9964,
+     "other_windthrow_parts_excluded": 21,
+     "contrast_median": 0.0739,
+     "auc_score_1minuscoh": 0.6496,
+     "youden": {
+      "thr": 0.7366,
+      "tpr": 0.7421,
+      "fpr": 0.5156,
+      "j": 0.2265
+     },
+     "tpr_at_fpr5pct": 0.0794
+    },
+    "control": {
+     "pair": "control",
+     "product": "S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E",
+     "ref_parts_in_shp": 1,
+     "grid": {
+      "w": 3637,
+      "h": 2991,
+      "posting_m": 80.0,
+      "epsg": "32639"
+     },
+     "ref": {
+      "n_px": 252,
+      "median": 0.8506,
+      "mean": 0.8285,
+      "p25": 0.7713,
+      "p75": 0.904
+     },
+     "background": {
+      "n_px": 85296,
+      "median": 0.6061,
+      "mean": 0.6005,
+      "p25": 0.4932,
+      "p75": 0.7147
+     },
+     "water_mask_used": false,
+     "water_mask_flagged_fraction": 0.9964,
+     "other_windthrow_parts_excluded": 21,
+     "contrast_median": -0.2445,
+     "auc_score_1minuscoh": 0.1174,
+     "youden": {
+      "thr": 0.0223,
+      "tpr": 1.0,
+      "fpr": 0.999,
+      "j": 0.001
+     },
+     "tpr_at_fpr5pct": 0.0
+    }
+   },
+   "delta_check": {
+    "contrast_prepost_minus_control": 0.3184,
+    "auc_prepost": 0.6496,
+    "auc_control": 0.1174
+   },
+   "did": {
+    "control_warped_to_prepost_grid": true,
+    "ref": {
+     "n_px": 252,
+     "median": 0.635,
+     "mean": 0.6273,
+     "p25": 0.5292,
+     "p75": 0.7316
+    },
+    "background": {
+     "n_px": 85296,
+     "median": 0.327,
+     "mean": 0.3209,
+     "p25": 0.1984,
+     "p75": 0.4505
+    },
+    "other_windthrow_parts_excluded": 21,
+    "did_excess_median": 0.308,
+    "auc_dcoh": 0.908,
+    "youden": {
+     "thr": 0.5095,
+     "tpr": 0.8175,
+     "fpr": 0.1541
+    },
+    "tpr_at_fpr5pct": 0.5476
+   },
+   "lband_reference": {
+    "dHH_invAUC": [
+     0.7327,
+     0.8053
+    ],
+    "dHV_invAUC": [
+     0.905,
+     0.5938
+    ],
+    "src": "step11c (d2017-2016, d2018-2017)"
+   }
+  }
+ }
+}
