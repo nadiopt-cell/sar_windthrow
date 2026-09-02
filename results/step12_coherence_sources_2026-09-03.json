@@ -1,0 +1,363 @@
+{
+  "step": "12",
+  "title": "Coherence data sources: OPERA CSLC-S1 vs HyP3 INSAR-GAMMA (re-restored probe, corrected)",
+  "generated": "2026-09-02T19:10:08Z",
+  "generated_local_date": "2026-09-03",
+  "note": "Re-restoration of the lost 2026-09-02 step12 JSONs (cmr-probe + opera-bursts). CORRECTION vs the 2026-09-02 session notes: OPERA CSLC-S1 is a dead end for BOTH events (zero coverage over both AOIs in the whole archive; historical back-processing covers the Americas). The earlier 'ID694 -> OPERA OK (frame 322451)' record was a misreading; evidence below. Both events proceed via HyP3 INSAR-GAMMA.",
+  "collections": {
+    "OPERA_L2_CSLC-S1_V1": {
+      "short_name": "OPERA_L2_CSLC-S1_V1",
+      "concept_id": "C2777443834-ASF",
+      "provider": "ASF",
+      "entry_title": "OPERA Coregistered Single-Look Complex from Sentinel-1 validated product (Version 1)"
+    },
+    "SENTINEL-1A_SLC": {
+      "short_name": "SENTINEL-1A_SLC",
+      "concept_id": "C1214470488-ASF",
+      "provider": "ASF",
+      "entry_title": "Sentinel-1A Single Look Complex Product"
+    },
+    "SENTINEL-1B_SLC": {
+      "short_name": "SENTINEL-1B_SLC",
+      "concept_id": "C1327985661-ASF",
+      "provider": "ASF",
+      "entry_title": "Sentinel-1B Single Look Complex Product"
+    }
+  },
+  "methodology_sanity": {
+    "A_bbox_known_region": {
+      "region": "N Mexico (T151-322352 footprint)",
+      "hits": 12
+    },
+    "B_temporal_1min_window": {
+      "day": "2017-09-24T00:58Z",
+      "hits": 35,
+      "frames_sample": [
+        "T151-f322352",
+        "T151-f322353",
+        "T151-f322354",
+        "T151-f322355",
+        "T151-f322356",
+        "T151-f322357",
+        "T151-f322358",
+        "T151-f322359",
+        "T151-f322360",
+        "T151-f322361",
+        "T151-f322362",
+        "T151-f322363"
+      ]
+    },
+    "conclusion": "bbox and temporal searches return real OPERA granules over the Americas -> zero results over the Russian AOIs are genuine, not a search artifact"
+  },
+  "events": {
+    "ID666": {
+      "event": "squall line 30.07.2017 ~15-18 UTC, Komi Republic (950.1 ha windthrow)",
+      "event_date": "2017-07-30",
+      "aoi_4326": [
+        42.7212,
+        61.6388,
+        43.6912,
+        62.1101
+      ],
+      "grid": {
+        "epsg": 32638,
+        "bounds_m": [
+          379250.0,
+          6836060.0,
+          431700.0,
+          6887140.0
+        ],
+        "source": "step7_warp_manifest.json / step11b_palsar_lband_probe_2026-09-02.json"
+      },
+      "expected_pass": {
+        "platform": "S1B",
+        "direction": "descending",
+        "relative_orbit": 94,
+        "time_utc": "03:34-03:35"
+      },
+      "opera_pass_windows": {
+        "2017-06-16": {
+          "window": "2017-06-16T03:32:00Z..2017-06-16T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-06-28": {
+          "window": "2017-06-28T03:32:00Z..2017-06-28T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-07-10": {
+          "window": "2017-07-10T03:32:00Z..2017-07-10T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-07-22": {
+          "window": "2017-07-22T03:32:00Z..2017-07-22T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-08-03": {
+          "window": "2017-08-03T03:32:00Z..2017-08-03T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-08-15": {
+          "window": "2017-08-15T03:32:00Z..2017-08-15T03:37:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        }
+      },
+      "opera_full_archive_bbox": {
+        "bbox": "42.671,61.589,43.741,62.160",
+        "hits_all_dates": 0
+      },
+      "opera_verdict": "DEAD END: 0 granules in all pass windows, 0 granules over AOI in the whole archive -> OPERA CSLC-S1 has no European Russia coverage for this track/AOI (historical back-processing is Americas-only); HyP3 INSAR-GAMMA required",
+      "sentinel1_slc": {
+        "temporal": "2017-07-10T00:00:00Z,2017-08-19T23:59:59Z",
+        "same_orbit_filter": "sensing time within +/-10 min of 03:34 UTC (drops other tracks)",
+        "dates_found": [
+          "2017-07-10",
+          "2017-07-22",
+          "2017-08-03",
+          "2017-08-15"
+        ],
+        "granules": [
+          {
+            "sat": "S1B",
+            "date": "2017-07-10",
+            "time": "033446",
+            "abs_orbit": 6420,
+            "take_id": "00B493",
+            "ur": "S1B_IW_SLC__1SDV_20170710T033446_20170710T033513_006420_00B493_D588-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-07-22",
+            "time": "033447",
+            "abs_orbit": 6595,
+            "take_id": "00B994",
+            "ur": "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-08-03",
+            "time": "033448",
+            "abs_orbit": 6770,
+            "take_id": "00BE98",
+            "ur": "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-08-15",
+            "time": "033448",
+            "abs_orbit": 6945,
+            "take_id": "00C3B5",
+            "ur": "S1B_IW_SLC__1SDV_20170815T033448_20170815T033515_006945_00C3B5_87FD-SLC"
+          }
+        ],
+        "granules_total": 4
+      },
+      "insar_pairs": {
+        "primary_straddling_event": {
+          "ref": "2017-07-22",
+          "sec": "2017-08-03",
+          "temporal_baseline_days": 12
+        },
+        "control_pre_pre": {
+          "ref": "2017-07-10",
+          "sec": "2017-07-22",
+          "temporal_baseline_days": 12
+        },
+        "control_post_post": {
+          "ref": "2017-08-03",
+          "sec": "2017-08-15",
+          "temporal_baseline_days": 12
+        }
+      },
+      "hyp3_order_plan": {
+        "service": "ASF HyP3 (INSAR_GAMMA)",
+        "primary_pair": {
+          "ref": "2017-07-22",
+          "sec": "2017-08-03",
+          "ref_granule": "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637-SLC",
+          "sec_granule": "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C-SLC",
+          "temporal_baseline_days": 12
+        },
+        "control_pair_pre_pre": {
+          "ref": "2017-07-10",
+          "sec": "2017-07-22",
+          "ref_granule": "S1B_IW_SLC__1SDV_20170710T033446_20170710T033513_006420_00B493_D588-SLC",
+          "sec_granule": "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637-SLC",
+          "temporal_baseline_days": 12
+        },
+        "params": "defaults (5x1 looks, copernicus DEM); outputs include coherence + unwrapped phase",
+        "auth": "Earthdata Login via hyp3-sdk (JWT on file): hyp3.submit_insar_job(ref, sec)",
+        "note": "if the API rejects the CMR '-SLC' suffix, strip it from granule names"
+      }
+    },
+    "ID694": {
+      "event": "tornado S486 ~19.09.2017, Perm Krai (161.2 ha, 21 polygons; Date_1 04.09 - Date_2 02.10)",
+      "event_date": "2017-09-19",
+      "aoi_4326": [
+        49.6276,
+        59.3172,
+        49.9048,
+        59.4371
+      ],
+      "grid": {
+        "epsg": 32640,
+        "bounds_m": [
+          80900.0,
+          6598610.0,
+          98040.0,
+          6610200.0
+        ],
+        "source": "step8_id694_warp_manifest.json / step11c_palsar_id694_2026-09-02.json"
+      },
+      "expected_pass": {
+        "platform": "S1B",
+        "direction": "descending",
+        "relative_orbit": 152,
+        "time_utc": "03:02-03:03"
+      },
+      "opera_pass_windows": {
+        "2017-08-07": {
+          "window": "2017-08-07T03:00:00Z..2017-08-07T03:05:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-08-19": {
+          "window": "2017-08-19T03:00:00Z..2017-08-19T03:05:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-08-31": {
+          "window": "2017-08-31T03:00:00Z..2017-08-31T03:05:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-09-24": {
+          "window": "2017-09-24T03:00:00Z..2017-09-24T03:05:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        },
+        "2017-10-06": {
+          "window": "2017-10-06T03:00:00Z..2017-10-06T03:05:00Z",
+          "hits": 0,
+          "parsed": 0,
+          "frames": {}
+        }
+      },
+      "opera_full_archive_bbox": {
+        "bbox": "49.578,59.267,49.955,59.487",
+        "hits_all_dates": 0
+      },
+      "opera_verdict": "DEAD END: 0 granules in all pass windows, 0 granules over AOI in the whole archive -> OPERA CSLC-S1 has no European Russia coverage for this track/AOI (historical back-processing is Americas-only); HyP3 INSAR-GAMMA required",
+      "sentinel1_slc": {
+        "temporal": "2017-08-30T00:00:00Z,2017-10-09T23:59:59Z",
+        "same_orbit_filter": "sensing time within +/-10 min of 03:02 UTC (drops other tracks)",
+        "dates_found": [
+          "2017-08-31",
+          "2017-09-12",
+          "2017-09-24",
+          "2017-10-06"
+        ],
+        "granules": [
+          {
+            "sat": "S1B",
+            "date": "2017-08-31",
+            "time": "030233",
+            "abs_orbit": 7178,
+            "take_id": "00CA71",
+            "ur": "S1B_IW_SLC__1SDV_20170831T030233_20170831T030301_007178_00CA71_3D50-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-09-12",
+            "time": "030234",
+            "abs_orbit": 7353,
+            "take_id": "00CF97",
+            "ur": "S1B_IW_SLC__1SDV_20170912T030234_20170912T030302_007353_00CF97_B5B7-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-09-24",
+            "time": "030234",
+            "abs_orbit": 7528,
+            "take_id": "00D4A7",
+            "ur": "S1B_IW_SLC__1SDV_20170924T030234_20170924T030302_007528_00D4A7_2A3F-SLC"
+          },
+          {
+            "sat": "S1B",
+            "date": "2017-10-06",
+            "time": "030235",
+            "abs_orbit": 7703,
+            "take_id": "00D9AD",
+            "ur": "S1B_IW_SLC__1SDV_20171006T030235_20171006T030303_007703_00D9AD_11C2-SLC"
+          }
+        ],
+        "granules_total": 4
+      },
+      "insar_pairs": {
+        "primary_straddling_event": {
+          "ref": "2017-09-12",
+          "sec": "2017-09-24",
+          "temporal_baseline_days": 12
+        },
+        "control_pre_pre": {
+          "ref": "2017-08-31",
+          "sec": "2017-09-12",
+          "temporal_baseline_days": 12
+        },
+        "control_post_post": {
+          "ref": "2017-09-24",
+          "sec": "2017-10-06",
+          "temporal_baseline_days": 12
+        }
+      },
+      "hyp3_order_plan": {
+        "service": "ASF HyP3 (INSAR_GAMMA)",
+        "primary_pair": {
+          "ref": "2017-09-12",
+          "sec": "2017-09-24",
+          "ref_granule": "S1B_IW_SLC__1SDV_20170912T030234_20170912T030302_007353_00CF97_B5B7-SLC",
+          "sec_granule": "S1B_IW_SLC__1SDV_20170924T030234_20170924T030302_007528_00D4A7_2A3F-SLC",
+          "temporal_baseline_days": 12
+        },
+        "control_pair_pre_pre": {
+          "ref": "2017-08-31",
+          "sec": "2017-09-12",
+          "ref_granule": "S1B_IW_SLC__1SDV_20170831T030233_20170831T030301_007178_00CA71_3D50-SLC",
+          "sec_granule": "S1B_IW_SLC__1SDV_20170912T030234_20170912T030302_007353_00CF97_B5B7-SLC",
+          "temporal_baseline_days": 12
+        },
+        "params": "defaults (5x1 looks, copernicus DEM); outputs include coherence + unwrapped phase",
+        "auth": "Earthdata Login via hyp3-sdk (JWT on file): hyp3.submit_insar_job(ref, sec)",
+        "note": "if the API rejects the CMR '-SLC' suffix, strip it from granule names"
+      }
+    }
+  },
+  "auth": {
+    "cmr_queries": "anonymous (umm_json)",
+    "downloads": "Earthdata Login required; JWT on file (work_data/earthdata_jwt.txt, uid nadiopt, exp 2026-11-01); token NOT embedded in this JSON"
+  },
+  "calibration": {
+    "hyp3_insar_gamma": "INSAR_GAMMA delivers coregistered SLC pair -> coherence + unwrapped phase, geocoded (GAMMA); coherence needs no DN offset. For HyP3 GTC/RTC amplitude products: g0_dB = 20*log10(DN) - 83"
+  },
+  "next_actions": [
+    "ID666: order HyP3 INSAR-GAMMA pair 2017-07-22 -> 2017-08-03 (+ pre-pre control) -> coherence -> ref/bg statistics like step11 (inverted detection: coherence DROP over windthrow)",
+    "ID694: order HyP3 INSAR-GAMMA pair 2017-09-12 -> 2017-09-24 (+ pre-pre control) -> coherence -> ref/bg statistics like step11 (inverted detection: coherence DROP over windthrow)",
+    "Compare C-band coherence with L-band step11b/11c (invAUC 0.87/0.73-0.90) and the C-band WI baseline (UA 1.5-2.3 %; forest-mask UA 1.7 %)",
+    "ID694 note: SLC 2017-09-12 exists at ASF but was absent from the PC RTC step8 plan -> the 12-day straddling pair (09-12 -> 09-24) is available for coherence"
+  ]
+}

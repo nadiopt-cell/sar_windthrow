@@ -317,3 +317,47 @@ Work Log:
 Stage Summary:
 - Индекс-студия закрыла вопрос «может, другой индекс?»: нет — линейная семья C-band исчерпана, WI оптимален
 - Плагин v0.9.0 остаётся финальной функциональностью; следующий содержательный шаг — когерентность (SLC) или L-band, вне рамок текущего трека
+
+---
+Task ID: 18
+Agent: main (Super Z)
+Task: Восстановление песочницы из этого репозитория (03.09, после отката песочницы к снапшоту 02.09 16:53)
+
+Work Log:
+- Клонирован в plugin_work/sar_windthrow_repo; секрет-скан чист (0 токенов/JWT)
+- qgis_plugin/sentinel1_windthrow_plugin (v0.9.0) → каноничное дерево песочницы; тесты 90/90
+- pipeline/*.py → scripts/ песочницы; results/*.json (39) → download/intermediate_json_2026-09-02/repo_step8-10/
+- Собран download/sentinel1_windthrow_plugin_v0.9.0.zip
+
+Stage Summary:
+- Код v0.9.0 и результаты step7–10 восстановлены; вне репо остались только step11b/11c/12 (созданы после последнего пуша)
+
+---
+Task ID: 19 (зеркало из ворклога песочницы, 03.09)
+Agent: main (Super Z)
+Task: Восстановление step11b/step11c JSON из архива пользователя + Earthdata JWT
+
+Work Log:
+- Пользователь прислал step11b_palsar_lband_probe_2026-09-02.json (ID666) и step11c_palsar_id694_2026-09-02.json (ID694) → results/; коммит a6f0c5c
+- Сверка чисел с записями Tasks 12/13: ID666 dHH invAUC 0.8703 / dHV 0.7318; ID694 d2017-2016 HH 0.7327 / HV 0.905, d2018-2017 HH 0.8053 / HV 0.5938 — совпадает; Youden-инверсия, TPR@FPR5 %, мозаики PC alos-palsar-mosaic (K&C F02DAR)
+- Earthdata JWT (uid nadiopt, exp 2026-11-01) сохранён вне git (work_data/earthdata_jwt.txt, chmod 600); инцидент автосинка с earthdata.txt вычищен filter-repo, утечки не было
+
+Stage Summary:
+- step11b/11c ЗАКРЫТЫ; оставался только step12
+
+---
+Task ID: 20 (03.09)
+Agent: main (Super Z)
+Task: Перевосстановление step12 — live CMR-проба (когерентность: OPERA CSLC-S1 vs HyP3 INSAR-GAMMA)
+
+Work Log:
+- pipeline/step12_coherence_sources.py: анонимные CMR umm_json запросы; коллекции OPERA_L2_CSLC-S1_V1 (C2777443834-ASF), SENTINEL-1A/B_SLC (ASF)
+- КОРРЕКЦИЯ к записям 02.09: OPERA CSLC-S1 — тупик для ОБОИХ событий: full-archive bbox над AOI = 0; окна прохождений (6 дат ID666 @03:34Z, 5 дат ID694 @03:02Z) = 0; sanity на Мексике (bbox 12; окно 1 мин → 35 гранул T151-322352..63) доказывает, что это не артефакт поиска; бэк-процессинг OPERA — только Америка (v1.1, продукты 2023–2024)
+- Практика CMR: параметр page удалён (400) — пейджинг через заголовок cmr-search-after; UR OPERA v1.1: T{track}-{frame}-IW{n}_{sense}Z_..._{S1X}_{POL}_v
+- SLC-пары (ASF, same-orbit ±10 мин): ID666 (EPSG 32638 → 42.72–43.69E, 61.64–62.11N, Коми; T094): 07-10/07-22/08-03/08-15 → primary (07-22→08-03) 12 дн + контроли; гранулы 006595_00B994_2637-SLC + 006770_00BE98_9F8C-SLC (= сценам step7). ID694 (T152, Пермь): 08-31/09-12/09-24/10-06 → primary (09-12→09-24) 12 дн; 007353_00CF97_B5B7-SLC + 007528_00D4A7_2A3F-SLC (= post step8); SLC 09-12 есть в ASF (в PC RTC отсутствовал)
+- Верdict: оба события → HyP3 INSAR-GAMMA (Earthdata JWT uid nadiopt, exp 01.11.2026, вне git); план заказа — в JSON
+- Артефакты: results/step12_coherence_sources_2026-09-03.json, pipeline/step12_coherence_sources.py; гео-поправка: ID666 — Коми (не Удмуртия)
+
+Stage Summary:
+- Последний утерянный артефакт (step12) восстановлен с усиленной доказательной базой; путь к когерентности готов для обоих событий
+- Дальше: пуш (токен от пользователя), репо → private, отзыв ghp_rze8…, заказы HyP3 ID666+ID694
