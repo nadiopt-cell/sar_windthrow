@@ -253,3 +253,48 @@ Work Log:
 
 Stage Summary:
 - Дифференциальная диагностика сезонности завершена: C-сигнал отсутствует в оба сезона; направления дальнейшей работы — v0.9 лесная маска + индекс-студия (dVH/VH/VV/log-ratio на кэше) + L-band зондаж; ID590 — только через GRD+SNAP
+
+---
+Task ID: 10
+Agent: main (Super Z)
+Task: Подключение GitHub (запрос пользователя «а может нам правда подсоединиться к githab?»)
+
+Work Log:
+- Проверена связность из песочницы: github.com HTTP 200, git-over-HTTPS работает (ls-remote октоката OK); api.github.com 403 только анонимно (рейт-лимит общей IP 8.212.10.159) — с PAT авторизованные запросы проходят
+- Старый .git = 3,0 ГБ (бинарные данные в истории) на GitHub не переедет → решение: свежая чистая история, сборка репо заново (чекпоинты и ворклог сохраняют преемственность)
+- scripts/prepare_github_repo.sh → github_repo/ (6,1 МБ, 79 файлов): qgis_plugin/ (исходники v0.8.0 — 76/76 тестов проходят в копии), plugin_dist/ (ZIP 0.7.0+0.8.0 для Install from ZIP), pipeline/ (+ diag/), results/ (все JSON step7/step8 + сводки shikhov_db), data/shikhov_csv/ (открытый ESSD CSV, 5 МБ), docs/ (docx/xlsx + ворклоги), worklog.md, README.md (метод, таблица результатов step7/step8, roadmap, атрибуция), .gitignore (tif/gpkg/pycache)
+- git init -b main; локальный identity «Sentinel-1 Windthrow Team <sentinel1.sar.plugin@example.com>»; commit 40cd132
+- scripts/push_to_github.sh: GITHUB_TOKEN (+опц. GITHUB_USER/REPO_NAME/PRIVATE=true) → POST /user/repos (201 создано / 422 уже есть / 000 — фолбэк на пуш без API) → push origin main → снятие токена из remote URL
+
+Stage Summary:
+- Репо собрано и готово к пушу: ожидается классический PAT (scope repo) от пользователя; main, 1 коммит, 6,1 МБ — уложится в лимиты GitHub с запасом
+- Шейпы БД Шихова (128 МБ) в репо не включены — только CSV и производные сводки
+- После первого пуша: v0.9 (лесная маска) и студия индексов продолжаются прямо в репо; litterbox-ссылки (Task 8) остаются как одноразовая доставка
+
+Task 10 — завершение (push выполнен):
+- Токен пользователя валиден (login nadiopt-cell); репо nadiopt-cell/sar_windthrow создано пользователем заранее (private, пустое) → POST вернул 422, скрипт перешёл к пушу
+- git push -u origin main: OK, * [new branch] main -> main; верификация: remote HEAD = local HEAD = 40cd132c0b04fabd3738ba5f9d63d24d84a19ccc; API git/trees: 79 blob'ов, все 9 top-level секций на месте
+- Токен снят из remote config (origin = чистый https URL); в выводе пуша токен маскировался sed'ом
+- Артефакт: https://github.com/nadiopt-cell/sar_windthrow (приватный, 6,1 МБ, 1 коммит)
+- Гигиена: токен ghp_... попал в чат — рекомендовать пользователю revoke после окончания совместных пушей или ротацию на fine-grained
+
+---
+Task ID: 11 (v0.9 — лесная маска + step9)
+Agent: main (Super Z)
+Task: Реимплементация лесной маски в плагин (v0.9.0) + валидация на ID666 (запрос «поехали по порядку — идея №1»)
+
+Work Log:
+- sources/forest_mask.py: ESA WorldCover через PC STAC (collection esa-worldcover, asset map, класс 10 Tree cover) — search/sign/vsicurl-warp на сетку S1 (nearest) → бинаризация → majority 3×3; dispatcher build_forest_mask(worldcover|file); bbox_4326 через osr с OAMS_TRADITIONAL_GIS_ORDER (урок step7); read_ref_info — публичная обёртка
+- windthrow.py: detect_file(+forest_mask_path) — пересечение с analysis mask (_intersect_masks, чанками); при отсутствии bg-mask статистика (offsets+mean) идёт по лесу (поведение статьи); в result добавлен forest_mask
+- GUI: чекбокс «Restrict detection to forest mask» + источник (Custom file | ESA WorldCover auto) + год 2020/2021; авто-скачивание маски в _work до детекции (прогресс 0-20% маска, 20-100% детекция); маска добавляется на карту, выводится в сообщении
+- Баг пойманный тестами: numpy-фолбэк majority-фильтра суммировал значения (0/255) вместо количества соседей — исправлен (голосование по бинарной маске)
+- Тесты 76→90 (+14): classify/majority (scipy и фолбэк), warp на сетку, bbox_4326, STAC-стабы, детектор: ограничение, пересечение mask∩forest, статистика по лесу, обратная совместимость
+- step9 (scripts/run_windthrow_forestmask_step9.py, маски/detect/report, resume): WC-2020 собран за 7 с; лес 81,5% AOI, покрытие эталона 98,1% (wc_closed 83,6%/100%); VH-прокси −18…−19 дБ — почти no-op (97-98% AOI «лес», медиана VH −13,9 дБ — летняя тайга)
+- Детекция 3 варианта (A/C/D) × 3 режима маски, пороги идентичны step7 (статистика на bg-кольце): PA не изменилась (0.126/0.111/0.084), UA +13-15% отн. (A 0.015→0.017, C 0.020→0.023, D 0.023→0.026), ложно-тревожная площадь −19…−40% (C 7335→4744 га, D 5740→3427 га); остаточные FP — мелкие объекты внутри леса (вырубки/депрессии) → следующий рычаг: min_pixels/индекс
+- Артефакты: download/step9_forest_mask_diag_2026-09-02.json, windthrow_id666_{A,C,D}_{wc,wc_closed,vh185}_step9.json (9 шт), windthrow_id666_forestmask_step9_2026-09-02.json; ZIP download/sentinel1_windthrow_plugin_v0.9.0.zip (32 файла, unzip -t OK)
+- Доки: metadata 0.9.0, RELEASE_NOTES_v0.9.0.md, README (бейджи 0.9.0/90 tests), METHOD §3b (лесная маска + caveat про регенерацию)
+
+Stage Summary:
+- v0.9.0 готов: лесная маска WorldCover работает end-to-end в плагине (STAC→маска→детекция), 90/90 тестов
+- step9: маска безвредна для PA и умеренно полезна для UA; главный остаточный шум — внутри леса; WorldCover рекомендован вместо VH-прокси
+- Дальше: студия индексов (dVH/VH/VV/log-ratio) и/или увеличение min_pixels как следующий шаг против лесных FP

@@ -1,0 +1,42 @@
+{
+  "bbox_4326": [
+    42.6869,
+    61.63883,
+    43.71063,
+    62.11014
+  ],
+  "masks": {
+    "wc": {
+      "path": "/home/z/my-project/work_data/forest/id666_wc2020_forest.tif",
+      "forest_share_aoi": 0.8146,
+      "forest_area_ha": 218234.7,
+      "ref_coverage": 0.9811
+    },
+    "wc_closed": {
+      "path": "/home/z/my-project/work_data/forest/id666_wc2020_forest_closed.tif",
+      "forest_share_aoi": 0.8361,
+      "forest_area_ha": 223998.6,
+      "ref_coverage": 1.0
+    },
+    "vh180": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh180_forest.tif",
+      "forest_share_aoi": 0.9642,
+      "forest_area_ha": 258321.9,
+      "ref_coverage": 0.9999
+    },
+    "vh185": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh185_forest.tif",
+      "forest_share_aoi": 0.9775,
+      "forest_area_ha": 261895.1,
+      "ref_coverage": 1.0
+    },
+    "vh190": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh190_forest.tif",
+      "forest_share_aoi": 0.9858,
+      "forest_area_ha": 264102.5,
+      "ref_coverage": 1.0
+    }
+  },
+  "ref_area_ha": 950.0,
+  "aoi_area_ha": 267914.6
+}

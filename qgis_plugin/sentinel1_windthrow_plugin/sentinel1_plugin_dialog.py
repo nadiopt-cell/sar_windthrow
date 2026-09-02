@@ -65,7 +65,9 @@ from .sources import (
     WindthrowDetector,
     common_polarizations,
     extract_polarization,
+    pair_by_polarization,
 )
+from .sources import forest_mask
 from .ui import DrawnRectangleTool
 
 
@@ -1288,15 +1290,38 @@ class Sentinel1PluginDialog(QDialog):
         params_form.addRow("", self.wt_norm_chk)
 
         # Analysis mask (forest restriction, optional)
-        self.wt_mask_chk = QCheckBox("Restrict detection to analysis mask", page)
+        self.wt_mask_chk = QCheckBox("Restrict detection to forest mask", page)
         self.wt_mask_chk.setToolTip(
-            "Optional forest/AOI mask: raster (values > 0 = analysed) or "
-            "vector layer (polygons = analysed). The mean WI and the "
-            "detections are then computed only inside it — exactly like "
-            "the forest mask in the paper, and it removes most false "
-            "alarms over agricultural fields."
+            "Optional forest mask: detections and the adaptive-threshold "
+            "mean are computed only inside it — exactly like the forest "
+            "mask in the paper, and it removes most false alarms over "
+            "agricultural fields and clearcuts."
         )
         params_form.addRow("", self.wt_mask_chk)
+        self.wt_mask_source_combo = QComboBox(page)
+        self.wt_mask_source_combo.addItem(
+            "Custom file (raster / vector)", "file")
+        self.wt_mask_source_combo.addItem(
+            "ESA WorldCover 10 m (auto-download)", "worldcover")
+        self.wt_mask_source_combo.setToolTip(
+            "v0.9 forest mask source. \u2018Custom file\u2019 uses your own "
+            "raster (values &gt; 0 = forest) or vector layer. \u2018ESA "
+            "WorldCover\u2019 searches the esa-worldcover collection on "
+            "Planetary Computer for the AOI, takes the 10 m Tree-cover "
+            "class and resamples it onto the radar grid — no local "
+            "land-cover file needed."
+        )
+        params_form.addRow("Mask source:", self.wt_mask_source_combo)
+        self.wt_wc_year_combo = QComboBox(page)
+        for _year in (2021, 2020):
+            self.wt_wc_year_combo.addItem(str(_year), _year)
+        self.wt_wc_year_combo.setToolTip(
+            "ESA WorldCover map epoch. Pick the year closest to (but not "
+            "after) the storm event — regrowth may reclassify old "
+            "windthrows as shrub/grass in later epochs."
+        )
+        self.wt_wc_year_combo.setEnabled(False)
+        params_form.addRow("WorldCover year:", self.wt_wc_year_combo)
         self.wt_mask_edit = QLineEdit(page)
         self.wt_mask_edit.setPlaceholderText(
             "Forest mask / AOI (GeoTIFF, GeoPackage, Shapefile…)"
@@ -1308,7 +1333,19 @@ class Sentinel1PluginDialog(QDialog):
         params_form.addRow("Mask file:", wt_mask_row)
         wt_mask_browse.clicked.connect(self._on_wt_browse_mask)
         self.wt_mask_edit.setEnabled(False)
-        self.wt_mask_chk.toggled.connect(self.wt_mask_edit.setEnabled)
+
+        def _sync_mask_source() -> None:
+            """Enable exactly the widgets of the active mask source."""
+            is_file = (
+                self.wt_mask_source_combo.currentData() or "file") == "file"
+            on = self.wt_mask_chk.isChecked()
+            self.wt_mask_edit.setEnabled(on and is_file)
+            wt_mask_browse.setEnabled(on and is_file)
+            self.wt_wc_year_combo.setEnabled(on and not is_file)
+
+        self.wt_mask_chk.toggled.connect(_sync_mask_source)
+        self.wt_mask_source_combo.currentIndexChanged.connect(
+            _sync_mask_source)
 
         layout.addWidget(params_group)
 
@@ -1331,9 +1368,11 @@ class Sentinel1PluginDialog(QDialog):
             "normalization), "
             "<code>&lt;base&gt;_mask.tif</code> (uint8 mask), "
             "<code>&lt;base&gt;.gpkg</code> (polygons, attribute "
-            "<code>area_ha</code>) and, when several scenes are composited, "
+            "<code>area_ha</code>), and when several scenes are composited, "
             "<code>&lt;base&gt;_pre_&lt;pol&gt;.tif</code> / "
-            "<code>&lt;base&gt;_post_&lt;pol&gt;.tif</code>.</small>",
+            "<code>&lt;base&gt;_post_&lt;pol&gt;.tif</code>; in WorldCover "
+            "mask mode also <code>&lt;base&gt;_forest_wc&lt;year&gt;.tif</code> "
+            "(the forest mask).</small>",
             page,
         )
         out_hint.setWordWrap(True)
@@ -1498,15 +1537,21 @@ class Sentinel1PluginDialog(QDialog):
             output_base = os.path.splitext(output_base)[0]
 
         mask_path = None
+        mask_source = "file"
+        wc_year = 2020
         if self.wt_mask_chk.isChecked():
-            mask_path = self.wt_mask_edit.text().strip()
-            if not mask_path or not os.path.isfile(mask_path):
-                QMessageBox.warning(
-                    self, "Invalid mask",
-                    "The analysis mask file does not exist. Uncheck the "
-                    "mask option or pick a valid file.",
-                )
-                return
+            mask_source = self.wt_mask_source_combo.currentData() or "file"
+            if mask_source == "file":
+                mask_path = self.wt_mask_edit.text().strip()
+                if not mask_path or not os.path.isfile(mask_path):
+                    QMessageBox.warning(
+                        self, "Invalid mask",
+                        "The forest mask file does not exist. Uncheck the "
+                        "mask option or pick a valid file.",
+                    )
+                    return
+            else:
+                wc_year = int(self.wt_wc_year_combo.currentData() or 2020)
 
         detector = WindthrowDetector(
             threshold_mode=self.wt_mode_combo.currentData() or "adaptive",
@@ -1528,17 +1573,44 @@ class Sentinel1PluginDialog(QDialog):
                 (lambda f, m: task.setProgress(float(f))) if task else None
             )
             cancel_cb = task.isCanceled if task else None
+            # v0.9: auto-download of the forest mask (ESA WorldCover)
+            # takes ~0-20% of the progress bar, the detection the rest.
+            forest_path = None
+            if mask_source == "worldcover":
+                ref_path = pair_by_polarization(post_paths)[pols[0]][0]
+                ref_info = forest_mask.read_ref_info(ref_path)
+                bbox = forest_mask.bbox_4326(ref_info)
+                forest_path = forest_mask.build_forest_mask(
+                    "worldcover",
+                    ref_info,
+                    f"{output_base}_forest_wc{wc_year}.tif",
+                    bbox=bbox,
+                    year=wc_year,
+                    progress_cb=(
+                        (lambda f, m: task.setProgress(20.0 * float(f) / 100.0))
+                        if task else None),
+                    cancel_cb=cancel_cb,
+                )
+            detect_progress = (
+                (lambda f, m: task.setProgress(
+                    20.0 + 0.8 * float(f))) if task else None)
             return detector.detect_file(
                 pre_paths=pre_paths,
                 post_paths=post_paths,
                 output_base=output_base,
                 analysis_mask_path=mask_path,
-                progress_cb=progress_cb,
+                progress_cb=detect_progress,
                 cancel_cb=cancel_cb,
+                forest_mask_path=forest_path,
             )
 
+        mask_label = {
+            "file": "forest mask file",
+            "worldcover": f"WorldCover {wc_year}",
+        }.get(mask_source, "") if self.wt_mask_chk.isChecked() else ""
         desc = (f"Windthrow detection ({pol_label}, "
-                f"{os.path.basename(output_base)})")
+                f"{os.path.basename(output_base)}"
+                + (f", {mask_label}" if mask_label else "") + ")")
         task = AnalysisTask(description=desc, work=_work)
         holder["task"] = task
         task.detector = detector
@@ -1573,7 +1645,8 @@ class Sentinel1PluginDialog(QDialog):
             vector_path = result.get("vector", "")
             # Load all artifacts when the Settings option is enabled.
             if self.add_to_map_chk.isChecked():
-                for key, label in (("wi", "WI"), ("mask", "Mask")):
+                for key, label in (("wi", "WI"), ("mask", "Mask"),
+                                   ("forest_mask", "Forest")):
                     p = result.get(key)
                     if p and os.path.isfile(p):
                         self._add_raster_to_map(p, os.path.basename(p))
@@ -1583,13 +1656,15 @@ class Sentinel1PluginDialog(QDialog):
             thr = result.get("threshold_db")
             mean = result.get("mean_wi")
             n_obj = result.get("n_objects")
+            forest_note = ("\nForest mask: " + str(result.get("forest_mask"))
+                           if result.get("forest_mask") else "")
             QMessageBox.information(
                 self, "Windthrow detection complete",
                 f"Detected objects: {n_obj}\n"
                 f"Mean WI: {mean:.2f} dB\n"
                 f"Threshold used: {thr:.2f} dB\n\n"
                 f"Outputs:\n{result.get('wi')}\n{result.get('mask')}\n"
-                f"{vector_path}",
+                f"{vector_path}" + forest_note,
             )
             log_info(
                 f"Windthrow detection finished: {n_obj} objects, "

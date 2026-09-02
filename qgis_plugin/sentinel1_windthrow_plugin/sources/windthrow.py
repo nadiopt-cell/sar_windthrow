@@ -482,6 +482,61 @@ def _resolve_mask_raster(path: str, ref_info: Dict, tmp_dir: str) -> str:
     return rasterize_vector_mask(path, ref_info, tmp_dir)
 
 
+def _intersect_masks(
+    mask_a: str, mask_b: str, ref_info: Dict, tmp_dir: str
+) -> str:
+    """Pixel-wise AND of two reference-grid mask rasters (0/255 byte)."""
+    _ensure_gdal()
+    os.makedirs(tmp_dir, exist_ok=True)
+    name_a = os.path.splitext(os.path.basename(mask_a))[0]
+    name_b = os.path.splitext(os.path.basename(mask_b))[0]
+    out_path = os.path.join(tmp_dir, f"_mask_{name_a}_x_{name_b}.tif")
+    if os.path.exists(out_path):
+        try:
+            gdal.GetDriverByName("GTiff").Delete(out_path)
+        except Exception:
+            pass
+    ds_a = gdal.Open(mask_a, gdal.GA_ReadOnly)
+    ds_b = gdal.Open(mask_b, gdal.GA_ReadOnly)
+    if ds_a is None or ds_b is None:
+        raise RuntimeError(
+            f"Cannot open masks for intersection: {mask_a}, {mask_b}")
+    width, height = ref_info["width"], ref_info["height"]
+    for ds, label in ((ds_a, mask_a), (ds_b, mask_b)):
+        if (ds.GetRasterBand(1).XSize != width
+                or ds.GetRasterBand(1).YSize != height):
+            raise RuntimeError(
+                f"Mask grid mismatch while intersecting: {label} is "
+                f"{ds.GetRasterBand(1).XSize}x{ds.GetRasterBand(1).YSize}, "
+                f"expected {width}x{height}")
+    driver = gdal.GetDriverByName("GTiff")
+    out = driver.Create(
+        out_path, width, height, 1, gdal.GDT_Byte,
+        options=["TILED=YES", "COMPRESS=LZW"],
+    )
+    if out is None:
+        raise RuntimeError(f"Cannot create intersected mask: {out_path}")
+    try:
+        out.SetGeoTransform(ref_info["geotransform"])
+        if ref_info["projection"]:
+            out.SetProjection(ref_info["projection"])
+        band_a = ds_a.GetRasterBand(1)
+        band_b = ds_b.GetRasterBand(1)
+        out_band = out.GetRasterBand(1)
+        out_band.SetNoDataValue(0)
+        for y0 in range(0, height, _CHUNK_ROWS):
+            rows = min(_CHUNK_ROWS, height - y0)
+            a = band_a.ReadAsArray(0, y0, width, rows) > 0
+            b = band_b.ReadAsArray(0, y0, width, rows) > 0
+            out_band.WriteArray(((a & b).astype(np.uint8)) * 255, 0, y0)
+        out_band.FlushCache()
+    finally:
+        ds_a = None
+        ds_b = None
+        out = None
+    return out_path
+
+
 def _create_output_vector(
     vector_path: str, projection_wkt: str
 ):
@@ -571,6 +626,7 @@ class WindthrowDetector:
         progress_cb: ProgressCallback = None,
         cancel_cb: CancelCallback = None,
         background_mask_path: Optional[str] = None,
+        forest_mask_path: Optional[str] = None,
     ) -> Dict[str, object]:
         """Run the full detection chain and write raster + vector outputs.
 
@@ -592,6 +648,13 @@ class WindthrowDetector:
             Rüetschi-style forest mean pass a forest sample that EXCLUDES
             known windthrow polygons (e.g. a buffer around them minus
             the polygons themselves).
+        :param forest_mask_path: optional raster or vector defining the
+            FOREST area (v0.9); detections are restricted to the
+            intersection with ``analysis_mask_path``, and — when no
+            ``background_mask_path`` is given — the adaptive-threshold
+            mean is computed over the forest only (paper behaviour).
+            ESA WorldCover rasters built by
+            ``sources.forest_mask`` are directly usable here.
         :return: dict with keys ``wi``, ``mask``, ``vector``,
             ``composites``, ``threshold_db``, ``mean_wi``, ``offset_db``,
             ``normalize_background``.
@@ -646,6 +709,22 @@ class WindthrowDetector:
                     f"Background mask file not found: {background_mask_path}")
             bg_mask_raster = _resolve_mask_raster(
                 background_mask_path, ref_info, tmp_dir)
+
+        # Optional forest mask (v0.9) — restricts the analysis area to
+        # forest: detections and (by default) the adaptive-threshold
+        # statistics live inside the forest ∩ analysis-mask intersection.
+        forest_raster: Optional[str] = None
+        if forest_mask_path:
+            if not os.path.isfile(forest_mask_path):
+                raise ValueError(
+                    f"Forest mask file not found: {forest_mask_path}")
+            forest_raster = _resolve_mask_raster(
+                forest_mask_path, ref_info, tmp_dir)
+            if mask_raster:
+                mask_raster = _intersect_masks(
+                    mask_raster, forest_raster, ref_info, tmp_dir)
+            else:
+                mask_raster = forest_raster
 
         # ---- 2. Composites per period / polarisation ------------------
         comp_paths: Dict[Tuple[str, str], str] = {}
@@ -961,4 +1040,6 @@ class WindthrowDetector:
             "n_objects": self.n_objects,
             "offset_db": dict(self.offset_db),
             "normalize_background": self.normalize_background,
+            "forest_mask": (os.path.abspath(forest_raster)
+                            if forest_raster else None),
         }

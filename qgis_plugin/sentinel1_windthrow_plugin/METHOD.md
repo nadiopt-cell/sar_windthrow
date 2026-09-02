@@ -58,6 +58,32 @@ separation of damaged from intact pixels.
 Reported accuracies of the original method: PA 0.85–0.88, UA
 0.65–0.81 (areas ≥ 0.5 ha, 10 m grid).
 
+## 3b. Forest mask (v0.9)
+
+Detections and the adaptive-threshold mean can be restricted to forest.
+Two sources are built in:
+
+* **ESA WorldCover 10 m** (`esa-worldcover` on Planetary Computer,
+  epochs 2020 / 2021): Tree-cover class (10) is warped onto the radar
+  grid (nearest), cleaned with a 3×3 majority filter and written as
+  `<base>_forest_wc<year>.tif`. The STAC search, SAS signing and
+  windowed COG reading (`/vsicurl/`) reuse the plugin's PC client —
+  no local land-cover download is required.
+* **User file** — any raster (values > 0) or vector (polygons).
+
+The forest mask is intersected with the analysis mask; when no separate
+background mask is given, offsets and the mean WI are computed over the
+forest sample (paper behaviour). Caveat: WorldCover epochs postdate many
+storms — young regrowth inside old windthrows may be classified as
+shrub/grass, so prefer the epoch closest to (but not after) the event,
+or enable a closing operation in pipeline use.
+
+Validation on event ID666 (squall 30.07.2017, ~950 ha; thresholds held
+identical to the baseline run): PA unchanged (reference coverage
+98–100 %), UA +13–15 % relative, false-alarm area −19…−40 % depending
+on the variant. Remaining false positives are small forest-internal
+disturbances — increase `n` or switch index for those.
+
 ### 3.1 Background normalization (v0.8, not in the paper)
 
 `normalize_background=True` (default) adds a weather-shift guard:

@@ -1,0 +1,28 @@
+{
+  "variant": "D",
+  "mask_mode": "vh185",
+  "desc": "stack + FIXED 3.0 dB, norm ON (WET post)",
+  "forest_mask": "/home/z/my-project/work_data/forest/id666_vh185_forest.tif",
+  "params": {
+    "threshold_mode": "fixed",
+    "a_db": 2.9,
+    "fixed_threshold_db": 3.0,
+    "min_pixels": 27,
+    "median_filter_size": 3
+  },
+  "offset_db": {
+    "VV": 0.804154634475708,
+    "VH": 1.068016529083252
+  },
+  "mean_wi": -0.07462967368496444,
+  "threshold_db": 3.0,
+  "n_objects": 9751,
+  "detected_area_ha": 5201.8,
+  "runtime_s": 13.1,
+  "outputs": {
+    "wi": "/home/z/my-project/work_data/out_fm/D_vh185/id666_D_vh185_wi_norm.tif",
+    "mask": "/home/z/my-project/work_data/out_fm/D_vh185/id666_D_vh185_mask.tif",
+    "vector": "/home/z/my-project/work_data/out_fm/D_vh185/id666_D_vh185.gpkg"
+  },
+  "timestamp": "2026-09-02T11:20:12"
+}

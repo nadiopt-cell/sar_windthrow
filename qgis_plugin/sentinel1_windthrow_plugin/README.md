@@ -1,9 +1,9 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-72%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/tests-90%20passed-success.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 **windthrow** (storm-damaged forest) with the bi-temporal
@@ -16,7 +16,7 @@ Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 |---------------------|----------------------------------------------------------------------------------|
 | Search & Download   | STAC search on Microsoft Planetary Computer (GRD **or** RTC) + COG download      |
 | Preprocess          | Linear→dB, Lee speckle filter, optional land/water mask                          |
-| Windthrow Detection | Pre/post composites → **WI = ΔVV + ΔVH** → threshold → object filter → polygons  |
+| Windthrow Detection | Pre/post composites → **WI = ΔVV + ΔVH** → threshold → object filter → polygons; optional **forest mask** (ESA WorldCover auto-download or your own file, v0.9)  |
 | Settings            | Default folders + detection parameters, persisted in `QgsSettings`               |
 
 Outputs of a detection run:

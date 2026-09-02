@@ -1,0 +1,199 @@
+{
+  "event": {
+    "id": 666,
+    "storm": "squall 30.07.2017",
+    "region": "north Sverdlovsk oblast",
+    "ref_area_ha": 950.0
+  },
+  "purpose": "v0.9 forest mask validation: object-based PA/UA without vs with forest restriction; thresholds identical to step7 (stats on the bg ring)",
+  "forest_masks": {
+    "wc": {
+      "path": "/home/z/my-project/work_data/forest/id666_wc2020_forest.tif",
+      "forest_share_aoi": 0.8146,
+      "forest_area_ha": 218234.7,
+      "ref_coverage": 0.9811
+    },
+    "wc_closed": {
+      "path": "/home/z/my-project/work_data/forest/id666_wc2020_forest_closed.tif",
+      "forest_share_aoi": 0.8361,
+      "forest_area_ha": 223998.6,
+      "ref_coverage": 1.0
+    },
+    "vh180": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh180_forest.tif",
+      "forest_share_aoi": 0.9642,
+      "forest_area_ha": 258321.9,
+      "ref_coverage": 0.9999
+    },
+    "vh185": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh185_forest.tif",
+      "forest_share_aoi": 0.9775,
+      "forest_area_ha": 261895.1,
+      "ref_coverage": 1.0
+    },
+    "vh190": {
+      "path": "/home/z/my-project/work_data/forest/id666_vh190_forest.tif",
+      "forest_share_aoi": 0.9858,
+      "forest_area_ha": 264102.5,
+      "ref_coverage": 1.0
+    }
+  },
+  "variants": {
+    "A": {
+      "none": {
+        "n_ref_components": 524,
+        "n_det_objects": 18684,
+        "tp_ref": 66,
+        "tp_det": 278,
+        "pa": 0.126,
+        "ua": 0.0149,
+        "f1": 0.0266,
+        "detected_area_ha": 9505.95,
+        "mean_wi": 2.7626986500648627,
+        "threshold_db": 5.662698650064863
+      },
+      "wc": {
+        "n_ref_components": 524,
+        "n_det_objects": 16473,
+        "tp_ref": 66,
+        "tp_det": 281,
+        "pa": 0.126,
+        "ua": 0.0171,
+        "f1": 0.03,
+        "detected_area_ha": 7729.5,
+        "mean_wi": 2.7626986500648627,
+        "threshold_db": 5.662698650064863
+      },
+      "wc_closed": {
+        "n_ref_components": 524,
+        "n_det_objects": 17113,
+        "tp_ref": 66,
+        "tp_det": 282,
+        "pa": 0.126,
+        "ua": 0.0165,
+        "f1": 0.0291,
+        "detected_area_ha": 8420.3,
+        "mean_wi": 2.7626986500648627,
+        "threshold_db": 5.662698650064863
+      },
+      "vh185": {
+        "n_ref_components": 524,
+        "n_det_objects": 18558,
+        "tp_ref": 65,
+        "tp_det": 278,
+        "pa": 0.124,
+        "ua": 0.015,
+        "f1": 0.0267,
+        "detected_area_ha": 9302.1,
+        "mean_wi": 2.7626986500648627,
+        "threshold_db": 5.662698650064863
+      }
+    },
+    "C": {
+      "none": {
+        "n_ref_components": 524,
+        "n_det_objects": 13130,
+        "tp_ref": 58,
+        "tp_det": 266,
+        "pa": 0.1107,
+        "ua": 0.0203,
+        "f1": 0.0342,
+        "detected_area_ha": 7334.83,
+        "mean_wi": 1.7975412301503277,
+        "threshold_db": 4.697541230150327
+      },
+      "wc": {
+        "n_ref_components": 524,
+        "n_det_objects": 11378,
+        "tp_ref": 57,
+        "tp_det": 261,
+        "pa": 0.1088,
+        "ua": 0.0229,
+        "f1": 0.0379,
+        "detected_area_ha": 4744.5,
+        "mean_wi": 1.7975412301503277,
+        "threshold_db": 4.697541230150327
+      },
+      "wc_closed": {
+        "n_ref_components": 524,
+        "n_det_objects": 12116,
+        "tp_ref": 58,
+        "tp_det": 266,
+        "pa": 0.1107,
+        "ua": 0.022,
+        "f1": 0.0366,
+        "detected_area_ha": 5460.5,
+        "mean_wi": 1.7975412301503277,
+        "threshold_db": 4.697541230150327
+      },
+      "vh185": {
+        "n_ref_components": 524,
+        "n_det_objects": 12819,
+        "tp_ref": 58,
+        "tp_det": 267,
+        "pa": 0.1107,
+        "ua": 0.0208,
+        "f1": 0.0351,
+        "detected_area_ha": 6738.5,
+        "mean_wi": 1.7975412301503277,
+        "threshold_db": 4.697541230150327
+      }
+    },
+    "D": {
+      "none": {
+        "n_ref_components": 524,
+        "n_det_objects": 9961,
+        "tp_ref": 44,
+        "tp_det": 226,
+        "pa": 0.084,
+        "ua": 0.0227,
+        "f1": 0.0357,
+        "detected_area_ha": 5740.43,
+        "mean_wi": -0.07462967368496444,
+        "threshold_db": 3.0
+      },
+      "wc": {
+        "n_ref_components": 524,
+        "n_det_objects": 8448,
+        "tp_ref": 44,
+        "tp_det": 224,
+        "pa": 0.084,
+        "ua": 0.0265,
+        "f1": 0.0403,
+        "detected_area_ha": 3426.8,
+        "mean_wi": -0.07462967368496444,
+        "threshold_db": 3.0
+      },
+      "wc_closed": {
+        "n_ref_components": 524,
+        "n_det_objects": 9143,
+        "tp_ref": 44,
+        "tp_det": 226,
+        "pa": 0.084,
+        "ua": 0.0247,
+        "f1": 0.0382,
+        "detected_area_ha": 4052.1,
+        "mean_wi": -0.07462967368496444,
+        "threshold_db": 3.0
+      },
+      "vh185": {
+        "n_ref_components": 524,
+        "n_det_objects": 9751,
+        "tp_ref": 44,
+        "tp_det": 227,
+        "pa": 0.084,
+        "ua": 0.0233,
+        "f1": 0.0365,
+        "detected_area_ha": 5201.8,
+        "mean_wi": -0.07462967368496444,
+        "threshold_db": 3.0
+      }
+    }
+  },
+  "metric_definition": {
+    "type": "object-based, 8-connected components",
+    "pa": "reference component is TP when >=30% of its pixels are flagged",
+    "ua": "detected object is TP when >=30% of its pixels are inside reference"
+  },
+  "updated": "2026-09-02T11:20:45"
+}

@@ -7,6 +7,8 @@ Public API:
     SARPreprocessor   — SAR preprocessing utilities (dB, speckle, land mask)
     WindthrowDetector — bi-temporal WI windthrow detector
                         (Rüetschi et al. 2019: WI = ΔVV + ΔVH)
+    forest_mask       — forest-mask providers (v0.9): ESA WorldCover via
+                        PC STAC / user file, on the radar reference grid
 """
 
 from . import pc_client as _pc_client
@@ -24,6 +26,18 @@ from .windthrow import (
     mask_from_threshold,
     median_filter_nan,
     pair_by_polarization,
+)
+from . import forest_mask as forest_mask
+from .forest_mask import (
+    DEFAULT_FOREST_CLASSES,
+    bbox_4326,
+    build_forest_mask,
+    build_forest_mask_from_rasters,
+    build_worldcover_forest_mask,
+    classify_forest,
+    fetch_worldcover_hrefs,
+    majority_filter_mask,
+    read_ref_info,
 )
 
 # Route pc_client warnings (retry notices, SAS-sign failures, token-cache
@@ -51,4 +65,14 @@ __all__ = [
     "mask_from_threshold",
     "median_filter_nan",
     "pair_by_polarization",
+    "forest_mask",
+    "DEFAULT_FOREST_CLASSES",
+    "bbox_4326",
+    "build_forest_mask",
+    "build_forest_mask_from_rasters",
+    "build_worldcover_forest_mask",
+    "classify_forest",
+    "fetch_worldcover_hrefs",
+    "majority_filter_mask",
+    "read_ref_info",
 ]
