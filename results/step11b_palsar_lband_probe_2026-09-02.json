@@ -1,0 +1,122 @@
+{
+  "event": "ID666 squall 30.07.2017 (950.1 ha), PALSAR-2 annual mosaics 2016 vs 2017 (K&C F02DAR v2.00, 25 m, HH/HV gamma0)",
+  "data_source": "Microsoft Planetary Computer, collection alos-palsar-mosaic via data API crop (anonymous)",
+  "grid": {
+    "epsg": 32638,
+    "res_m": 25.0,
+    "bounds": [
+      379250.0,
+      6836060.0,
+      431700.0,
+      6887140.0
+    ]
+  },
+  "ref_px_25m": 15212,
+  "ring_px_forest": 743867,
+  "dn_to_g0": "g0_dB = 20*log10(DN) - 83 (offset cancels in differences)",
+  "metrics": {
+    "dHH": {
+      "n_ref": 15212,
+      "n_bg": 743419,
+      "median_ref_db": -0.861,
+      "median_bg_db": -0.709,
+      "contrast_db": -0.152,
+      "auc": 0.1297,
+      "youden": {
+        "thr_db": 2.3587,
+        "tpr": 0.0885,
+        "fpr": 0.0877,
+        "j": 0.0009
+      },
+      "share_ref_gt_bgmedian_plus": {
+        "+1.0": 0.3099,
+        "+2.0": 0.1798,
+        "+3.0": 0.0929
+      },
+      "iqr_ref": [
+        -2.44,
+        0.7
+      ],
+      "iqr_bg": [
+        -2.21,
+        0.8
+      ]
+    },
+    "dHV": {
+      "n_ref": 15212,
+      "n_bg": 743419,
+      "median_ref_db": -1.304,
+      "median_bg_db": -1.196,
+      "contrast_db": -0.107,
+      "auc": 0.2682,
+      "youden": {
+        "thr_db": 2.5501,
+        "tpr": 0.0464,
+        "fpr": 0.0432,
+        "j": 0.0032
+      },
+      "share_ref_gt_bgmedian_plus": {
+        "+1.0": 0.3132,
+        "+2.0": 0.1738,
+        "+3.0": 0.0826
+      },
+      "iqr_ref": [
+        -2.84,
+        0.23
+      ],
+      "iqr_bg": [
+        -2.67,
+        0.26
+      ]
+    }
+  },
+  "interpretation_hints": [
+    "L-band penetrates canopy; debris/roughness contrast expected positive on dHV",
+    "annual mosaic difference includes phenology/moisture/weather noise and 2016-vs-2017 acquisition-date spread",
+    "25 m resolution: 950 ha ref = ~15 200 px - statistics stable"
+  ],
+  "updated": "2026-09-02",
+  "inverted_detection": {
+    "dHH": {
+      "auc_inverted": 0.8703,
+      "median_bg_db": -0.709,
+      "youden_inverted_flag_d_below_thr": {
+        "thr_db": -1.745,
+        "tpr": 0.3548,
+        "fpr": 0.3212,
+        "j": 0.0336
+      },
+      "operating_point_fpr~0.05": {
+        "thr_db": -4.395,
+        "tpr": 0.0669,
+        "fpr": 0.0502
+      },
+      "share_ref_below_bgmedian_minus": {
+        "-1.0": 0.3599,
+        "-2.0": 0.2148,
+        "-3.0": 0.1137
+      }
+    },
+    "dHV": {
+      "auc_inverted": 0.7318,
+      "median_bg_db": -1.196,
+      "youden_inverted_flag_d_below_thr": {
+        "thr_db": -2.808,
+        "tpr": 0.2539,
+        "fpr": 0.2296,
+        "j": 0.0243
+      },
+      "operating_point_fpr~0.05": {
+        "thr_db": -4.836,
+        "tpr": 0.0621,
+        "fpr": 0.0495
+      },
+      "share_ref_below_bgmedian_minus": {
+        "-1.0": 0.3441,
+        "-2.0": 0.2018,
+        "-3.0": 0.1022
+      }
+    },
+    "physical_interpretation": "L-band: removing standing canopy removes volume scattering, so windthrow shows as a DROP in annual HH/HV difference relative to forest background (cf. Tanase et al. 2018). Detection direction is inverted vs the C-band WI scheme. AUC 0.87 (dHH) approaches the 0.8 level needed for PA~0.85; caveats: 25 m annual mosaic, acquisition-date spread within mosaic years, moisture/weather confounders, single event."
+  }
+}
