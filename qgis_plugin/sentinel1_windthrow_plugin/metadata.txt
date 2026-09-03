@@ -2,10 +2,10 @@
 name=Sentinel-1 Windthrow Detector
 qgisMinimumVersion=3.28
 description=Detect windthrow (storm-damaged forest) from bi-temporal Sentinel-1 SAR imagery using the Windthrow Index (WI = dVV + dVH).
-version=0.9.0
+version=1.0.0
 author=Sentinel1 SAR Team
 email=sentinel1.sar.plugin@example.com
-about=Plugin for rapid windthrow mapping with Sentinel-1: STAC search and COG download on Microsoft Planetary Computer (GRD or RTC), preprocessing (dB conversion, Lee speckle filter, land/water mask) and bi-temporal change detection after Ruettschi et al. 2019 (Remote Sensing 11(2):115): per-polarisation pre/post composites, Windthrow Index WI = dVV + dVH, adaptive threshold (mean + a dB), background normalization against weather-driven radiometric shifts (v0.8), minimum-object filtering, an optional ESA WorldCover forest mask (v0.9, auto-downloaded via STAC) and vectorisation to GeoPackage with per-object area in hectares.
+about=Plugin for rapid windthrow mapping from SAR data: STAC search and COG download on Microsoft Planetary Computer (Sentinel-1 GRD or RTC), preprocessing (dB conversion, Lee speckle filter, land/water mask) and three validated detection modes (v1.0): (1) C-band amplitude WI = dVV + dVH with adaptive threshold after Ruettschi et al. 2019, background normalization (v0.8) and an optional ESA WorldCover forest mask (v0.9); (2) L-band backscatter decline on ALOS PALSAR after Tanase et al. 2018 (LDI = dHH + dHV, inverted sign); (3) interferometric coherence difference-in-differences over ASF HyP3 INSAR-GAMMA products (dcoh = coh_control − coh_prepost). All modes produce a float32 index raster, a byte mask and a GeoPackage with per-object area in hectares.
 tracker=
 repository=
 tags=sentinel-1,sar,windthrow,windfall,storm,forest,forestry,change detection,planetary-computer,stac

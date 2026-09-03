@@ -7,6 +7,10 @@ Public API:
     SARPreprocessor   — SAR preprocessing utilities (dB, speckle, land mask)
     WindthrowDetector — bi-temporal WI windthrow detector
                         (Rüetschi et al. 2019: WI = ΔVV + ΔVH)
+    LbandDeclineDetector — L-band backscatter decline detector (v1.0,
+                        Tanase et al. 2018: LDI = ΔHH + ΔHV, inverted sign)
+    CoherenceDeltaDetector — coherence DiD detector over HyP3 INSAR-GAMMA
+                        products (v1.0, dcoh = coh_control − coh_prepost)
     forest_mask       — forest-mask providers (v0.9): ESA WorldCover via
                         PC STAC / user file, on the radar reference grid
 """
@@ -39,6 +43,8 @@ from .forest_mask import (
     majority_filter_mask,
     read_ref_info,
 )
+from .lband import LbandDeclineDetector
+from .coh_delta import CoherenceDeltaDetector
 
 # Route pc_client warnings (retry notices, SAS-sign failures, token-cache
 # problems) into the QGIS log panel under the Sentinel1SAR tag. The hook
@@ -57,6 +63,8 @@ __all__ = [
     "PCError",
     "SARPreprocessor",
     "WindthrowDetector",
+    "LbandDeclineDetector",
+    "CoherenceDeltaDetector",
     "background_offset_db",
     "common_polarizations",
     "compute_wi",

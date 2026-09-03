@@ -414,3 +414,26 @@ Stage Summary:
 - Ответ: кредиты НЕ одноразовые — лимит восстанавливается ежемесячно; остаток 7960 ≈ 796 пар; план DiD-валидации требует 60–100 кр. (~1 %); отдельный риск — истечение ПРОДУКТОВ 17.09.2026, но всё скачано 03.09
 - Плагин от HyP3 не зависит (RTC из Planetary Computer); когерентность воспроизводима локально (SNAP/ISCE)
 - Файл: reports/Промежуточный_отчет_SAR_ветровалы_этапы7-12_2026-09-03_изд3.pdf (17 стр.); ворклог разд. 17 — в docs/
+
+---
+Task ID: 24
+Agent: Super Z (main)
+Task: Плагин v1.0 — режимы lband_decline и coh_delta, GUI, тесты, сборка
+
+Work Log:
+- Среда сброшена 03.09 (~10:00): локальная копия репо, отчёты, step12-скрипты и work_data/hyp3_products потеряны; всё восстановлено из GitHub (clone main = ec9d99b, PAT одноразово в URL, затем сброшен) + повторная докачка 4 HyP3-продуктов (~380 МБ) скриптом с resume/Range (scripts/hyp3_download_products.py, вне репо)
+- Базлайн: pytest+scipy доставлены (--break-system-packages), 90/90 зелёные
+- windthrow.py: 3 хука-переопределения (обратная совместимость) — _delta_sign() (+1/-1), _index_suffix() (_wi/_ldi), _restrict_polarizations(); diff-знак в аккумуляторе WI
+- sources/lband.py: LbandDeclineDetector(WindthrowDetector) — LDI = (HH_pre−HH_post)+(HV_pre−HV_post), суффикс _ldi/_ldi_norm, дефолт a=2.0 дБ, фильтр pol hh/hv (явный набор -> ValueError при отсутствии, дефолт -> warning + fallback)
+- sources/coh_delta.py: CoherenceDeltaDetector — dcoh = coh_control − coh_prepost; find_correlation_tif (папка/zip/tif), find_water_mask (_wm.tif/_water_mask.tif), sane_water_mask (>50% воды -> ignore, кейс продукта 5748), _sanitize (registered nodata + физический диапазон [−0.01, 1.01] — ловит ±9999 fill варпа), дефолт min_pixels=6 (80 м), адаптивный порог = МЕДИАНА + a (дефолт a=0.25: FPR ~8/14% на ID694/ID666; mean+0.1 залил бы 30% кадра при осеннем дрейфе +0.33)
+- GUI: wt_method_combo (wi/lband/coh), coh-группа (2 пикера продуктов + a/fixed), _sync_method_widgets (видимость стеков/coh-группы, WorldCover только для радар-сеток, авто-переключение min_px 27<->6), _run_coh_detection + диспетчер в _on_windthrow_run, _on_windthrow_finished различает dB/когерентность + water_mask_ignored
+- Тесты: +37 (test_lband 15, test_coh_delta 22) — итого 127 passed (Python 3.13.5, GDAL 3.10.3, numpy 2.2.4, scipy)
+- ВАЛИДАЦИЯ на живых продуктах (scripts/validate_v1_coh.py -> work_data/v1_validation/v1_plugin_validation.json): ID694 AUC 0.908 / excess 0.308 / TPR@FPR5% 0.548 (step12b: 0.908/0.308/0.55); ID666 0.671 / 0.1398 (0.671/0.140) — точное совпадение; пороги согласованы с Youden (0.51/0.27)
+- Баги по пути: GDAL-цепочки в тестах (band proxy виснет без сохранённого ds), NameError gdal в 2 тестах, nodata-утечка в mean_dcoh (ID666: −95.2 -> 0.048 после _sanitize)
+- Docs: metadata 1.0.0 (about = 3 режима), METHOD.md §6 (L-band) + §7 (Coherence DiD) + refs (Tanase 2018, ASF HyP3), README (v1.0.0, 127 tests, таблицы артефактов _ldi/_dcoh, limitations), RELEASE_NOTES_v1.0.0.md, sources/__init__ экспортирует новые детекторы
+- Сборка: plugin_dist/sentinel1_windthrow_plugin_v1.0.0.zip (37 файлов) + копия в /home/z/my-project/download/
+
+Stage Summary:
+- Плагин v1.0.0: три валидированных режима в одном GUI (C-band WI, L-band decline, Coherence DiD), 127 тестов, zip собран
+- Ключевые решения: медиана вместо среднего для порога когерентности (осенний дрейф ID694 +0.33), sane-mask эвристика перенесена в плагин, min_pixels=6 для 80 м
+- Следующее: до-до контроль ID666 (10 кр.), DiD на 3–5 событиях из 59 кандидатов, репо -> private + отзыв старого PAT

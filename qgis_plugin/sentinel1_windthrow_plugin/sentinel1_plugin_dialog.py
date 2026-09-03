@@ -67,6 +67,8 @@ from .sources import (
     extract_polarization,
     pair_by_polarization,
 )
+from .sources.coh_delta import CoherenceDeltaDetector
+from .sources.lband import LbandDeclineDetector
 from .sources import forest_mask
 from .ui import DrawnRectangleTool
 
@@ -1191,6 +1193,7 @@ class Sentinel1PluginDialog(QDialog):
         )
         method_hint.setWordWrap(True)
         method_hint.setStyleSheet("color: #555;")
+        self.wt_method_hint = method_hint
         layout.addWidget(method_hint)
 
         # ----- Pre-storm / post-storm file stacks -----
@@ -1209,13 +1212,99 @@ class Sentinel1PluginDialog(QDialog):
             "onto it if needed.",
             page,
         )
+        self.wt_pre_group = pre_group
+        self.wt_post_group = post_group
         stacks_row.addWidget(pre_group, 1)
         stacks_row.addWidget(post_group, 1)
         layout.addLayout(stacks_row)
 
+        # ----- Coherence products (v1.0, method == "coh") -----
+        # Hidden unless the Coherence DiD method is selected; the
+        # pre/post stack lists above are hidden in that case instead.
+        coh_group = QGroupBox("HyP3 InSAR products (unpacked folder, .zip or *_corr.tif)", page)
+        coh_form = QFormLayout(coh_group)
+        self.wt_coh_prepost_edit = QLineEdit(coh_group)
+        self.wt_coh_prepost_edit.setPlaceholderText(
+            "Pre/post pair product — the damage window, e.g. "
+            "id694-coh-prepost/ (contains *_corr.tif)"
+        )
+        coh_prepost_browse = QPushButton("Browse...", coh_group)
+        coh_prepost_row = QHBoxLayout()
+        coh_prepost_row.addWidget(self.wt_coh_prepost_edit, 1)
+        coh_prepost_row.addWidget(coh_prepost_browse)
+        coh_form.addRow("Pre/post pair:", coh_prepost_row)
+        self.wt_coh_control_edit = QLineEdit(coh_group)
+        self.wt_coh_control_edit.setPlaceholderText(
+            "Control pair product (same frames, outside the damage "
+            "window) — optional but strongly recommended"
+        )
+        coh_control_browse = QPushButton("Browse...", coh_group)
+        coh_control_row = QHBoxLayout()
+        coh_control_row.addWidget(self.wt_coh_control_edit, 1)
+        coh_control_row.addWidget(coh_control_browse)
+        coh_form.addRow("Control pair:", coh_control_row)
+
+        self.wt_coh_a_spin = QDoubleSpinBox(coh_group)
+        self.wt_coh_a_spin.setRange(0.0, 1.0)
+        self.wt_coh_a_spin.setSingleStep(0.01)
+        self.wt_coh_a_spin.setValue(0.25)
+        self.wt_coh_a_spin.setToolTip(
+            "Offset above the background MEDIAN of dcoh (coherence units, "
+            "not dB). On the validated events 0.25 keeps the false-alarm "
+            "rate near 8-14 %; lower values flood the output on scenes "
+            "with seasonal coherence drift (e.g. autumn freeze-up)."
+        )
+        coh_form.addRow("Offset a (adaptive):", self.wt_coh_a_spin)
+        self.wt_coh_fixed_spin = QDoubleSpinBox(coh_group)
+        self.wt_coh_fixed_spin.setRange(-1.0, 1.0)
+        self.wt_coh_fixed_spin.setSingleStep(0.05)
+        self.wt_coh_fixed_spin.setValue(0.25)
+        self.wt_coh_fixed_spin.setToolTip(
+            "Absolute dcoh threshold (coherence units). Only pixels "
+            "where the control pair is more coherent than the pre/post "
+            "pair by this margin are flagged."
+        )
+        coh_form.addRow("Fixed threshold:", self.wt_coh_fixed_spin)
+        coh_hint = QLabel(
+            "<small>dcoh = coh(control) − coh(prepost) is <b>positive</b> "
+            "over windthrow. The control pair removes static low-coherence "
+            "anomalies and seasonal drift. A corrupt product water mask "
+            "(&gt; 50 % water) is ignored automatically. Default min "
+            "object size is 6 px — one 80 m pixel covers 0.64 ha.</small>",
+            coh_group,
+        )
+        coh_hint.setWordWrap(True)
+        coh_hint.setStyleSheet("color: #555;")
+        coh_form.addRow("", coh_hint)
+        coh_prepost_browse.clicked.connect(self._on_wt_browse_coh_prepost)
+        coh_control_browse.clicked.connect(self._on_wt_browse_coh_control)
+        coh_group.setVisible(False)
+        self.wt_coh_group = coh_group
+        layout.addWidget(coh_group)
+
         # ----- Parameters -----
         params_group = QGroupBox("Detection Parameters", page)
         params_form = QFormLayout(params_group)
+
+        # Detection method (v1.0): C-band WI, L-band decline or
+        # coherence DiD — the two new modes reuse the same threshold /
+        # object-size / output machinery.
+        self.wt_method_combo = QComboBox(page)
+        self.wt_method_combo.addItem(
+            "Sentinel-1 C-band WI (Rüetschi 2019)", "wi")
+        self.wt_method_combo.addItem(
+            "L-band decline — PALSAR (Tanase 2018)", "lband")
+        self.wt_method_combo.addItem(
+            "Coherence DiD — HyP3 InSAR (step12b)", "coh")
+        self.wt_method_combo.setToolTip(
+            "C-band WI: amplitude increase on Sentinel-1 (default).\n"
+            "L-band decline: backscatter drop on ALOS PALSAR — the "
+            "opposite sign, validated invAUC up to 0.905.\n"
+            "Coherence DiD: coherence drop between the pre/post InSAR "
+            "pair relative to a same-season control pair — validated "
+            "AUC 0.908 on the 2017 tornado event."
+        )
+        params_form.addRow("Detection method:", self.wt_method_combo)
 
         self.wt_mode_combo = QComboBox(page)
         self.wt_mode_combo.addItem(
@@ -1397,8 +1486,15 @@ class Sentinel1PluginDialog(QDialog):
         self.wt_mode_combo.currentIndexChanged.connect(
             self._on_wt_mode_changed
         )
+        self.wt_method_combo.currentIndexChanged.connect(
+            self._sync_method_widgets
+        )
+        self.wt_mode_combo.currentIndexChanged.connect(
+            self._sync_method_widgets
+        )
         self.analysis_run_btn.clicked.connect(self._on_windthrow_run)
         self.analysis_cancel_btn.clicked.connect(self._on_windthrow_cancel)
+        self._sync_method_widgets()
 
         return page
 
@@ -1473,6 +1569,89 @@ class Sentinel1PluginDialog(QDialog):
         self.wt_a_spin.setEnabled(adaptive)
         self.wt_fixed_spin.setEnabled(not adaptive)
 
+    # ----- Detection method switching (v1.0) -----
+    _METHOD_HINTS = {
+        "wi":
+            "<small><b>Method — Rüetschi et al. 2019 (Remote Sensing "
+            "11(2):115):</b> per-polarisation pre/post composites → image "
+            "differencing → <b>WI = (VV<sub>post</sub> − VV<sub>pre</sub>) "
+            "+ (VH<sub>post</sub> − VH<sub>pre</sub>)</b> in dB. "
+            "Windthrown forest scatters <b>more</b> after the storm "
+            "(chaotic trunks and branches), so damaged areas show a "
+            "<b>positive</b> WI. A pixel is flagged when WI &gt; mean(WI) "
+            "+ a (adaptive) or WI &gt; a fixed value; objects smaller "
+            "than n pixels are discarded. Use 1–5 pre-storm and 1–3 "
+            "post-storm scenes of the <b>same orbit direction</b>, one "
+            "window ≤ 2–3 weeks each.</small>",
+        "lband":
+            "<small><b>Method — Tanase et al. 2018 (RSE 209:700–711):</b> "
+            "L-band (ALOS PALSAR / PALSAR-2) penetrates the canopy, so a "
+            "flattened stand LOSES volume scattering: the decline index "
+            "<b>LDI = (HH<sub>pre</sub> − HH<sub>post</sub>) + "
+            "(HV<sub>pre</sub> − HV<sub>post</sub>)</b> in dB is "
+            "<b>positive</b> over windthrow — the opposite sign of the "
+            "C-band WI. Validated on the 2017 events: invAUC 0.870 (dHH, "
+            "squall line) and 0.905 (dHV, tornado). Annual PALSAR mosaics "
+            "work out of the box; a forest mask is strongly recommended "
+            "(regrowth fields confuse the threshold).</small>",
+        "coh":
+            "<small><b>Method — coherence DiD (project step12b, 2026):</b> "
+            "interferometric coherence of the pre/post pair (HyP3 "
+            "INSAR-GAMMA 80 m) drops over disturbed forest. "
+            "<b>dcoh = coh(control) − coh(prepost)</b> cancels static "
+            "anomalies and seasonal drift and is <b>positive</b> over "
+            "windthrow. Validated: AUC 0.908 on the 2017 tornado (161 ha) "
+            "— the strongest C-band result of the project. Supply a "
+            "control pair of the SAME frames from outside the damage "
+            "window for robust results.</small>",
+    }
+
+    def _sync_method_widgets(self) -> None:
+        """Show exactly the inputs of the active detection method."""
+        method = self.wt_method_combo.currentData() or "wi"
+        is_coh = method == "coh"
+        is_radar = method in ("wi", "lband")
+        adaptive = self.wt_mode_combo.currentData() == "adaptive"
+        # Method description
+        hint = self._METHOD_HINTS.get(method)
+        if hint:
+            self.wt_method_hint.setText(hint)
+        # Input groups
+        self.wt_pre_group.setVisible(is_radar)
+        self.wt_post_group.setVisible(is_radar)
+        self.wt_coh_group.setVisible(is_coh)
+        # Threshold widgets: dB offsets for radar modes, coherence
+        # offsets live inside the coherence group.
+        self.wt_a_spin.setEnabled(is_radar and adaptive)
+        self.wt_fixed_spin.setEnabled(is_radar and not adaptive)
+        self.wt_coh_a_spin.setEnabled(adaptive)
+        self.wt_coh_fixed_spin.setEnabled(not adaptive)
+        self.wt_norm_chk.setEnabled(is_radar)
+        # The WorldCover auto-mask needs a post image on the radar grid;
+        # coherence products use the 80 m InSAR grid instead.
+        wc_index = 1
+        if not is_radar:
+            self.wt_mask_source_combo.setCurrentIndex(0)
+        self.wt_mask_source_combo.model().item(wc_index).setEnabled(is_radar)
+        self.wt_mask_source_combo.setEnabled(is_radar)
+        # Minimum object size: 27 px @10 m ≈ 6 px @80 m.
+        if is_coh and self.wt_min_px_spin.value() == 27:
+            self.wt_min_px_spin.setValue(6)
+        elif not is_coh and self.wt_min_px_spin.value() == 6:
+            self.wt_min_px_spin.setValue(27)
+
+    def _on_wt_browse_coh_prepost(self) -> None:
+        path = QFileDialog.getExistingDirectory(
+            self, "Select the pre/post pair product (unpacked HyP3 folder)")
+        if path:
+            self.wt_coh_prepost_edit.setText(path)
+
+    def _on_wt_browse_coh_control(self) -> None:
+        path = QFileDialog.getExistingDirectory(
+            self, "Select the control pair product (unpacked HyP3 folder)")
+        if path:
+            self.wt_coh_control_edit.setText(path)
+
     def _on_wt_browse_mask(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
             self, "Select analysis mask (raster or vector)", "",
@@ -1501,6 +1680,10 @@ class Sentinel1PluginDialog(QDialog):
                 self, "Busy", "A detection is already running. Please wait."
             )
             return
+
+        method = self.wt_method_combo.currentData() or "wi"
+        if method == "coh":
+            return self._run_coh_detection()
 
         pre_paths = [
             self.wt_pre_list.item(i).data(Qt.UserRole)
@@ -1553,7 +1736,7 @@ class Sentinel1PluginDialog(QDialog):
             else:
                 wc_year = int(self.wt_wc_year_combo.currentData() or 2020)
 
-        detector = WindthrowDetector(
+        common_detector_kwargs = dict(
             threshold_mode=self.wt_mode_combo.currentData() or "adaptive",
             a_db=self.wt_a_spin.value(),
             fixed_threshold_db=self.wt_fixed_spin.value(),
@@ -1561,6 +1744,10 @@ class Sentinel1PluginDialog(QDialog):
             median_filter_size=int(self.wt_median_combo.currentData() or 0),
             normalize_background=self.wt_norm_chk.isChecked(),
         )
+        if method == "lband":
+            detector = LbandDeclineDetector(**common_detector_kwargs)
+        else:
+            detector = WindthrowDetector(**common_detector_kwargs)
         pol_label = "+".join(pols)
 
         # The task object is created after the closure; resolve it lazily
@@ -1628,6 +1815,92 @@ class Sentinel1PluginDialog(QDialog):
         log_info(f"Windthrow detection started: {desc}")
         QgsApplication.taskManager().addTask(task)
 
+    def _run_coh_detection(self) -> None:
+        """Validate the coherence-DiD inputs and start the task (v1.0)."""
+        prepost = self.wt_coh_prepost_edit.text().strip()
+        control = self.wt_coh_control_edit.text().strip()
+        if not prepost:
+            QMessageBox.warning(
+                self, "Missing product",
+                "Select the pre/post pair product (an unpacked HyP3 "
+                "folder containing *_corr.tif, a .zip or the layer path).",
+            )
+            return
+        if not os.path.exists(prepost):
+            QMessageBox.warning(
+                self, "Invalid product",
+                f"The pre/post product path does not exist:\n{prepost}")
+            return
+        if control and not os.path.exists(control):
+            QMessageBox.warning(
+                self, "Invalid product",
+                f"The control product path does not exist:\n{control}")
+            return
+        output_base = self.wt_output_edit.text().strip()
+        if not output_base:
+            QMessageBox.warning(
+                self, "Missing output", "Please select an output base path.")
+            return
+        if output_base.lower().endswith((".gpkg", ".shp", ".tif", ".tiff")):
+            output_base = os.path.splitext(output_base)[0]
+
+        mask_path = None
+        if (self.wt_mask_chk.isChecked()
+                and (self.wt_mask_source_combo.currentData() or "file") == "file"):
+            mask_path = self.wt_mask_edit.text().strip()
+            if not mask_path or not os.path.isfile(mask_path):
+                QMessageBox.warning(
+                    self, "Invalid mask",
+                    "The analysis mask file does not exist. Uncheck the "
+                    "mask option or pick a valid file.",
+                )
+                return
+
+        detector = CoherenceDeltaDetector(
+            threshold_mode=self.wt_mode_combo.currentData() or "adaptive",
+            a_coh=self.wt_coh_a_spin.value(),
+            fixed_threshold=self.wt_coh_fixed_spin.value(),
+            min_pixels=self.wt_min_px_spin.value(),
+            median_filter_size=int(self.wt_median_combo.currentData() or 0),
+        )
+        desc = (f"Coherence DiD ({os.path.basename(prepost)}"
+                + (f" vs {os.path.basename(control)}" if control else " — no control")
+                + f", {os.path.basename(output_base)})")
+
+        holder: dict = {}
+
+        def _work() -> dict:
+            task = holder.get("task")
+            progress_cb = (
+                (lambda f, m: task.setProgress(float(f))) if task else None
+            )
+            cancel_cb = task.isCanceled if task else None
+            return detector.detect_file(
+                prepost_products=[prepost],
+                control_products=[control] if control else [],
+                output_base=output_base,
+                analysis_mask_path=mask_path,
+                progress_cb=progress_cb,
+                cancel_cb=cancel_cb,
+            )
+
+        task = AnalysisTask(description=desc, work=_work)
+        holder["task"] = task
+        task.detector = detector
+        task.taskCompleted.connect(
+            lambda: self._on_windthrow_finished(task, True))
+        task.taskTerminated.connect(
+            lambda: self._on_windthrow_finished(task, False))
+
+        self._active_analysis_task = task
+        self.analysis_run_btn.setEnabled(False)
+        self.analysis_progress.setVisible(True)
+        self.analysis_progress.setRange(0, 100)
+        self.analysis_progress.setValue(0)
+        self.analysis_cancel_btn.setVisible(True)
+        log_info(f"Coherence DiD detection started: {desc}")
+        QgsApplication.taskManager().addTask(task)
+
     def _on_windthrow_cancel(self) -> None:
         """Cancel the running windthrow detection task."""
         task = self._active_analysis_task
@@ -1645,7 +1918,8 @@ class Sentinel1PluginDialog(QDialog):
             vector_path = result.get("vector", "")
             # Load all artifacts when the Settings option is enabled.
             if self.add_to_map_chk.isChecked():
-                for key, label in (("wi", "WI"), ("mask", "Mask"),
+                for key, label in (("wi", "WI"), ("dcoh", "dCoH"),
+                                   ("mask", "Mask"),
                                    ("forest_mask", "Forest")):
                     p = result.get(key)
                     if p and os.path.isfile(p):
@@ -1653,22 +1927,36 @@ class Sentinel1PluginDialog(QDialog):
                 if vector_path and os.path.isfile(vector_path):
                     self._add_vector_to_map(
                         vector_path, os.path.basename(vector_path))
-            thr = result.get("threshold_db")
-            mean = result.get("mean_wi")
+            # Result dictionaries differ per method: radar modes use
+            # threshold_db/mean_wi (dB), coherence DiD uses
+            # threshold/mean_dcoh (coherence units).
+            is_coh_result = "dcoh" in result
+            thr = result.get("threshold_db", result.get("threshold"))
+            mean = result.get("mean_wi", result.get("median_dcoh"))
             n_obj = result.get("n_objects")
+            units = "" if is_coh_result else " dB"
+            index_name = "dCoH" if is_coh_result else "WI"
+            stat_label = ("Median dCoH" if is_coh_result else "Mean WI")
             forest_note = ("\nForest mask: " + str(result.get("forest_mask"))
                            if result.get("forest_mask") else "")
+            wm_note = ""
+            ignored = result.get("water_mask_ignored") or []
+            if ignored:
+                wm_note = ("\nIgnored corrupt water mask(s): "
+                           + ", ".join(os.path.basename(p) for p in ignored))
+            index_path = result.get("dcoh") or result.get("wi") or ""
             QMessageBox.information(
                 self, "Windthrow detection complete",
                 f"Detected objects: {n_obj}\n"
-                f"Mean WI: {mean:.2f} dB\n"
-                f"Threshold used: {thr:.2f} dB\n\n"
-                f"Outputs:\n{result.get('wi')}\n{result.get('mask')}\n"
-                f"{vector_path}" + forest_note,
+                f"{stat_label}: {mean:.3f}{units}\n"
+                f"Threshold used: {thr:.3f}{units}\n\n"
+                f"Outputs:\n{index_path}\n{result.get('mask')}\n"
+                f"{vector_path}" + forest_note + wm_note,
             )
             log_info(
                 f"Windthrow detection finished: {n_obj} objects, "
-                f"threshold {thr:.2f} dB (mean WI {mean:.2f} dB)"
+                f"threshold {thr:.3f}{units} (mean {index_name} "
+                f"{mean:.3f}{units})"
             )
         else:
             msg = str(task.exception) if task.exception else "Task was cancelled."

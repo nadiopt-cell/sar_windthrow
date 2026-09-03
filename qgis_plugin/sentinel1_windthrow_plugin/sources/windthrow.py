@@ -617,6 +617,29 @@ class WindthrowDetector:
         self.offset_db: Dict[str, float] = {}
 
     # ------------------------------------------------------------------
+    # Hooks for index-family subclasses (v1.0: L-band decline).  The
+    # base class implements the C-band WI (backscatter INCREASE over
+    # windthrow); subclasses flip the sign / rename the outputs without
+    # duplicating the compositing-threshold-polygonize chain.
+    # ------------------------------------------------------------------
+    def _delta_sign(self) -> float:
+        """Sign applied to the summed per-polarisation difference.
+
+        +1.0 for the C-band WI (windthrown forest scatters MORE).
+        Subclasses may return -1.0 (backscatter DECLINE over windthrow,
+        L-band physics of Tanase et al. 2018).
+        """
+        return 1.0
+
+    def _index_suffix(self) -> str:
+        """File-name suffix of the float32 index raster."""
+        return "_wi_norm" if self.normalize_background else "_wi"
+
+    def _restrict_polarizations(self, pols: List[str]) -> List[str]:
+        """Filter the common polarisation list (no-op in the base class)."""
+        return pols
+
+    # ------------------------------------------------------------------
     def detect_file(
         self,
         pre_paths: Sequence[str],
@@ -669,7 +692,8 @@ class WindthrowDetector:
         for p in list(pre_paths) + list(post_paths):
             if not os.path.isfile(p):
                 raise ValueError(f"File not found: {p}")
-        pols = common_polarizations(pre_paths, post_paths)
+        pols = self._restrict_polarizations(
+            common_polarizations(pre_paths, post_paths))
         if not pols:
             raise ValueError(
                 "No common polarisation found between the pre- and "
@@ -814,7 +838,7 @@ class WindthrowDetector:
                 stats_band_h = None
 
         # ---- 3. WI raster + running statistics (chunked) --------------
-        suffix = "_wi_norm" if self.normalize_background else "_wi"
+        suffix = self._index_suffix()
         wi_path = f"{output_base}{suffix}.tif"
         if os.path.exists(wi_path):
             try:
@@ -884,6 +908,8 @@ class WindthrowDetector:
                         delta = post_db - pre_db
                     delta = delta.astype(np.float32, copy=False)
                     good = np.isfinite(delta)
+                    if self._delta_sign() < 0:
+                        delta = -delta
                     wi_chunk[good] += delta[good]
                     # A pixel is valid only when EVERY polarisation yields
                     # a finite difference (paper sums VV + VH).

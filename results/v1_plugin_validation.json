@@ -1,0 +1,28 @@
+{
+ "id694": {
+  "ref_pixels": 252,
+  "bg_pixels": 85296,
+  "other_windthrow_parts_excluded": 21,
+  "excess_median": 0.308,
+  "auc": 0.908,
+  "tpr_at_fpr5pct": 0.5476,
+  "reference_step12b": {
+   "auc": 0.908,
+   "excess": 0.308,
+   "tpr5": 0.55
+  }
+ },
+ "id666": {
+  "ref_pixels": 1516,
+  "bg_pixels": 283191,
+  "other_windthrow_parts_excluded": 561,
+  "excess_median": 0.1398,
+  "auc": 0.671,
+  "tpr_at_fpr5pct": 0.1418,
+  "reference_step12b": {
+   "auc": 0.671,
+   "excess": 0.14,
+   "tpr5": null
+  }
+ }
+}

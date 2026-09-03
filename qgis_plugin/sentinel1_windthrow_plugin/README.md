@@ -1,14 +1,16 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-90%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/tests-127%20passed-success.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
-**windthrow** (storm-damaged forest) with the bi-temporal
-**Windthrow Index** method of Rüetschi, Small & Waser (2019,
-*Remote Sensing* 11(2):115).
+**windthrow** (storm-damaged forest) with THREE validated methods:
+the bi-temporal **Windthrow Index** of Rüetschi, Small & Waser (2019,
+*Remote Sensing* 11(2):115), the **L-band decline** of Tanase et al.
+(2018, *RSE* 209:700–711, ALOS PALSAR) and the **coherence
+difference-in-differences** over ASF HyP3 InSAR pairs (v1.0).
 
 ## What it does
 
@@ -16,13 +18,16 @@ Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 |---------------------|----------------------------------------------------------------------------------|
 | Search & Download   | STAC search on Microsoft Planetary Computer (GRD **or** RTC) + COG download      |
 | Preprocess          | Linear→dB, Lee speckle filter, optional land/water mask                          |
-| Windthrow Detection | Pre/post composites → **WI = ΔVV + ΔVH** → threshold → object filter → polygons; optional **forest mask** (ESA WorldCover auto-download or your own file, v0.9)  |
+| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** (ESA WorldCover auto-download or your own file, v0.9)  |
 | Settings            | Default folders + detection parameters, persisted in `QgsSettings`               |
 
 Outputs of a detection run:
 
-* `<base>_wi.tif` — Windthrow Index raster (float32, dB; **positive =
-  backscatter increase = potential windthrow**)
+* `<base>_wi.tif` (C-band) / `<base>_ldi.tif` (L-band) — index raster
+  (float32, dB; **positive = potential windthrow**; L-band index is
+  `<base>_ldi_norm.tif` with background normalization)
+* `<base>_dcoh.tif` (coherence DiD — control minus pre/post coherence,
+  float32, positive = potential windthrow)
 * `<base>_mask.tif` — cleaned uint8 mask (255 = detected windthrow)
 * `<base>.gpkg` (or `.shp`) — vectorised objects with an `area_ha`
   attribute
@@ -54,6 +59,24 @@ Outputs of a detection run:
 Reported performance of the original method (Swiss training area /
 German validation area): PA 0.85–0.88, UA 0.65–0.81 for windthrow
 areas ≥ 0.5 ha.
+
+### L-band decline (PALSAR) and Coherence DiD (HyP3) — v1.0
+
+The **L-band mode** flips the C-band sign (flattened stands LOSE
+volume scattering at L-band): `LDI = (HH_pre − HH_post) +
+(HV_pre − HV_post)` over ALOS PALSAR annual mosaics, positive over
+windthrow. Validated invAUC 0.870 (dHH) and 0.905 (dHV) on two 2017
+European Russia events.
+
+The **coherence DiD mode** compares interferometric coherence of the
+pre/post HyP3 pair against a same-season control pair of the same
+frames: `dcoh = coh(control) − coh(prepost)`, positive over
+windthrow. Validated AUC **0.908** (161-ha tornado track) — on par
+with L-band, the strongest C-band-family result of the project.
+Corrupt product water masks are auto-detected and ignored.
+
+See METHOD.md §6–7 for the full description, parameters and
+validation tables.
 
 ## Requirements
 
@@ -153,7 +176,7 @@ full-size IW scene never sits in RAM. The connected-component cleanup
 250 × 170 km scene) is the only RAM-heavy step; on memory-limited
 machines, clip the AOI first or raise `min_pixels`.
 
-## Limitations (v0.7.0)
+## Limitations (v1.0)
 
 - Sentinel-1 GRD products are not radiometrically calibrated in the
   plugin (raw DN → dB); an inter-sensor (S1A/S1B) offset of ~0.1–0.3 dB
@@ -167,6 +190,12 @@ machines, clip the AOI first or raise `min_pixels`.
   PC RTC products are assumed pixel-aligned (they normally are, thanks
   to S1's orbit control); any input on a different grid is warped
   bilinearly onto the reference grid.
+- The L-band mode expects PALSAR-style annual pairs (sub-annual stacks
+  work but the adaptive offset may need retuning); the coherence mode
+  targets HyP3 INSAR-GAMMA 80 m products.
+- A storm-contaminated control pair (e.g. ID666's July pair) remains
+  the main confounder of the coherence DiD — order controls from
+  quiet periods.
 - Confusion sources to check before field work: agricultural
   harvest/ploughing, flooded grassland, wind-roughened lakes, snowfall
   between dates, salvage logging inside the post window.

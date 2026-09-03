@@ -127,12 +127,105 @@ after windy dates (wind-roughened surface) or agricultural fields
 (harvest / ploughing), those are expected confusion sources — restrict
 detection with a forest mask and/or raise `a` / `n`.
 
-## 6. References
+## 6. L-band decline mode (v1.0)
+
+Sources: ALOS PALSAR / PALSAR-2 annual mosaics (HH/HV, delivered as
+DN on Planetary Computer; auto-converted to dB like the C-band chain —
+the calibration constant cancels in the differencing).
+
+Physics (Tanase et al. 2018): L-band waves penetrate the canopy and
+interact with trunks and large branches. A flattened stand LOSES
+volume scattering, so the backscatter DECLINES over windthrow — the
+opposite sign of the C-band WI. The plugin reuses the complete
+WindthrowDetector chain and flips the difference sign:
+
+    LDI = (HH_pre − HH_post) + (HV_pre − HV_post)   [dB]
+
+positive over windthrow, exactly like WI. Everything else — median
+composites, background normalization, adaptive threshold
+(median/mean of LDI + a), minimum-object cleanup, forest mask,
+polygonisation — behaves identically; the index raster is named
+`<base>_ldi.tif` (`<base>_ldi_norm.tif` with normalization).
+
+Validation (project sessions 02.09.2026, ALOS annual mosaics, two
+European Russia events against the Shikhov et al. 2020 database):
+
+| Event | Channel | invAUC |
+|---|---|---|
+| ID666 (squall line, 950 ha, 30.07.2017) | dHH | 0.870 |
+| ID666 | dHV | 0.732 |
+| ID694 (tornado, 161 ha, 19.09.2017) | dHV | 0.905 |
+| ID694 | dHH | 0.733–0.805 |
+
+Practical notes: annual mosaics mean one pre / one post epoch (12
+months apart), so the adaptive offset `a` should start near 1.5–2.0 dB
+(the GUI default), not the C-band 2.9. A forest mask is strongly
+recommended: regrowth fields and agricultural changes also decline in
+L-band. The GUI method selector defaults to both HH+HV; a single
+channel can be requested explicitly (`polarizations=["hv"]`).
+
+## 7. Coherence DiD mode (v1.0)
+
+Sources: two ASF HyP3 INSAR-GAMMA products (80 m, 20×4 looks, UTM) of
+the SAME frames — a pre/post pair bracketing the damage and a control
+pair from outside the damage window. The plugin accepts unpacked
+product folders, original `.zip` archives or direct `*_corr.tif`
+paths; the control layer is warped onto the pre/post grid when
+needed.
+
+Metric (project step12b, 03.09.2026):
+
+    dcoh = coh(control) − coh(prepost)
+
+positive over windthrow: the damage-window pair decorrelates where
+the canopy was disturbed, while the control pair tracks the
+background level. The difference cancels static low-coherence
+anomalies (harvests, wet ground) and seasonal drift. Validated
+against the Shikhov reference:
+
+| Event | AUC | excess median | TPR@FPR5% |
+|---|---|---|---|
+| ID694 (tornado, 161 ha) | **0.908** | +0.308 | 0.55 |
+| ID666 (squall line, 950 ha) | 0.671 | +0.140 | 0.14 |
+
+ID666 is confounded by storm-wide decorrelation of the July control
+pair (its own background is storm-damaged); a pre-pre control pair is
+the planned fix. Despite that, the DiD AUC (0.671) beats a naive
+single-pair score on the same data once the contaminated background
+is excluded.
+
+Implementation notes baked into the plugin:
+
+* **Adaptive threshold on the background MEDIAN** (not the mean):
+  HyP3 scenes with seasonal drift shift the whole dcoh background
+  (ID694 autumn freeze-up: +0.33 offset). The median stays at the
+  background level; the mean would flag a third of the frame.
+* Default offset `a = 0.25` ≈ false-alarm rate 8 % (ID694) / 14 %
+  (ID666); 0.10 floods drifted scenes. Youden-optimal thresholds
+  from the validation: 0.51 (ID694) / 0.27 (ID666).
+* Default `min_pixels = 6`: one 80 m pixel covers 0.64 ha, so the
+  10-m `n = 27` default would equal 17 ha — 27× the paper optimum.
+* **Sane water-mask heuristic**: a product water mask claiming more
+  than 50 % of the frame is corrupt (HyP3 product 5748 marked 99.6 %
+  water) and is ignored with a warning.
+* Registered no-data and non-physical coherence values (±9999 warp
+  fills, the products' own 0-nodata edges) are excluded from the
+  statistics.
+* Without a control pair the score degrades to `1 − coherence` of
+  the pre/post pair (static decorrelation) and the plugin warns —
+  that score is NOT robust against harvests and seasonal anomalies.
+
+## 8. References
 
 - Rüetschi, Small, Waser (2019), *Remote Sensing* 11(2):115.
+- Tanase, Santoro, Wegmüller, de la Riva, Pérez-Cabello (2018),
+  *Remote Sensing of Environment* 209:700–711 — L-band windthrow
+  physics (decline sign convention of the v1.0 L-band mode).
 - Small (2011), RTC γ⁰ methodology, *IEEE TGRS* 49(10):3799–3806.
 - Shikhov, Chernokulsky, Azhigov, Semakina (2020), *Earth Syst. Sci.
   Data* 12:3489–3513 — windthrow event database for European Russia
   1986–2017 (validation source, see TESTING_PLAN.md).
 - Shikhov, Abdullin, Semakina (2020), *Геодезия и картография*
   № 4, 19–30 — forest susceptibility mapping for the Ural region.
+- ASF HyP3 documentation — INSAR-GAMMA product specification and
+  credit accounting (https://hyp3-docs.asf.alaska.edu).
