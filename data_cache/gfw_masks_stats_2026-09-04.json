@@ -1,0 +1,344 @@
+{
+ "generated": "2026-09-04",
+ "source": "Hansen GFC v1.12 (2000-2024), tau=30",
+ "sites": [
+  {
+   "id": 583,
+   "year": 2015,
+   "epsg": 32636,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 1923,
+    "h": 2449
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9925,
+    "forest_cand_frac": 0.9925,
+    "forest_bg_frac": 0.9525,
+    "loss_in_Y_frac": 0.0399,
+    "ring_forest_cand_frac": 0.6293,
+    "forest_cand_frac_tau30": 0.9925,
+    "forest_cand_frac_tau50": 0.9925,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.9673,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N57E030",
+    "wc2021_minus_gfw": -0.025
+   }
+  },
+  {
+   "id": 674,
+   "year": 2017,
+   "epsg": 32636,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 1519,
+    "h": 1153
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9347,
+    "forest_cand_frac": 0.9311,
+    "forest_bg_frac": 0.1666,
+    "loss_in_Y_frac": 0.7645,
+    "ring_forest_cand_frac": 0.7876,
+    "forest_cand_frac_tau30": 0.9311,
+    "forest_cand_frac_tau50": 0.9196,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.7947,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N54E033",
+    "wc2021_minus_gfw": -0.136
+   }
+  },
+  {
+   "id": 608,
+   "year": 2016,
+   "epsg": 32637,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 2425,
+    "h": 1068
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9425,
+    "forest_cand_frac": 0.9377,
+    "forest_bg_frac": 0.1684,
+    "loss_in_Y_frac": 0.7693,
+    "ring_forest_cand_frac": 0.4726,
+    "forest_cand_frac_tau30": 0.9377,
+    "forest_cand_frac_tau50": 0.9276,
+    "treecover_med_poly": 84.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.259,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N54E036",
+    "wc2021_minus_gfw": -0.679
+   }
+  },
+  {
+   "id": 646,
+   "year": 2017,
+   "epsg": 32637,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 2649,
+    "h": 1620
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.837,
+    "forest_cand_frac": 0.8336,
+    "forest_bg_frac": 0.2298,
+    "loss_in_Y_frac": 0.6038,
+    "ring_forest_cand_frac": 0.5106,
+    "forest_cand_frac_tau30": 0.8336,
+    "forest_cand_frac_tau50": 0.8207,
+    "treecover_med_poly": 84.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.5788,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N54E036",
+    "wc2021_minus_gfw": -0.255
+   }
+  },
+  {
+   "id": 579,
+   "year": 2015,
+   "epsg": 32636,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 863,
+    "h": 946
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 1.0,
+    "forest_cand_frac": 1.0,
+    "forest_bg_frac": 0.5234,
+    "loss_in_Y_frac": 0.4766,
+    "ring_forest_cand_frac": 0.7649,
+    "forest_cand_frac_tau30": 1.0,
+    "forest_cand_frac_tau50": 1.0,
+    "treecover_med_poly": 87.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.997,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N60E033",
+    "wc2021_minus_gfw": -0.003
+   }
+  },
+  {
+   "id": 654,
+   "year": 2017,
+   "epsg": 32638,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 980,
+    "h": 930
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9967,
+    "forest_cand_frac": 0.9967,
+    "forest_bg_frac": 0.4368,
+    "loss_in_Y_frac": 0.5599,
+    "ring_forest_cand_frac": 0.8416,
+    "forest_cand_frac_tau30": 0.9967,
+    "forest_cand_frac_tau50": 0.9967,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 1.0,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N60E042",
+    "wc2021_minus_gfw": 0.003
+   }
+  },
+  {
+   "id": 666,
+   "year": 2017,
+   "epsg": 32638,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 2373,
+    "h": 2279
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9664,
+    "forest_cand_frac": 0.9585,
+    "forest_bg_frac": 0.7809,
+    "loss_in_Y_frac": 0.1776,
+    "ring_forest_cand_frac": 0.6608,
+    "forest_cand_frac_tau30": 0.9585,
+    "forest_cand_frac_tau50": 0.9204,
+    "treecover_med_poly": 84.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.9765,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N60E042",
+    "wc2021_minus_gfw": 0.018
+   }
+  },
+  {
+   "id": 694,
+   "year": 2017,
+   "epsg": 32639,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 1169,
+    "h": 917
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9939,
+    "forest_cand_frac": 0.9933,
+    "forest_bg_frac": 0.9915,
+    "loss_in_Y_frac": 0.0018,
+    "ring_forest_cand_frac": 0.7876,
+    "forest_cand_frac_tau30": 0.9933,
+    "forest_cand_frac_tau50": 0.9921,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.9976,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N57E048",
+    "wc2021_minus_gfw": 0.004
+   }
+  },
+  {
+   "id": 655,
+   "year": 2017,
+   "epsg": 32638,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 1099,
+    "h": 1304
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9943,
+    "forest_cand_frac": 0.9942,
+    "forest_bg_frac": 0.6399,
+    "loss_in_Y_frac": 0.3543,
+    "ring_forest_cand_frac": 0.946,
+    "forest_cand_frac_tau30": 0.9942,
+    "forest_cand_frac_tau50": 0.9935,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.0,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N57E045",
+    "wc2021_minus_gfw": -0.994
+   }
+  },
+  {
+   "id": 683,
+   "year": 2017,
+   "epsg": 32636,
+   "type": "tornado",
+   "grid": {
+    "res_m": 30,
+    "w": 1026,
+    "h": 893
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9992,
+    "forest_cand_frac": 0.9992,
+    "forest_bg_frac": 0.2337,
+    "loss_in_Y_frac": 0.7655,
+    "ring_forest_cand_frac": 0.7515,
+    "forest_cand_frac_tau30": 0.9992,
+    "forest_cand_frac_tau50": 0.9983,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.9832,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N57E033",
+    "wc2021_minus_gfw": -0.016
+   }
+  },
+  {
+   "id": 696,
+   "year": 2017,
+   "epsg": 32636,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 879,
+    "h": 899
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 1.0,
+    "forest_cand_frac": 1.0,
+    "forest_bg_frac": 0.2309,
+    "loss_in_Y_frac": 0.7691,
+    "ring_forest_cand_frac": 0.8595,
+    "forest_cand_frac_tau30": 1.0,
+    "forest_cand_frac_tau50": 1.0,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.9821,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N54E030",
+    "wc2021_minus_gfw": -0.018
+   }
+  },
+  {
+   "id": 606,
+   "year": 2016,
+   "epsg": 32638,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 1770,
+    "h": 962
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9927,
+    "forest_cand_frac": 0.9898,
+    "forest_bg_frac": 0.2327,
+    "loss_in_Y_frac": 0.757,
+    "ring_forest_cand_frac": 0.7176,
+    "forest_cand_frac_tau30": 0.9898,
+    "forest_cand_frac_tau50": 0.9832,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.004,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N54E045",
+    "wc2021_minus_gfw": -0.986
+   }
+  },
+  {
+   "id": 658,
+   "year": 2017,
+   "epsg": 32637,
+   "type": "squall",
+   "grid": {
+    "res_m": 30,
+    "w": 1077,
+    "h": 1236
+   },
+   "tile": "gfc_tiles",
+   "stats": {
+    "forest_cand_frac_tau20": 0.9922,
+    "forest_cand_frac": 0.9922,
+    "forest_bg_frac": 0.962,
+    "loss_in_Y_frac": 0.0302,
+    "ring_forest_cand_frac": 0.8562,
+    "forest_cand_frac_tau30": 0.9922,
+    "forest_cand_frac_tau50": 0.9922,
+    "treecover_med_poly": 85.0,
+    "outside_gfw_forest": false,
+    "wc2021_forest_frac": 0.962,
+    "wc_source": "ESA_WorldCover_10m_2021_v200_N60E039",
+    "wc2021_minus_gfw": -0.03
+   }
+  }
+ ]
+}
