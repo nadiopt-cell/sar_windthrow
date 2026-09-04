@@ -1,0 +1,177 @@
+{
+ "generated": "2026-09-04",
+ "remaining_credits": 7810,
+ "files": [
+  {
+   "job_name": "id583-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "a23dd94b-199d-4eea-94a0-512330a9acb5",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20150728T041724_20150809T041725_VVP012_INT80_G_ueF_7C23.zip",
+   "size_mb": 114.7,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/a23dd94b-199d-4eea-94a0-512330a9acb5/S1AA_20150728T041724_20150809T041725_VVP012_INT80_G_ueF_7C23.zip"
+  },
+  {
+   "job_name": "id583-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "e8f1f9e1-738c-45b7-999b-1e6e90e9925d",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20150716T041723_20150728T041724_VVP012_INT80_G_ueF_6635.zip",
+   "size_mb": 115.1,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/e8f1f9e1-738c-45b7-999b-1e6e90e9925d/S1AA_20150716T041723_20150728T041724_VVP012_INT80_G_ueF_6635.zip"
+  },
+  {
+   "job_name": "id608-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "6560a619-cf70-4813-8bd7-81e35d0b0fa8",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20160714T034543_20160726T034544_VVP012_INT80_G_ueF_FA62.zip",
+   "size_mb": 93.1,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/6560a619-cf70-4813-8bd7-81e35d0b0fa8/S1AA_20160714T034543_20160726T034544_VVP012_INT80_G_ueF_FA62.zip"
+  },
+  {
+   "job_name": "id608-coh-control-v2",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "64041214-bc24-40a4-bdd9-7732724d644a",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20160714T034516_20160726T034517_VVP012_INT80_G_ueF_8850.zip",
+   "size_mb": 98.8,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/64041214-bc24-40a4-bdd9-7732724d644a/S1AA_20160714T034516_20160726T034517_VVP012_INT80_G_ueF_8850.zip"
+  },
+  {
+   "job_name": "id608-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "c39b67a1-31fa-49ab-889a-61ccd420ffa8",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20160702T034543_20160714T034543_VVP012_INT80_G_ueF_25D0.zip",
+   "size_mb": 92.7,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/c39b67a1-31fa-49ab-889a-61ccd420ffa8/S1AA_20160702T034543_20160714T034543_VVP012_INT80_G_ueF_25D0.zip"
+  },
+  {
+   "job_name": "id608-coh-prepost-v2",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "afdca0af-952f-4dea-ab7a-69fefafc59f7",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20160702T034515_20160714T034516_VVP012_INT80_G_ueF_DC49.zip",
+   "size_mb": 99.4,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/afdca0af-952f-4dea-ab7a-69fefafc59f7/S1AA_20160702T034515_20160714T034516_VVP012_INT80_G_ueF_DC49.zip"
+  },
+  {
+   "job_name": "id646-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "38093168-3f93-4c0b-9e64-c6c8a478eb03",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170604T033625_20170616T033625_VVP012_INT80_G_ueF_B8C4.zip",
+   "size_mb": 84.9,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/38093168-3f93-4c0b-9e64-c6c8a478eb03/S1BB_20170604T033625_20170616T033625_VVP012_INT80_G_ueF_B8C4.zip"
+  },
+  {
+   "job_name": "id646-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "b26ec122-327f-423e-906b-385d9ee1ebac",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170523T033624_20170604T033625_VVP012_INT80_G_ueF_105D.zip",
+   "size_mb": 83.9,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/b26ec122-327f-423e-906b-385d9ee1ebac/S1BB_20170523T033624_20170604T033625_VVP012_INT80_G_ueF_105D.zip"
+  },
+  {
+   "job_name": "id655-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "2eb23118-a90f-4cd4-a348-26d3f37ef077",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170805T031922_20170817T031923_VVP012_INT80_G_ueF_5C98.zip",
+   "size_mb": 89.0,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/2eb23118-a90f-4cd4-a348-26d3f37ef077/S1BB_20170805T031922_20170817T031923_VVP012_INT80_G_ueF_5C98.zip"
+  },
+  {
+   "job_name": "id655-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "e15a0226-a306-48c2-8920-77cb54cde8c1",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170724T031922_20170805T031922_VVP012_INT80_G_ueF_5AA7.zip",
+   "size_mb": 89.5,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/e15a0226-a306-48c2-8920-77cb54cde8c1/S1BB_20170724T031922_20170805T031922_VVP012_INT80_G_ueF_5AA7.zip"
+  },
+  {
+   "job_name": "id666-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "ab5d9110-4698-40e6-a164-604294014308",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "filename": "S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D.zip",
+   "size_mb": 87.9,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/ab5d9110-4698-40e6-a164-604294014308/S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D.zip"
+  },
+  {
+   "job_name": "id666-coh-dodo",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "8b0d1fe1-5778-49c2-a522-a087fdfcef9b",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170628T033446_20170710T033446_VVP012_INT80_G_ueF_4CD2.zip",
+   "size_mb": 87.8,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/8b0d1fe1-5778-49c2-a522-a087fdfcef9b/S1BB_20170628T033446_20170710T033446_VVP012_INT80_G_ueF_4CD2.zip"
+  },
+  {
+   "job_name": "id666-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "8d80a74d-2324-4849-ab8c-cdfef716e4f8",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "filename": "S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3.zip",
+   "size_mb": 88.3,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/8d80a74d-2324-4849-ab8c-cdfef716e4f8/S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3.zip"
+  },
+  {
+   "job_name": "id674-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "2f8e8e5d-56a0-4740-a822-2bd80570be07",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20170805T041008_20170817T041009_VVP012_INT80_G_ueF_5F4D.zip",
+   "size_mb": 98.9,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/2f8e8e5d-56a0-4740-a822-2bd80570be07/S1AA_20170805T041008_20170817T041009_VVP012_INT80_G_ueF_5F4D.zip"
+  },
+  {
+   "job_name": "id674-coh-control-v2",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "6e5bc5d0-90ac-4cde-b84e-d09ec9d0a87c",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170811T040915_20170823T040915_VVP012_INT80_G_ueF_AB7F.zip",
+   "size_mb": 83.5,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/6e5bc5d0-90ac-4cde-b84e-d09ec9d0a87c/S1BB_20170811T040915_20170823T040915_VVP012_INT80_G_ueF_AB7F.zip"
+  },
+  {
+   "job_name": "id674-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "180e2f35-05d0-437f-b65f-1a024cc5ad73",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_17E3.zip",
+   "size_mb": 101.0,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/180e2f35-05d0-437f-b65f-1a024cc5ad73/S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_17E3.zip"
+  },
+  {
+   "job_name": "id674-coh-prepost-v2",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "3fc79d78-e421-44f0-b236-9b24dfaa2ab6",
+   "expiration_time": "2026-09-18T00:00:00+00:00",
+   "filename": "S1BB_20170730T040914_20170811T040915_VVP012_INT80_G_ueF_0473.zip",
+   "size_mb": 83.0,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/3fc79d78-e421-44f0-b236-9b24dfaa2ab6/S1BB_20170730T040914_20170811T040915_VVP012_INT80_G_ueF_0473.zip"
+  },
+  {
+   "job_name": "id694-coh-control",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "9202f9f9-c27d-4006-b615-1fa54bad7b5c",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "filename": "S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E.zip",
+   "size_mb": 91.2,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/9202f9f9-c27d-4006-b615-1fa54bad7b5c/S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E.zip"
+  },
+  {
+   "job_name": "id694-coh-prepost",
+   "job_type": "INSAR_GAMMA",
+   "job_id": "5a0e11a7-e4c0-4528-b27d-865fc5ae868d",
+   "expiration_time": "2026-09-17T00:00:00+00:00",
+   "filename": "S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748.zip",
+   "size_mb": 92.7,
+   "url": "https://d3gm2hf49xd6jj.cloudfront.net/5a0e11a7-e4c0-4528-b27d-865fc5ae868d/S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748.zip"
+  }
+ ]
+}

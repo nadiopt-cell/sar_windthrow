@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  @page { size: 794px 1123px; margin: 0; }
+  :root {
+    --c-bg: #f6f6f5;
+    --c-accent: #97781b;
+    --c-text: #191816;
+    --c-muted: #7c7972;
+    --c-mid: #6f6443;
+    --c-surface: #f0efec;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    width: 794px; height: 1123px;
+    background: var(--c-bg);
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    color: var(--c-text);
+  }
+  @media screen {
+    html { height: auto; display: flex; justify-content: center; min-height: 100vh; background: var(--c-bg); }
+    body { transform-origin: top center; scale: min(1, calc(100vw / 794), calc(100vh / 1123)); margin: 0 auto; box-shadow: 0 0 60px rgba(0,0,0,0.18); }
+  }
+  .cover { position: relative; width: 794px; height: 1123px; border: none; outline: none; box-shadow: none; }
+
+  /* Layer 1: фоновая сетка (2% непрозрачности) */
+  .layer1 {
+    position: absolute; inset: 0; overflow: hidden; z-index: 1;
+    background-image:
+      repeating-linear-gradient(to right, rgba(111,100,67,0.05) 0 0.5px, transparent 0.5px 66px),
+      repeating-linear-gradient(to bottom, rgba(111,100,67,0.05) 0 0.5px, transparent 0.5px 66px);
+  }
+  /* Layer 2: толстая вертикальная якорная линия */
+  .layer2 { position: absolute; inset: 0; z-index: 2; }
+  .anchor-line {
+    position: absolute; left: 91px; top: 112px; bottom: 112px;
+    width: 8px; background: var(--c-mid);
+  }
+  /* Layer 3: контент */
+  .layer3 { position: absolute; inset: 0; z-index: 3; }
+  .kicker {
+    position: absolute; left: 180px; top: 168px;
+    font-size: 15pt; font-weight: 400; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--c-text); opacity: 0.6;
+    max-width: 560px;
+  }
+  .hero {
+    position: absolute; left: 180px; top: 337px;
+    font-size: 40pt; font-weight: 900; line-height: 1.15;
+    color: var(--c-text); max-width: 560px;
+  }
+  .hero2 {
+    position: absolute; left: 180px; top: 463px;
+    font-size: 40pt; font-weight: 900; line-height: 1.15;
+    color: var(--c-accent); max-width: 560px;
+  }
+  .summary {
+    position: absolute; left: 180px; top: 596px;
+    font-size: 16.5pt; font-weight: 400; line-height: 1.6;
+    color: var(--c-text); opacity: 0.85; max-width: 476px;
+  }
+  .meta {
+    position: absolute; left: 180px; top: 852px;
+    font-size: 16pt; font-weight: 400; line-height: 1.55;
+    color: var(--c-text);
+  }
+  .meta .dim { color: var(--c-muted); }
+  .footer {
+    position: absolute; left: 180px; right: 60px; top: 1032px;
+    display: flex; justify-content: space-between;
+    font-size: 12pt; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--c-text); opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+  <div class="cover">
+    <div class="layer1"></div>
+    <div class="layer2"><div class="anchor-line"></div></div>
+    <div class="layer3">
+      <div class="kicker">Сводный отчёт · Издание 5</div>
+      <div class="hero">SENTINEL-1 SAR<br>ДЕТЕКТИРОВАНИЕ</div>
+      <div class="hero2">ВЕТРОВАЛОВ</div>
+      <div class="summary">Двенадцать объектов валидации: семь обработанных событий
+        и вторая партия из пяти новых участков. Схема DiD на парах
+        InSAR, отбор по базе Шихова–Эрлиха (2020).</div>
+      <div class="meta">QGIS-плагин Sentinel-1 ветровал v1.0<br>
+        <span class="dim">3 торнадо + 2 шквала · 10 задач INSAR_GAMMA<br>
+        Аккаунт HyP3: nadiopt · 4 сентября 2026</span></div>
+      <div class="footer"><span>S1A · S1B · HYP3</span><span>04.09.2026</span></div>
+    </div>
+  </div>
+</body>
+</html>

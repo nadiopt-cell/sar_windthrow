@@ -1,0 +1,486 @@
+{
+ "generated": "2026-09-04T12:30:10",
+ "rule": "3 tornado + 2 squall, 2015-2017, quality=full only",
+ "n_full_candidates": 11,
+ "cohort": [
+  {
+   "id": 579,
+   "storm_id": 422,
+   "key": "579_20150702",
+   "type": "tornado",
+   "date_1": "2015/07/02",
+   "area_km2": 0.68,
+   "length_km": 4.4,
+   "mean_width_m": 187.8,
+   "max_width_m": 485.8,
+   "wind_gust": -9999,
+   "direction": "NW-SE",
+   "certainty": "High",
+   "lon": 34.5134,
+   "lat": 62.5928,
+   "score": 0.873,
+   "chain": {
+    "platform": "S1A",
+    "direction": null,
+    "rel_orbit": 6,
+    "pre": "2015-06-22",
+    "post": "2015-07-04",
+    "control": "2015-07-16",
+    "pair_interval_days": 11,
+    "control_interval_days": 12,
+    "min_coverage": 1.0,
+    "coverages": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "quality": "full",
+    "gap_days_pre": 9,
+    "gap_days_post": 2
+   },
+   "landscape": {
+    "id": 579,
+    "key": "579_20150702",
+    "wc_item": "ESA_WorldCover_10m_2021_v200_N60E033",
+    "forest_frac": 0.995,
+    "water_frac": 0.0,
+    "wetland_frac": 0.0,
+    "crop_frac": 0.0,
+    "wc_classes_top": [
+     [
+      10,
+      3729
+     ],
+     [
+      30,
+      20
+     ]
+    ],
+    "slope_mean_deg": 2.05,
+    "slope_p90_deg": 3.88
+   },
+   "granules": {
+    "pre": {
+     "title": "S1A_IW_SLC__1SDV_20150622T041605_20150622T041635_006481_008978_993E-SLC",
+     "cov": 1.0,
+     "rel": 6,
+     "t": "2015-06-22T04:16:05",
+     "rel_match": true
+    },
+    "post": {
+     "title": "S1A_IW_SLC__1SDV_20150704T041604_20150704T041634_006656_008E32_C5BE-SLC",
+     "cov": 1.0,
+     "rel": 6,
+     "t": "2015-07-04T04:16:04",
+     "rel_match": true
+    },
+    "control": {
+     "title": "S1A_IW_SLC__1SDV_20150716T041605_20150716T041635_006831_009338_7F34-SLC",
+     "cov": 1.0,
+     "rel": 6,
+     "t": "2015-07-16T04:16:05",
+     "rel_match": true
+    }
+   }
+  },
+  {
+   "id": 683,
+   "storm_id": 480,
+   "key": "683_20170801",
+   "type": "tornado",
+   "date_1": "2017/08/01",
+   "area_km2": 1.12,
+   "length_km": 6.9,
+   "mean_width_m": 205.8,
+   "max_width_m": 594.0,
+   "wind_gust": -9999,
+   "direction": "WSW-ENE",
+   "certainty": "High",
+   "lon": 33.1923,
+   "lat": 57.4676,
+   "score": 0.863,
+   "chain": {
+    "platform": "S1B",
+    "direction": null,
+    "rel_orbit": 62,
+    "pre": "2017-07-30",
+    "post": "2017-08-11",
+    "control": "2017-08-23",
+    "pair_interval_days": 12,
+    "control_interval_days": 12,
+    "min_coverage": 1.0,
+    "coverages": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "quality": "full",
+    "gap_days_pre": 1,
+    "gap_days_post": 10
+   },
+   "landscape": {
+    "id": 683,
+    "key": "683_20170801",
+    "wc_item": "ESA_WorldCover_10m_2021_v200_N57E033",
+    "forest_frac": 0.983,
+    "water_frac": 0.0,
+    "wetland_frac": 0.0,
+    "crop_frac": 0.0,
+    "wc_classes_top": [
+     [
+      10,
+      5714
+     ],
+     [
+      30,
+      99
+     ]
+    ],
+    "slope_mean_deg": 3.35,
+    "slope_p90_deg": 6.19
+   },
+   "granules": {
+    "pre": {
+     "title": "S1B_IW_SLC__1SDV_20170730T040849_20170730T040916_006712_00BCE3_8D45-SLC",
+     "cov": 1.0,
+     "rel": 62,
+     "t": "2017-07-30T04:08:49",
+     "rel_match": true
+    },
+    "post": {
+     "title": "S1B_IW_SLC__1SDV_20170811T040850_20170811T040917_006887_00C1F8_55FF-SLC",
+     "cov": 1.0,
+     "rel": 62,
+     "t": "2017-08-11T04:08:50",
+     "rel_match": true
+    },
+    "control": {
+     "title": "S1B_IW_SLC__1SDV_20170823T040850_20170823T040917_007062_00C70A_5B8B-SLC",
+     "cov": 1.0,
+     "rel": 62,
+     "t": "2017-08-23T04:08:50",
+     "rel_match": true
+    }
+   }
+  },
+  {
+   "id": 654,
+   "storm_id": 470,
+   "key": "654_20170716",
+   "type": "tornado",
+   "date_1": "2017/07/16",
+   "area_km2": 0.64,
+   "length_km": 6.4,
+   "mean_width_m": 173.3,
+   "max_width_m": 337.3,
+   "wind_gust": -9999,
+   "direction": "ENE-WSW",
+   "certainty": "High",
+   "lon": 44.6244,
+   "lat": 61.744,
+   "score": 0.853,
+   "chain": {
+    "platform": "S1B",
+    "direction": null,
+    "rel_orbit": 149,
+    "pre": "2017-07-12",
+    "post": "2017-07-24",
+    "control": "2017-08-05",
+    "pair_interval_days": 12,
+    "control_interval_days": 12,
+    "min_coverage": 1.0,
+    "coverages": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "quality": "full",
+    "gap_days_pre": 3,
+    "gap_days_post": 8
+   },
+   "landscape": {
+    "id": 654,
+    "key": "654_20170716",
+    "wc_item": "ESA_WorldCover_10m_2021_v200_N60E042",
+    "forest_frac": 1.0,
+    "water_frac": 0.0,
+    "wetland_frac": 0.0,
+    "crop_frac": 0.0,
+    "wc_classes_top": [
+     [
+      10,
+      4953
+     ]
+    ],
+    "slope_mean_deg": 2.97,
+    "slope_p90_deg": 5.0
+   },
+   "granules": {
+    "pre": {
+     "title": "S1B_IW_SLC__1SDV_20170712T031830_20170712T031857_006449_00B566_B82A-SLC",
+     "cov": 1.0,
+     "rel": 149,
+     "t": "2017-07-12T03:18:30",
+     "rel_match": true
+    },
+    "post": {
+     "title": "S1B_IW_SLC__1SDV_20170724T031831_20170724T031858_006624_00BA63_6F6E-SLC",
+     "cov": 1.0,
+     "rel": 149,
+     "t": "2017-07-24T03:18:31",
+     "rel_match": true
+    },
+    "control": {
+     "title": "S1B_IW_SLC__1SDV_20170805T031832_20170805T031859_006799_00BF69_C206-SLC",
+     "cov": 1.0,
+     "rel": 149,
+     "t": "2017-08-05T03:18:32",
+     "rel_match": true
+    }
+   }
+  },
+  {
+   "id": 658,
+   "storm_id": 467,
+   "key": "658_20170729",
+   "type": "squall",
+   "date_1": "2017/07/29",
+   "area_km2": 1.97,
+   "length_km": 13.4,
+   "mean_width_m": 245.5,
+   "max_width_m": 744.8,
+   "wind_gust": 25,
+   "direction": "SSW-NNE",
+   "certainty": "High",
+   "lon": 40.0002,
+   "lat": 62.074,
+   "score": 0.851,
+   "chain": {
+    "platform": "S1B",
+    "direction": null,
+    "rel_orbit": 120,
+    "pre": "2017-07-22",
+    "post": "2017-08-03",
+    "control": "2017-08-15",
+    "pair_interval_days": 12,
+    "control_interval_days": 12,
+    "min_coverage": 1.0,
+    "coverages": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "quality": "full",
+    "gap_days_pre": 6,
+    "gap_days_post": 5
+   },
+   "landscape": {
+    "id": 658,
+    "key": "658_20170729",
+    "wc_item": "ESA_WorldCover_10m_2021_v200_N60E039",
+    "forest_frac": 0.968,
+    "water_frac": 0.0,
+    "wetland_frac": 0.0,
+    "crop_frac": 0.0,
+    "wc_classes_top": [
+     [
+      10,
+      1372
+     ],
+     [
+      30,
+      46
+     ]
+    ],
+    "slope_mean_deg": 3.51,
+    "slope_p90_deg": 6.51
+   },
+   "granules": {
+    "pre": {
+     "title": "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637-SLC",
+     "cov": 1.0,
+     "rel": 120,
+     "t": "2017-07-22T03:34:47",
+     "rel_match": true
+    },
+    "post": {
+     "title": "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C-SLC",
+     "cov": 1.0,
+     "rel": 120,
+     "t": "2017-08-03T03:34:48",
+     "rel_match": true
+    },
+    "control": {
+     "title": "S1B_IW_SLC__1SDV_20170815T033448_20170815T033515_006945_00C3B5_87FD-SLC",
+     "cov": 1.0,
+     "rel": 120,
+     "t": "2017-08-15T03:34:48",
+     "rel_match": true
+    }
+   }
+  },
+  {
+   "id": 696,
+   "storm_id": 474,
+   "key": "696_20170723",
+   "type": "squall",
+   "date_1": "2017/07/23",
+   "area_km2": 0.65,
+   "length_km": 3.5,
+   "mean_width_m": 222.1,
+   "max_width_m": 592.1,
+   "wind_gust": -9999,
+   "direction": "SW-NE",
+   "certainty": "High",
+   "lon": 31.9137,
+   "lat": 55.5849,
+   "score": 0.797,
+   "chain": {
+    "platform": "S1A",
+    "direction": null,
+    "rel_orbit": 108,
+    "pre": "2017-07-12",
+    "post": "2017-07-24",
+    "control": "2017-08-05",
+    "pair_interval_days": 12,
+    "control_interval_days": 12,
+    "min_coverage": 1.0,
+    "coverages": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "quality": "full",
+    "gap_days_pre": 10,
+    "gap_days_post": 1
+   },
+   "landscape": {
+    "id": 696,
+    "key": "696_20170723",
+    "wc_item": "ESA_WorldCover_10m_2021_v200_N54E030",
+    "forest_frac": 0.979,
+    "water_frac": 0.0,
+    "wetland_frac": 0.0,
+    "crop_frac": 0.0,
+    "wc_classes_top": [
+     [
+      10,
+      2718
+     ],
+     [
+      30,
+      57
+     ]
+    ],
+    "slope_mean_deg": 3.34,
+    "slope_p90_deg": 5.79
+   },
+   "granules": {
+    "pre": {
+     "title": "S1A_IW_SLC__1SDV_20170712T041007_20170712T041037_017433_01D219_FA83-SLC",
+     "cov": 1.0,
+     "rel": 108,
+     "t": "2017-07-12T04:10:07",
+     "rel_match": true
+    },
+    "post": {
+     "title": "S1A_IW_SLC__1SDV_20170724T041008_20170724T041037_017608_01D766_3758-SLC",
+     "cov": 1.0,
+     "rel": 108,
+     "t": "2017-07-24T04:10:08",
+     "rel_match": true
+    },
+    "control": {
+     "title": "S1A_IW_SLC__1SDV_20170805T041008_20170805T041038_017783_01DCC1_56AA-SLC",
+     "cov": 1.0,
+     "rel": 108,
+     "t": "2017-08-05T04:10:08",
+     "rel_match": true
+    }
+   }
+  }
+ ],
+ "planned_jobs": [
+  {
+   "name": "id579-coh-prepost",
+   "granules": [
+    "S1A_IW_SLC__1SDV_20150622T041605_20150622T041635_006481_008978_993E-SLC",
+    "S1A_IW_SLC__1SDV_20150704T041604_20150704T041634_006656_008E32_C5BE-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id579-coh-control",
+   "granules": [
+    "S1A_IW_SLC__1SDV_20150704T041604_20150704T041634_006656_008E32_C5BE-SLC",
+    "S1A_IW_SLC__1SDV_20150716T041605_20150716T041635_006831_009338_7F34-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id683-coh-prepost",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170730T040849_20170730T040916_006712_00BCE3_8D45-SLC",
+    "S1B_IW_SLC__1SDV_20170811T040850_20170811T040917_006887_00C1F8_55FF-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id683-coh-control",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170811T040850_20170811T040917_006887_00C1F8_55FF-SLC",
+    "S1B_IW_SLC__1SDV_20170823T040850_20170823T040917_007062_00C70A_5B8B-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id654-coh-prepost",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170712T031830_20170712T031857_006449_00B566_B82A-SLC",
+    "S1B_IW_SLC__1SDV_20170724T031831_20170724T031858_006624_00BA63_6F6E-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id654-coh-control",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170724T031831_20170724T031858_006624_00BA63_6F6E-SLC",
+    "S1B_IW_SLC__1SDV_20170805T031832_20170805T031859_006799_00BF69_C206-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id658-coh-prepost",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170722T033447_20170722T033514_006595_00B994_2637-SLC",
+    "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id658-coh-control",
+   "granules": [
+    "S1B_IW_SLC__1SDV_20170803T033448_20170803T033515_006770_00BE98_9F8C-SLC",
+    "S1B_IW_SLC__1SDV_20170815T033448_20170815T033515_006945_00C3B5_87FD-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id696-coh-prepost",
+   "granules": [
+    "S1A_IW_SLC__1SDV_20170712T041007_20170712T041037_017433_01D219_FA83-SLC",
+    "S1A_IW_SLC__1SDV_20170724T041008_20170724T041037_017608_01D766_3758-SLC"
+   ],
+   "credits": 10
+  },
+  {
+   "name": "id696-coh-control",
+   "granules": [
+    "S1A_IW_SLC__1SDV_20170724T041008_20170724T041037_017608_01D766_3758-SLC",
+    "S1A_IW_SLC__1SDV_20170805T041008_20170805T041038_017783_01DCC1_56AA-SLC"
+   ],
+   "credits": 10
+  }
+ ],
+ "planned_cost_credits": 100
+}

@@ -1,0 +1,62 @@
+Прямые ссылки на HyP3-продукты (обновлено 2026-09-04)
+Аккаунт: nadiopt | кредитов осталось: 7810
+Ссылки подписанные (presigned) и могут протухнуть через ~сутки —
+тогда берите заново через Vertex: https://search.asf.alaska.edu -> Processing
+
+--- id583-coh-control (продукты экспирируются 2026-09-18) ---
+  S1AA_20150728T041724_20150809T041725_VVP012_INT80_G_ueF_7C23.zip (114.7 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/a23dd94b-199d-4eea-94a0-512330a9acb5/S1AA_20150728T041724_20150809T041725_VVP012_INT80_G_ueF_7C23.zip
+--- id583-coh-prepost (продукты экспирируются 2026-09-18) ---
+  S1AA_20150716T041723_20150728T041724_VVP012_INT80_G_ueF_6635.zip (115.1 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/e8f1f9e1-738c-45b7-999b-1e6e90e9925d/S1AA_20150716T041723_20150728T041724_VVP012_INT80_G_ueF_6635.zip
+--- id608-coh-control (продукты экспирируются 2026-09-18) ---
+  S1AA_20160714T034543_20160726T034544_VVP012_INT80_G_ueF_FA62.zip (93.1 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/6560a619-cf70-4813-8bd7-81e35d0b0fa8/S1AA_20160714T034543_20160726T034544_VVP012_INT80_G_ueF_FA62.zip
+--- id608-coh-control-v2 (продукты экспирируются 2026-09-18) ---
+  S1AA_20160714T034516_20160726T034517_VVP012_INT80_G_ueF_8850.zip (98.8 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/64041214-bc24-40a4-bdd9-7732724d644a/S1AA_20160714T034516_20160726T034517_VVP012_INT80_G_ueF_8850.zip
+--- id608-coh-prepost (продукты экспирируются 2026-09-18) ---
+  S1AA_20160702T034543_20160714T034543_VVP012_INT80_G_ueF_25D0.zip (92.7 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/c39b67a1-31fa-49ab-889a-61ccd420ffa8/S1AA_20160702T034543_20160714T034543_VVP012_INT80_G_ueF_25D0.zip
+--- id608-coh-prepost-v2 (продукты экспирируются 2026-09-18) ---
+  S1AA_20160702T034515_20160714T034516_VVP012_INT80_G_ueF_DC49.zip (99.4 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/afdca0af-952f-4dea-ab7a-69fefafc59f7/S1AA_20160702T034515_20160714T034516_VVP012_INT80_G_ueF_DC49.zip
+--- id646-coh-control (продукты экспирируются 2026-09-18) ---
+  S1BB_20170604T033625_20170616T033625_VVP012_INT80_G_ueF_B8C4.zip (84.9 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/38093168-3f93-4c0b-9e64-c6c8a478eb03/S1BB_20170604T033625_20170616T033625_VVP012_INT80_G_ueF_B8C4.zip
+--- id646-coh-prepost (продукты экспирируются 2026-09-18) ---
+  S1BB_20170523T033624_20170604T033625_VVP012_INT80_G_ueF_105D.zip (83.9 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/b26ec122-327f-423e-906b-385d9ee1ebac/S1BB_20170523T033624_20170604T033625_VVP012_INT80_G_ueF_105D.zip
+--- id655-coh-control (продукты экспирируются 2026-09-18) ---
+  S1BB_20170805T031922_20170817T031923_VVP012_INT80_G_ueF_5C98.zip (89.0 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/2eb23118-a90f-4cd4-a348-26d3f37ef077/S1BB_20170805T031922_20170817T031923_VVP012_INT80_G_ueF_5C98.zip
+--- id655-coh-prepost (продукты экспирируются 2026-09-18) ---
+  S1BB_20170724T031922_20170805T031922_VVP012_INT80_G_ueF_5AA7.zip (89.5 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/e15a0226-a306-48c2-8920-77cb54cde8c1/S1BB_20170724T031922_20170805T031922_VVP012_INT80_G_ueF_5AA7.zip
+--- id666-coh-control (продукты экспирируются 2026-09-17) ---
+  S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D.zip (87.9 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/ab5d9110-4698-40e6-a164-604294014308/S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_172D.zip
+--- id666-coh-dodo (продукты экспирируются 2026-09-18) ---
+  S1BB_20170628T033446_20170710T033446_VVP012_INT80_G_ueF_4CD2.zip (87.8 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/8b0d1fe1-5778-49c2-a522-a087fdfcef9b/S1BB_20170628T033446_20170710T033446_VVP012_INT80_G_ueF_4CD2.zip
+--- id666-coh-prepost (продукты экспирируются 2026-09-17) ---
+  S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3.zip (88.3 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/8d80a74d-2324-4849-ab8c-cdfef716e4f8/S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_C4A3.zip
+--- id674-coh-control (продукты экспирируются 2026-09-18) ---
+  S1AA_20170805T041008_20170817T041009_VVP012_INT80_G_ueF_5F4D.zip (98.9 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/2f8e8e5d-56a0-4740-a822-2bd80570be07/S1AA_20170805T041008_20170817T041009_VVP012_INT80_G_ueF_5F4D.zip
+--- id674-coh-control-v2 (продукты экспирируются 2026-09-18) ---
+  S1BB_20170811T040915_20170823T040915_VVP012_INT80_G_ueF_AB7F.zip (83.5 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/6e5bc5d0-90ac-4cde-b84e-d09ec9d0a87c/S1BB_20170811T040915_20170823T040915_VVP012_INT80_G_ueF_AB7F.zip
+--- id674-coh-prepost (продукты экспирируются 2026-09-18) ---
+  S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_17E3.zip (101.0 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/180e2f35-05d0-437f-b65f-1a024cc5ad73/S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_17E3.zip
+--- id674-coh-prepost-v2 (продукты экспирируются 2026-09-18) ---
+  S1BB_20170730T040914_20170811T040915_VVP012_INT80_G_ueF_0473.zip (83.0 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/3fc79d78-e421-44f0-b236-9b24dfaa2ab6/S1BB_20170730T040914_20170811T040915_VVP012_INT80_G_ueF_0473.zip
+--- id694-coh-control (продукты экспирируются 2026-09-17) ---
+  S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E.zip (91.2 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/9202f9f9-c27d-4006-b615-1fa54bad7b5c/S1BB_20170924T030234_20171006T030235_VVP012_INT80_G_ueF_5C8E.zip
+--- id694-coh-prepost (продукты экспирируются 2026-09-17) ---
+  S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748.zip (92.7 MB)
+  https://d3gm2hf49xd6jj.cloudfront.net/5a0e11a7-e4c0-4528-b27d-865fc5ae868d/S1BB_20170912T030234_20170924T030234_VVP012_INT80_G_ueF_5748.zip

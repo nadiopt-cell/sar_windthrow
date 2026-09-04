@@ -1,0 +1,287 @@
+{
+ "579_20150702": {
+  "id": 579,
+  "key": "579_20150702",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N60E033",
+  "forest_frac": 0.995,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    3729
+   ],
+   [
+    30,
+    20
+   ]
+  ],
+  "slope_mean_deg": 2.05,
+  "slope_p90_deg": 3.88
+ },
+ "606_20160618": {
+  "id": 606,
+  "key": "606_20160618",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E045",
+  "forest_frac": 0.952,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    59
+   ],
+   [
+    30,
+    3
+   ]
+  ],
+  "slope_mean_deg": 1.13,
+  "slope_p90_deg": 1.96
+ },
+ "594_20150623": {
+  "id": 594,
+  "key": "594_20150623",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E039",
+  "forest_frac": 0.633,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    900
+   ],
+   [
+    30,
+    521
+   ]
+  ],
+  "slope_mean_deg": 3.8,
+  "slope_p90_deg": 7.71
+ },
+ "605_20160623": {
+  "id": 605,
+  "key": "605_20160623",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E039",
+  "forest_frac": 0.877,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    3647
+   ],
+   [
+    30,
+    510
+   ]
+  ],
+  "slope_mean_deg": 3.11,
+  "slope_p90_deg": 6.36
+ },
+ "658_20170729": {
+  "id": 658,
+  "key": "658_20170729",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N60E039",
+  "forest_frac": 0.968,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    1372
+   ],
+   [
+    30,
+    46
+   ]
+  ],
+  "slope_mean_deg": 3.51,
+  "slope_p90_deg": 6.51
+ },
+ "654_20170716": {
+  "id": 654,
+  "key": "654_20170716",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N60E042",
+  "forest_frac": 1.0,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    4953
+   ]
+  ],
+  "slope_mean_deg": 2.97,
+  "slope_p90_deg": 5.0
+ },
+ "667_20170727": {
+  "id": 667,
+  "key": "667_20170727",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E048",
+  "forest_frac": 0.497,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.057,
+  "wc_classes_top": [
+   [
+    10,
+    3642
+   ],
+   [
+    30,
+    3266
+   ],
+   [
+    40,
+    419
+   ]
+  ],
+  "slope_mean_deg": 3.47,
+  "slope_p90_deg": 5.96
+ },
+ "668_20170727": {
+  "id": 668,
+  "key": "668_20170727",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E048",
+  "forest_frac": 0.567,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.022,
+  "wc_classes_top": [
+   [
+    10,
+    1689
+   ],
+   [
+    30,
+    1222
+   ],
+   [
+    40,
+    66
+   ]
+  ],
+  "slope_mean_deg": 2.61,
+  "slope_p90_deg": 4.52
+ },
+ "696_20170723": {
+  "id": 696,
+  "key": "696_20170723",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E030",
+  "forest_frac": 0.979,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    2718
+   ],
+   [
+    30,
+    57
+   ]
+  ],
+  "slope_mean_deg": 3.34,
+  "slope_p90_deg": 5.79
+ },
+ "690_20170801": {
+  "id": 690,
+  "key": "690_20170801",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E033",
+  "forest_frac": 0.971,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    2461
+   ],
+   [
+    30,
+    74
+   ]
+  ],
+  "slope_mean_deg": 3.68,
+  "slope_p90_deg": 6.49
+ },
+ "683_20170801": {
+  "id": 683,
+  "key": "683_20170801",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N57E033",
+  "forest_frac": 0.983,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.0,
+  "wc_classes_top": [
+   [
+    10,
+    5714
+   ],
+   [
+    30,
+    99
+   ]
+  ],
+  "slope_mean_deg": 3.35,
+  "slope_p90_deg": 6.19
+ },
+ "672_20170731": {
+  "id": 672,
+  "key": "672_20170731",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N57E033",
+  "forest_frac": 0.314,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.011,
+  "wc_classes_top": [
+   [
+    30,
+    998
+   ],
+   [
+    10,
+    465
+   ],
+   [
+    40,
+    17
+   ]
+  ],
+  "slope_mean_deg": 4.1,
+  "slope_p90_deg": 7.3
+ },
+ "675_20170731": {
+  "id": 675,
+  "key": "675_20170731",
+  "wc_item": "ESA_WorldCover_10m_2021_v200_N54E033",
+  "forest_frac": 0.584,
+  "water_frac": 0.0,
+  "wetland_frac": 0.0,
+  "crop_frac": 0.003,
+  "wc_classes_top": [
+   [
+    10,
+    793
+   ],
+   [
+    30,
+    562
+   ],
+   [
+    40,
+    4
+   ]
+  ],
+  "slope_mean_deg": 4.25,
+  "slope_p90_deg": 8.14
+ }
+}
