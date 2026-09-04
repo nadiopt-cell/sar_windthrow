@@ -1,0 +1,152 @@
+{
+ "id579": {
+  "event_id": 579,
+  "date": "2015-07-02",
+  "type": "торнадо",
+  "platform": "S1A",
+  "prepost_zip": "S1AA_20150622T041605_20150704T041604_VVP012_INT80_G_ueF_07A7.zip",
+  "control_zip": "S1AA_20150704T041604_20150716T041605_VVP012_INT80_G_ueF_8A5D.zip",
+  "ref_parts": 2,
+  "ref_pixels": 107,
+  "bg_pixels": 58808,
+  "other_windthrow_parts_excluded": 3893,
+  "detector": {
+   "threshold": 0.3433,
+   "mean_dcoh": 0.1011,
+   "n_objects": 17036,
+   "water_mask_ignored": [
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1AA_20150622T041605_20150704T041604_VVP012_INT80_G_ueF_07A7/S1AA_20150622T041605_20150704T041604_VVP012_INT80_G_ueF_07A7_water_mask.tif",
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1AA_20150704T041604_20150716T041605_VVP012_INT80_G_ueF_8A5D/S1AA_20150704T041604_20150716T041605_VVP012_INT80_G_ueF_8A5D_water_mask.tif"
+   ]
+  },
+  "dcoh": "/home/z/my-project/work_data/wave2/id579_did_dcoh.tif",
+  "mask": "/home/z/my-project/work_data/wave2/id579_did_mask.tif",
+  "vector": "/home/z/my-project/work_data/wave2/id579_did.gpkg",
+  "excess_median": 0.1265,
+  "auc": 0.665,
+  "tpr_at_fpr5pct": 0.1776,
+  "median_ref": 0.1526,
+  "median_bg": 0.0262
+ },
+ "id654": {
+  "event_id": 654,
+  "date": "2017-07-16",
+  "type": "торнадо",
+  "platform": "S1B",
+  "prepost_zip": "S1BB_20170712T031830_20170724T031831_VVP012_INT80_G_ueF_3A90.zip",
+  "control_zip": "S1BB_20170724T031831_20170805T031832_VVP012_INT80_G_ueF_4FDF.zip",
+  "ref_parts": 1,
+  "ref_pixels": 99,
+  "bg_pixels": 70219,
+  "other_windthrow_parts_excluded": 7,
+  "detector": {
+   "threshold": 0.235,
+   "mean_dcoh": -0.0254,
+   "n_objects": 16603,
+   "water_mask_ignored": [
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1BB_20170712T031830_20170724T031831_VVP012_INT80_G_ueF_3A90/S1BB_20170712T031830_20170724T031831_VVP012_INT80_G_ueF_3A90_water_mask.tif",
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1BB_20170724T031831_20170805T031832_VVP012_INT80_G_ueF_4FDF/S1BB_20170724T031831_20170805T031832_VVP012_INT80_G_ueF_4FDF_water_mask.tif"
+   ]
+  },
+  "dcoh": "/home/z/my-project/work_data/wave2/id654_did_dcoh.tif",
+  "mask": "/home/z/my-project/work_data/wave2/id654_did_mask.tif",
+  "vector": "/home/z/my-project/work_data/wave2/id654_did.gpkg",
+  "excess_median": -0.3959,
+  "auc": 0.0512,
+  "tpr_at_fpr5pct": 0.0,
+  "median_ref": -0.3393,
+  "median_bg": 0.0567,
+  "diagnosis": {
+   "coh_prepost_median_ref": 0.6353,
+   "coh_control_median_ref": 0.2846,
+   "coh_prepost_median_bg": 0.5192,
+   "coh_control_median_bg": 0.5854,
+   "verdict": "Внутри полигона когерентность prepost-пары 0.635 — сигнатура голого грунта, а не стоящего леса (лес даёт 0.3-0.5): на дату события участок уже был безлесным, след торнадо 16.07.2017 в когерентности отсутствует. Инверсия DiD вызвана изменением в КОНТРОЛЬНОМ окне (24.07-05.08, coh 0.285) — зарастание/уборка. WorldCover-2021 показывает 95-100% леса — территория заросла за 4 года; скринингу нужна растительность на дату события."
+  }
+ },
+ "id658": {
+  "event_id": 658,
+  "date": "2017-07-29",
+  "type": "шквал",
+  "platform": "S1B",
+  "prepost_zip": "S1BB_20170722T033447_20170803T033448_VVP012_INT80_G_ueF_4BC7.zip",
+  "control_zip": "S1BB_20170803T033448_20170815T033448_VVP012_INT80_G_ueF_082D.zip",
+  "ref_parts": 1,
+  "ref_pixels": 315,
+  "bg_pixels": 101468,
+  "other_windthrow_parts_excluded": 192,
+  "detector": {
+   "threshold": 0.293,
+   "mean_dcoh": 0.0478,
+   "n_objects": 410,
+   "water_mask_ignored": []
+  },
+  "dcoh": "/home/z/my-project/work_data/wave2/id658_did_dcoh.tif",
+  "mask": "/home/z/my-project/work_data/wave2/id658_did_mask.tif",
+  "vector": "/home/z/my-project/work_data/wave2/id658_did.gpkg",
+  "excess_median": 0.0537,
+  "auc": 0.5675,
+  "tpr_at_fpr5pct": 0.0921,
+  "median_ref": 0.1052,
+  "median_bg": 0.0515
+ },
+ "id683": {
+  "event_id": 683,
+  "date": "2017-08-01",
+  "type": "торнадо",
+  "platform": "S1B",
+  "prepost_zip": "S1BB_20170730T040849_20170811T040850_VVP012_INT80_G_ueF_E9F3.zip",
+  "control_zip": "S1BB_20170811T040850_20170823T040850_VVP012_INT80_G_ueF_168D.zip",
+  "ref_parts": 1,
+  "ref_pixels": 171,
+  "bg_pixels": 72974,
+  "other_windthrow_parts_excluded": 57,
+  "detector": {
+   "threshold": 0.2733,
+   "mean_dcoh": 0.0286,
+   "n_objects": 12284,
+   "water_mask_ignored": [
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1BB_20170730T040849_20170811T040850_VVP012_INT80_G_ueF_E9F3/S1BB_20170730T040849_20170811T040850_VVP012_INT80_G_ueF_E9F3_water_mask.tif",
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1BB_20170811T040850_20170823T040850_VVP012_INT80_G_ueF_168D/S1BB_20170811T040850_20170823T040850_VVP012_INT80_G_ueF_168D_water_mask.tif"
+   ]
+  },
+  "dcoh": "/home/z/my-project/work_data/wave2/id683_did_dcoh.tif",
+  "mask": "/home/z/my-project/work_data/wave2/id683_did_mask.tif",
+  "vector": "/home/z/my-project/work_data/wave2/id683_did.gpkg",
+  "excess_median": 0.3748,
+  "auc": 0.9276,
+  "tpr_at_fpr5pct": 0.6842,
+  "median_ref": 0.4091,
+  "median_bg": 0.0343
+ },
+ "id696": {
+  "event_id": 696,
+  "date": "2017-07-23",
+  "type": "шквал",
+  "platform": "S1A",
+  "prepost_zip": "S1AA_20170712T041007_20170724T041008_VVP012_INT80_G_ueF_083E.zip",
+  "control_zip": "S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_DB8F.zip",
+  "ref_parts": 1,
+  "ref_pixels": 106,
+  "bg_pixels": 62588,
+  "other_windthrow_parts_excluded": 36,
+  "detector": {
+   "threshold": 0.2645,
+   "mean_dcoh": 0.0199,
+   "n_objects": 13260,
+   "water_mask_ignored": [
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1AA_20170712T041007_20170724T041008_VVP012_INT80_G_ueF_083E/S1AA_20170712T041007_20170724T041008_VVP012_INT80_G_ueF_083E_water_mask.tif",
+    "/home/z/my-project/work_data/wave2/_coh_tmp/_wm/S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_DB8F/S1AA_20170724T041008_20170805T041008_VVP012_INT80_G_ueF_DB8F_water_mask.tif"
+   ]
+  },
+  "dcoh": "/home/z/my-project/work_data/wave2/id696_did_dcoh.tif",
+  "mask": "/home/z/my-project/work_data/wave2/id696_did_mask.tif",
+  "vector": "/home/z/my-project/work_data/wave2/id696_did.gpkg",
+  "excess_median": -0.0136,
+  "auc": 0.4555,
+  "tpr_at_fpr5pct": 0.0189,
+  "median_ref": 0.0206,
+  "median_bg": 0.0342,
+  "note": "Шквал 0.65 км2, ширина следа сравнима с пикселем 80 м (106 ref-пикселей) — размывание сигнала, как в уроке step12c для узких треков; сигнал отсутствует (excess -0.014)."
+ }
+}
