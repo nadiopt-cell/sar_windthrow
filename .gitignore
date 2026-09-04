@@ -17,3 +17,6 @@ work_data/
 
 # GitHub push helper state
 .gh_resp.json
+
+# Exception: coh_delta detection GPKGs are a requested deliverable (small, 63 MB total)
+!gis/detections_gpkg/*.gpkg
