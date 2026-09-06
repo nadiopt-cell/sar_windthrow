@@ -1675,13 +1675,17 @@ class Sentinel1PluginDialog(QDialog):
         self.wt_coh_a_spin.setEnabled(adaptive)
         self.wt_coh_fixed_spin.setEnabled(not adaptive)
         self.wt_norm_chk.setEnabled(is_radar)
-        # The WorldCover auto-mask needs a post image on the radar grid;
-        # coherence products use the 80 m InSAR grid instead.
-        wc_index = 1
-        if not is_radar:
-            self.wt_mask_source_combo.setCurrentIndex(0)
-        self.wt_mask_source_combo.model().item(wc_index).setEnabled(is_radar)
-        self.wt_mask_source_combo.setEnabled(is_radar)
+        # Forest-mask source: all three sources are valid in EVERY
+        # method.  The radar modes warp the mask onto the radar grid;
+        # the coherence method (v1.1) builds GFC / WorldCover masks on
+        # the DiD grid (_run_coh_detection, report ed.8 §9).
+        # v1.2.1 bugfix: the stale v1.0 logic disabled the whole combo
+        # and forced "Custom file" in the coherence method (and its
+        # hard-coded item index 1 pointed at the GFC entry after the
+        # v1.1 insertion, not at WorldCover), which made the validated
+        # coh + GFC@Y workflow (DiD background, ed.9) unreachable from
+        # the GUI.
+        self.wt_mask_source_combo.setEnabled(True)
         # Minimum object size: 27 px @10 m ≈ 6 px @80 m.
         if is_coh and self.wt_min_px_spin.value() == 27:
             self.wt_min_px_spin.setValue(6)
@@ -2259,7 +2263,7 @@ class Sentinel1PluginDialog(QDialog):
         QMessageBox.information(
             self, "About — Sentinel-1 Windthrow Detector",
             "<h3>Sentinel-1 Windthrow Detector</h3>"
-            "<p>Version 1.2.0</p>"
+            "<p>Version 1.2.1</p>"
             "<p>Rapid windthrow (storm forest damage) mapping from SAR "
             "imagery: STAC search and download on Microsoft Planetary "
             "Computer (Sentinel-1 GRD / RTC, ALOS PALSAR), preprocessing "

@@ -1,7 +1,7 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-144%20passed-success.svg)]()
 
@@ -110,7 +110,7 @@ SNAP, snappy, torch or tensorflow.
 ## Installation
 
 1. **Plugins → Manage and Install Plugins → Install from ZIP**.
-2. Select `sentinel1_windthrow_plugin_v1.2.0.zip`.
+2. Select `sentinel1_windthrow_plugin_v1.2.1.zip`.
 3. The toolbar button and the **Plugins → Sentinel-1 Windthrow** menu
    entry appear.
 
@@ -171,7 +171,7 @@ sentinel1_windthrow_plugin/
 ├── sentinel1_plugin_dialog.py   # 4-tab QDialog + QgsTask subclasses
 ├── logger.py                    # QgsMessageLog wrapper (QGIS-optional)
 ├── metadata.txt / icon.svg / LICENSE
-├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md (+ older)
+├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md / RELEASE_NOTES_v1.2.1.md (+ older)
 ├── ui/
 │   └── draw_rectangle_tool.py   # "Draw on map" AOI tool
 ├── sources/
@@ -238,9 +238,10 @@ python -m pytest tests -v          # from the parent of the plugin folder
 
 Array-level tests run with numpy + scipy only; the file-level pipeline
 tests run wherever GDAL bindings are available and skip otherwise.
-See `TESTING_PLAN.md` for the real-data validation protocol
-(European Russia / Urals case studies from the Shikhov et al. 2020
-windthrow database).
+See `TESTING_PLAN.md` (v2.0, plugin v1.2.1) for the real-data testing
+protocol: smoke test, coherence DiD 80 m, Burst InSAR 40 m ordering
+and GUI workflow, L-band and reference WI tracks, regression checklist
+and the 12-event reference AUC table (Shikhov et al. 2020 events).
 
 ## License
 
