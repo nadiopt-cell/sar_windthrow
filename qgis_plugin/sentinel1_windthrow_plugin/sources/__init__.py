@@ -56,7 +56,13 @@ from .forest_mask import (
     read_ref_info,
 )
 from .lband import LbandDeclineDetector
-from .coh_delta import CoherenceDeltaDetector
+from .coh_delta import (
+    CoherenceDeltaDetector,
+    find_correlation_tif,
+    find_water_mask,
+    parse_hyp3_product,
+    sane_water_mask,
+)
 
 # Route pc_client warnings (retry notices, SAS-sign failures, token-cache
 # problems) into the QGIS log panel under the Sentinel1SAR tag. The hook
@@ -77,6 +83,10 @@ __all__ = [
     "WindthrowDetector",
     "LbandDeclineDetector",
     "CoherenceDeltaDetector",
+    "find_correlation_tif",
+    "find_water_mask",
+    "parse_hyp3_product",
+    "sane_water_mask",
     "background_offset_db",
     "common_polarizations",
     "compute_wi",

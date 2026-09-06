@@ -1224,12 +1224,14 @@ class Sentinel1PluginDialog(QDialog):
         # ----- Coherence products (v1.0, method == "coh") -----
         # Hidden unless the Coherence DiD method is selected; the
         # pre/post stack lists above are hidden in that case instead.
-        coh_group = QGroupBox("HyP3 InSAR products (unpacked folder, .zip or *_corr.tif)", page)
+        coh_group = QGroupBox(
+            "HyP3 InSAR products (unpacked folder, .zip or *_corr.tif)", page)
         coh_form = QFormLayout(coh_group)
         self.wt_coh_prepost_edit = QLineEdit(coh_group)
         self.wt_coh_prepost_edit.setPlaceholderText(
             "Pre/post pair product — the damage window, e.g. "
-            "id694-coh-prepost/ (contains *_corr.tif)"
+            "id694-coh-prepost/ (contains *_corr.tif). Full frames "
+            "(INSAR_GAMMA, 80 m) or burst pairs (INSAR_BURST, 40 m)"
         )
         coh_prepost_browse = QPushButton("Browse...", coh_group)
         coh_prepost_row = QHBoxLayout()
@@ -1238,8 +1240,15 @@ class Sentinel1PluginDialog(QDialog):
         coh_form.addRow("Pre/post pair:", coh_prepost_row)
         self.wt_coh_control_edit = QLineEdit(coh_group)
         self.wt_coh_control_edit.setPlaceholderText(
-            "Control pair product (same frames, outside the damage "
+            "Control pair product (same frames/burst, outside the damage "
             "window) — optional but strongly recommended"
+        )
+        self.wt_coh_control_edit.setToolTip(
+            "DiD control pair. For Burst InSAR products this must be the "
+            "SAME burst (same relative burst ID, track and polarization) "
+            "with both dates outside the damage window — order it in "
+            "Vertex for the same burst. Mixing a full GAMMA frame with a "
+            "burst product is rejected."
         )
         coh_control_browse = QPushButton("Browse...", coh_group)
         coh_control_row = QHBoxLayout()
@@ -1272,8 +1281,12 @@ class Sentinel1PluginDialog(QDialog):
             "<small>dcoh = coh(control) − coh(prepost) is <b>positive</b> "
             "over windthrow. The control pair removes static low-coherence "
             "anomalies and seasonal drift. A corrupt product water mask "
-            "(&gt; 50 % water) is ignored automatically. Default min "
-            "object size is 6 px — one 80 m pixel covers 0.64 ha.</small>",
+            "(&gt; 50 % water) is ignored automatically; a sane mask "
+            "(HyP3 encoding: 1 = land, 0 = water) excludes water bodies. "
+            "Default min object size is 6 px — one 80 m pixel covers "
+            "0.64 ha, one 40 m burst pixel 0.16 ha (scale min px up to "
+            "≈ 20–25 for burst pairs to keep the validated 3.8 ha "
+            "object size).</small>",
             coh_group,
         )
         coh_hint.setWordWrap(True)
@@ -1631,13 +1644,14 @@ class Sentinel1PluginDialog(QDialog):
         "coh":
             "<small><b>Method — coherence DiD (project step12b, 2026):</b> "
             "interferometric coherence of the pre/post pair (HyP3 "
-            "INSAR-GAMMA 80 m) drops over disturbed forest. "
+            "INSAR-GAMMA 80 m full frames or Burst InSAR 40 m pairs) "
+            "drops over disturbed forest. "
             "<b>dcoh = coh(control) − coh(prepost)</b> cancels static "
             "anomalies and seasonal drift and is <b>positive</b> over "
             "windthrow. Validated: AUC 0.908 on the 2017 tornado (161 ha) "
             "— the strongest C-band result of the project. Supply a "
-            "control pair of the SAME frames from outside the damage "
-            "window for robust results.</small>",
+            "control pair of the SAME frames (or the SAME burst) from "
+            "outside the damage window for robust results.</small>",
     }
 
     def _sync_method_widgets(self) -> None:
@@ -2245,15 +2259,18 @@ class Sentinel1PluginDialog(QDialog):
         QMessageBox.information(
             self, "About — Sentinel-1 Windthrow Detector",
             "<h3>Sentinel-1 Windthrow Detector</h3>"
-            "<p>Version 0.7.0</p>"
-            "<p>Rapid windthrow (storm forest damage) mapping with "
-            "Sentinel-1: STAC search and download on Microsoft Planetary "
-            "Computer (GRD / RTC), preprocessing (dB, Lee speckle, land "
-            "mask) and bi-temporal change detection after Rüetschi et al. "
-            "2019 (Remote Sensing 11(2):115): Windthrow Index "
-            "WI = dVV + dVH, adaptive threshold (mean + a dB), minimum "
-            "object filter and vectorisation to GeoPackage with per-object "
-            "area in hectares.</p>"
+            "<p>Version 1.2.0</p>"
+            "<p>Rapid windthrow (storm forest damage) mapping from SAR "
+            "imagery: STAC search and download on Microsoft Planetary "
+            "Computer (Sentinel-1 GRD / RTC, ALOS PALSAR), preprocessing "
+            "(dB, Lee speckle, forest masks incl. GFW Hansen GFC on the "
+            "year before the event) and three detection modes: C-band "
+            "Windthrow Index (Rüetschi et al. 2019), L-band decline "
+            "(Tanase et al. 2018) and interferometric coherence DiD over "
+            "ASF HyP3 products — full INSAR-GAMMA frames (80 m) or Burst "
+            "InSAR pairs (20/40/80 m, same-burst validation; v1.2). "
+            "Vectorised GeoPackage output with per-object area in "
+            "hectares.</p>"
             "<p><b>Dependencies:</b> numpy, scipy, GDAL (osgeo). "
             "STAC access uses only the Python standard library "
             "(no pystac-client / planetary-computer needed).</p>"

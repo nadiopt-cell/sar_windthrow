@@ -209,14 +209,40 @@ recommended: regrowth fields and agricultural changes also decline in
 L-band. The GUI method selector defaults to both HH+HV; a single
 channel can be requested explicitly (`polarizations=["hv"]`).
 
-## 7. Coherence DiD mode (v1.0)
+## 7. Coherence DiD mode (v1.0; burst products since v1.2)
 
-Sources: two ASF HyP3 INSAR-GAMMA products (80 m, 20×4 looks, UTM) of
-the SAME frames — a pre/post pair bracketing the damage and a control
-pair from outside the damage window. The plugin accepts unpacked
-product folders, original `.zip` archives or direct `*_corr.tif`
-paths; the control layer is warped onto the pre/post grid when
-needed.
+Sources: two ASF HyP3 InSAR products of the SAME footprint — a
+pre/post pair bracketing the damage and a control pair from outside
+the damage window. Since v1.2 two product families are accepted:
+
+* **INSAR-GAMMA full frames** (GAMMA processor, 80 m, 20×4 looks,
+  UTM) — the validated baseline of the project (`S1AB_<dates>..._INT80_G_...`);
+* **Burst InSAR pairs** (ISCE processor, `INSAR_ISCE_BURST` /
+  `INSAR_ISCE_MULTI_BURST`: `S1_<track>_<burst IDs>_IW_<dates>_<pol>_INT<sp>_<id>`)
+  — pixel spacing 20 m (5×1), **40 m (10×2 — the «бёрст-пары 40 м»
+  option of report ed.9, 1 credit per 1–4 pairs)** or 80 m (20×4);
+  a burst footprint (~50–150 km²) matches narrow tornado tracks that
+  a full frame maps at a 1–2 % object-size fraction.
+
+The plugin accepts unpacked product folders, original `.zip` archives
+or direct `*_corr.tif` paths; the control layer is warped onto the
+pre/post grid when needed (nearest for water masks, bilinear for
+coherence).
+
+**DiD pairing validation (v1.2).** The granule names of both products
+are parsed; the DiD is rejected up front when
+
+* a GAMMA frame is mixed with a burst product (incompatible
+  footprints and look conventions);
+* two burst products carry DIFFERENT relative burst IDs, tracks or
+  polarizations (the coherence rasters of different bursts only
+  overlap along burst borders — a mismatched DiD degrades to edge
+  noise); order the control pair in Vertex for the SAME burst.
+
+A different pixel spacing on the two sides (e.g. 40 m pre/post vs
+80 m control) is allowed but warned about — resampling makes the dcoh
+statistics noisy. Unrecognised (custom-renamed) products skip the
+validation.
 
 Metric (project step12b, 03.09.2026):
 
@@ -250,9 +276,22 @@ Implementation notes baked into the plugin:
   from the validation: 0.51 (ID694) / 0.27 (ID666).
 * Default `min_pixels = 6`: one 80 m pixel covers 0.64 ha, so the
   10-m `n = 27` default would equal 17 ha — 27× the paper optimum.
-* **Sane water-mask heuristic**: a product water mask claiming more
-  than 50 % of the frame is corrupt (HyP3 product 5748 marked 99.6 %
-  water) and is ignored with a warning.
+  At the 40 m posting of 10×2-look Burst InSAR one pixel is 0.16 ha:
+  scale `min_pixels` up to ≈ 20–25 px to keep the validated ≈ 3.8 ha
+  object size (the plugin logs a hint when the effective object area
+  drops below 2 ha).
+* **Sane water-mask heuristic (v1.2 semantics)**: a product water
+  mask claiming more than 50 % of the frame is corrupt (HyP3 product
+  5748 marked 99.6 % water) and is ignored with a warning.
+  **Convention fix:** per the ASF product guides (GAMMA and ISCE
+  alike) water masks encode **1 = land, 0 = water**. v1.0/v1.1 read
+  them inverted (kept mask > 0, i.e. WATER) — on real products the
+  masks were rejected as "corrupt" (the > 0 share was actually land)
+  and, on water-dominant frames, detections were clipped to water
+  bodies. Since v1.2 the mask is converted to a keep-land layer
+  (255 = land) with a nearest-neighbour warp and the water share is
+  counted as the share of 0 pixels; legacy 1 = water products can be
+  consumed via `sane_water_mask(..., water_value=1)`.
 * Registered no-data and non-physical coherence values (±9999 warp
   fills, the products' own 0-nodata edges) are excluded from the
   statistics.
@@ -273,4 +312,8 @@ Implementation notes baked into the plugin:
 - Shikhov, Abdullin, Semakina (2020), *Геодезия и картография*
   № 4, 19–30 — forest susceptibility mapping for the Ural region.
 - ASF HyP3 documentation — INSAR-GAMMA product specification and
-  credit accounting (https://hyp3-docs.asf.alaska.edu).
+  credit accounting (https://hyp3-docs.asf.alaska.edu);
+  Sentinel-1 Burst InSAR Product Guide (naming `INSAR_ISCE_BURST`,
+  20/40/80 m postings, water-mask encoding 1 = land / 0 = water) —
+  the source of the v1.2 burst support and water-mask fix
+  (https://hyp3-docs.asf.alaska.edu/guides/burst_insar_product_guide).

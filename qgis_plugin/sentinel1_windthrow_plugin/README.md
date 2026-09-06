@@ -1,9 +1,9 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-133%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/tests-144%20passed-success.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 **windthrow** (storm-damaged forest) with THREE validated methods:
@@ -18,7 +18,7 @@ difference-in-differences** over ASF HyP3 InSAR pairs (v1.0).
 |---------------------|----------------------------------------------------------------------------------|
 | Search & Download   | STAC search on Microsoft Planetary Computer (GRD **or** RTC) + COG download      |
 | Preprocess          | Linear→dB, Lee speckle filter, optional land/water mask                          |
-| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** — v1.1 adds **GFW Hansen GFC reconstructed on the year before the event** (retrospective mask of record), plus ESA WorldCover (monitoring) or your own file |
+| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** — v1.1 adds **GFW Hansen GFC reconstructed on the year before the event** (retrospective mask of record), plus ESA WorldCover (monitoring) or your own file; v1.2 adds **Burst InSAR pairs** (INSAR_ISCE_BURST, 20/40/80 m) with same-burst DiD validation |
 | Settings            | Default folders + detection parameters, persisted in `QgsSettings`               |
 
 Outputs of a detection run:
@@ -110,7 +110,7 @@ SNAP, snappy, torch or tensorflow.
 ## Installation
 
 1. **Plugins → Manage and Install Plugins → Install from ZIP**.
-2. Select `sentinel1_windthrow_plugin_v1.1.0.zip`.
+2. Select `sentinel1_windthrow_plugin_v1.2.0.zip`.
 3. The toolbar button and the **Plugins → Sentinel-1 Windthrow** menu
    entry appear.
 
@@ -171,7 +171,7 @@ sentinel1_windthrow_plugin/
 ├── sentinel1_plugin_dialog.py   # 4-tab QDialog + QgsTask subclasses
 ├── logger.py                    # QgsMessageLog wrapper (QGIS-optional)
 ├── metadata.txt / icon.svg / LICENSE
-├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md (+ older)
+├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md (+ older)
 ├── ui/
 │   └── draw_rectangle_tool.py   # "Draw on map" AOI tool
 ├── sources/
@@ -181,7 +181,7 @@ sentinel1_windthrow_plugin/
 │   ├── preprocessor.py          # SARPreprocessor (dB, Lee, land mask)
 │   ├── forest_mask.py           # GFC / WorldCover / file forest masks (v0.9/v1.1)
 │   ├── lband.py                 # LbandDeclineDetector (v1.0)
-│   ├── coh_delta.py             # CoherenceDeltaDetector (v1.0)
+│   ├── coh_delta.py             # CoherenceDeltaDetector (v1.0; burst products + water-mask fix v1.2)
 │   └── windthrow.py             # WindthrowDetector + compositing helpers
 └── tests/                       # pytest suite (runs without QGIS)
 ```
@@ -198,11 +198,19 @@ full-size IW scene never sits in RAM. The connected-component cleanup
 250 × 170 km scene) is the only RAM-heavy step; on memory-limited
 machines, clip the AOI first or raise `min_pixels`.
 
-## Limitations (v1.1)
+## Limitations (v1.2)
 
 - Sentinel-1 GRD products are not radiometrically calibrated in the
   plugin (raw DN → dB); an inter-sensor (S1A/S1B) offset of ~0.1–0.3 dB
   may remain. Prefer the PC **RTC** collection for quantitative work.
+- Burst InSAR support consumes the delivered coherence products
+  (`*_corr.tif`); ordering jobs via the HyP3 API from inside the plugin
+  is planned as the v1.2 order-helper (Vertex ordering is manual for
+  now). DiD pairs must cover the SAME burst — the plugin validates
+  this and refuses mismatched pairs.
+- Product water masks follow the ASF convention (1 = land, 0 = water,
+  both GAMMA and ISCE); legacy products encoded the other way round
+  need the explicit `water_value=1` override.
 - Compositing uses the pixel-wise median, not the paper's
   local-resolution-weighted merging (LRW needs the local illuminated
   area product).

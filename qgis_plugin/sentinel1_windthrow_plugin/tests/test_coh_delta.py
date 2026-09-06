@@ -3,6 +3,11 @@
 Sign convention: dcoh = coh_control - coh_prepost is POSITIVE over
 windthrow (the damage-window pair decorrelates while the control pair
 stays coherent).
+
+v1.2: burst InSAR (ISCE) product parsing and DiD validation, and the
+water-mask convention fix — HyP3 masks encode 1 = land, 0 = water
+(ASF product guides), so the old tests that assumed 1 = water were
+rewritten.
 """
 
 import os
@@ -14,9 +19,11 @@ import pytest
 from sentinel1_windthrow_plugin.sources.coh_delta import (
     DCOH_NODATA,
     CoherenceDeltaDetector,
+    _validate_did_pair,
     coherence_delta_chunk,
     find_correlation_tif,
     find_water_mask,
+    parse_hyp3_product,
     sane_water_mask,
 )
 
@@ -163,19 +170,31 @@ def test_find_water_mask_none(tmp_path, coh_pair_dirs):
 
 # ----------------------------------------------------------------------
 # Sane water-mask heuristic (step12b: product 5748 shipped 99.6% water)
+# HyP3 convention (ASF guides, GAMMA and ISCE): 1 = land, 0 = water.
 # ----------------------------------------------------------------------
 def test_sane_water_mask_accepts_reasonable_mask(tmp_path):
     pytest.importorskip("osgeo.gdal")
-    arr = np.zeros((100, 100), dtype=np.uint8)
-    arr[:10, :] = 1  # 10% water
+    arr = np.ones((100, 100), dtype=np.uint8)  # land everywhere...
+    arr[:10, :] = 0  # ...except a 10 % water band
     p = _make_corr_tiff(str(tmp_path / "wm.tif"), arr)
     assert sane_water_mask(p) == p
 
 
 def test_sane_water_mask_rejects_corrupt_mask(tmp_path):
     pytest.importorskip("osgeo.gdal")
-    arr = np.ones((100, 100), dtype=np.uint8)  # 100% water — corrupt
+    arr = np.zeros((100, 100), dtype=np.uint8)  # 100 % water — corrupt
     p = _make_corr_tiff(str(tmp_path / "wm_corrupt.tif"), arr)
+    assert sane_water_mask(p) is None
+
+
+def test_sane_water_mask_legacy_water_value(tmp_path):
+    """Legacy masks (pre-2024 GSHHG convention, 1 = water) via override."""
+    pytest.importorskip("osgeo.gdal")
+    arr = np.zeros((100, 100), dtype=np.uint8)
+    arr[:10, :] = 1  # 10 % "water" under the legacy encoding
+    p = _make_corr_tiff(str(tmp_path / "wm_legacy.tif"), arr)
+    assert sane_water_mask(p, water_value=1) == p
+    # Under the default (water == 0) the same mask is 90 % water -> corrupt.
     assert sane_water_mask(p) is None
 
 
@@ -278,8 +297,9 @@ def test_fixed_threshold_mode(coh_pair_dirs, tmp_path):
 def test_corrupt_water_mask_is_ignored(coh_pair_dirs, tmp_path):
     from osgeo import gdal
     pytest.importorskip("osgeo.gdal")
-    # Corrupt mask: everything is "water" (99.6% case of product 5748).
-    corrupt = np.ones((100, 100), dtype=np.uint8)
+    # Corrupt mask: everything is "water" (99.6 % case of product 5748).
+    # HyP3 convention: water == 0.
+    corrupt = np.zeros((100, 100), dtype=np.uint8)
     wm_path = os.path.join(
         coh_pair_dirs["prepost_dir"], "S1BB_pair_5748_water_mask.tif")
     _make_corr_tiff(wm_path, corrupt)
@@ -299,15 +319,31 @@ def test_corrupt_water_mask_is_ignored(coh_pair_dirs, tmp_path):
 
 
 def test_sane_water_mask_restricts_detection(coh_pair_dirs, tmp_path):
+    """Non-vacuous check of the keep-land conversion (v1.2 fix).
+
+    Water band at the top rows (mask == 0) contains a SECOND
+    decorrelation blob; only the land blob may be detected.  Under the
+    pre-v1.2 (inverted) semantics the water blob was kept and the land
+    one clipped, so this test actually pins the convention.
+    """
     from osgeo import gdal
     pytest.importorskip("osgeo.gdal")
-    # Sane mask: water band at the top (10%) — no detections may land
-    # inside it.
-    water = np.zeros((100, 100), dtype=np.uint8)
-    water[:10, :] = 1
+    # Water band at the top (0 = water), land below (1 = land).
+    water = np.ones((100, 100), dtype=np.uint8)
+    water[:10, :] = 0
     wm_path = os.path.join(
         coh_pair_dirs["prepost_dir"], "S1BB_pair_5748_water_mask.tif")
     _make_corr_tiff(wm_path, water)
+    # Second decorrelation blob INSIDE the water band.
+    ds = gdal.Open(coh_pair_dirs["prepost_tif"], gdal.GA_Update)
+    band = ds.GetRasterBand(1)
+    arr = band.ReadAsArray()
+    water_blob = np.zeros_like(arr, dtype=bool)
+    water_blob[2:8, 40:60] = True
+    arr[water_blob] = 0.2
+    band.WriteArray(arr)
+    band.FlushCache()
+    ds = None
     out_base = str(tmp_path / "run_wm2" / "event")
     det = CoherenceDeltaDetector(min_pixels=6)
     result = det.detect_file(
@@ -319,7 +355,10 @@ def test_sane_water_mask_restricts_detection(coh_pair_dirs, tmp_path):
     _ds_mask = gdal.Open(result["mask"])
     mask = _ds_mask.GetRasterBand(1).ReadAsArray()
     _ds_mask = None
+    # Nothing detected inside the water band (the water blob is masked)…
     assert (mask[:10, :] > 0).sum() == 0
+    # …and the land blob is still detected (pre-v1.2 it was NOT).
+    assert ((mask > 0) & coh_pair_dirs["blob"]).sum() > 0
 
 
 def test_nodata_written_to_dcoh_raster(coh_pair_dirs, tmp_path):
@@ -470,3 +509,131 @@ def test_background_mask_shifts_stats_not_detections(coh_pair_dirs,
             control_products=[coh_pair_dirs["control_dir"]],
             output_base=str(tmp_path / "run_bad" / "event"),
             background_mask_path=str(tmp_path / "missing.tif"))
+
+
+# ----------------------------------------------------------------------
+# v1.2: HyP3 granule parsing (GAMMA vs ISCE burst)
+# ----------------------------------------------------------------------
+GAMMA_GRANULE = "S1AB_20171111T150004_20171117T145926_VVP006_INT80_G_ueF_4D09"
+ISCE_SINGLE = "S1_123_111111s1n02_IW_20240101_20240115_VV_INT40_AEB4"
+ISCE_MULTI = ("S1_123_111111s1n02-111111s2n01-000000s3n00"
+              "_IW_20240101_20240115_VV_INT40_AEB4")
+
+
+def test_parse_gamma_granule():
+    for source in (f"/x/{GAMMA_GRANULE}.zip", f"/x/{GAMMA_GRANULE}_corr.tif"):
+        info = parse_hyp3_product(source)
+        assert info["family"] == "gamma"
+        assert info["granule"] == GAMMA_GRANULE
+        assert info["platform"] == "A"
+        assert info["pol"] == "VV"
+        assert info["spacing_m"] == 80
+        assert info["pid"] == "4D09"
+        assert info["date1"] == "20171111T150004"
+        assert info["burst_key"] is None
+
+
+def test_parse_isce_burst_granule():
+    info = parse_hyp3_product(f"/x/{ISCE_SINGLE}.zip")
+    assert info["family"] == "isce"
+    assert info["track"] == 123
+    assert info["burst_key"] == "111111s1n02"
+    assert info["pol"] == "VV"
+    assert info["spacing_m"] == 40
+    assert info["date1"] == "20240101"
+    assert info["date2"] == "20240115"
+
+
+def test_parse_isce_multi_burst_granule():
+    info = parse_hyp3_product(f"/orders/{ISCE_MULTI}")
+    assert info["family"] == "isce"
+    assert info["burst_key"] == (
+        "111111s1n02-111111s2n01-000000s3n00")
+    assert info["spacing_m"] == 40
+
+
+def test_parse_custom_product_yields_none_family():
+    info = parse_hyp3_product("/home/user/my_pair_5748_corr.tif")
+    assert info["family"] is None
+    assert info["granule"] == "my_pair_5748"
+
+
+def test_validate_did_pair_accepts_same_burst():
+    prepost = parse_hyp3_product(f"/pp/{ISCE_SINGLE}.zip")
+    control = parse_hyp3_product(
+        f"/ctl/S1_123_111111s1n02_IW_20240601_20240613_VV_INT40_C334.zip")
+    _validate_did_pair(prepost, control)  # must not raise
+
+
+def test_validate_did_pair_rejects_burst_mismatch():
+    prepost = parse_hyp3_product(f"/pp/{ISCE_SINGLE}.zip")
+    control = parse_hyp3_product(
+        "/ctl/S1_123_999999s1n02_IW_20240601_20240613_VV_INT40_C334.zip")
+    with pytest.raises(ValueError, match="SAME burst footprint"):
+        _validate_did_pair(prepost, control)
+
+
+def test_validate_did_pair_rejects_family_mixing():
+    prepost = parse_hyp3_product(f"/pp/{ISCE_SINGLE}.zip")
+    control = parse_hyp3_product(f"/ctl/{GAMMA_GRANULE}.zip")
+    with pytest.raises(ValueError, match="Mixing product families"):
+        _validate_did_pair(prepost, control)
+
+
+def test_validate_did_pair_rejects_polarization_mismatch():
+    prepost = parse_hyp3_product(f"/pp/{ISCE_SINGLE}.zip")
+    control = parse_hyp3_product(
+        "/ctl/S1_123_111111s1n02_IW_20240601_20240613_HH_INT40_C334.zip")
+    with pytest.raises(ValueError, match="polarization mismatch"):
+        _validate_did_pair(prepost, control)
+
+
+def test_validate_did_pair_warns_on_spacing_mismatch():
+    # Different look selection (40 m vs 80 m): allowed but noisy —
+    # the validator must NOT raise, only warn (logged).
+    prepost = parse_hyp3_product(f"/pp/{ISCE_SINGLE}.zip")
+    control = parse_hyp3_product(
+        "/ctl/S1_123_111111s1n02_IW_20240601_20240613_VV_INT80_C334.zip")
+    _validate_did_pair(prepost, control)
+
+
+# ----------------------------------------------------------------------
+# v1.2: end-to-end detection on burst-flavoured products (40 m posting)
+# ----------------------------------------------------------------------
+def test_burst_products_end_to_end(coh_pair_dirs, tmp_path):
+    """40 m burst products run through the whole DiD chain.
+
+    Product directories carry real ISCE granule names (INT40); the
+    detector must parse both sides, validate the same-burst pairing,
+    detect the blob and report the flavour + posting diagnostics.
+    """
+    from osgeo import gdal
+    pytest.importorskip("osgeo.gdal")
+    pp_dir = tmp_path / "bursts" / ISCE_SINGLE
+    ctl_dir = tmp_path / "bursts" / (
+        "S1_123_111111s1n02_IW_20240601_20240613_VV_INT40_C334")
+    pp_dir.mkdir(parents=True)
+    ctl_dir.mkdir(parents=True)
+    _make_corr_tiff(str(pp_dir / (ISCE_SINGLE + "_corr.tif")),
+                    coh_pair_dirs["prepost_arr"], pixel=40.0)
+    _make_corr_tiff(str(ctl_dir / (
+        "S1_123_111111s1n02_IW_20240601_20240613_VV_INT40_C334"
+        + "_corr.tif")),
+        coh_pair_dirs["control_arr"], pixel=40.0)
+    out_base = str(tmp_path / "run_burst" / "event")
+    det = CoherenceDeltaDetector(min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[str(pp_dir)],
+        control_products=[str(ctl_dir)],
+        output_base=out_base,
+    )
+    assert result["product_flavors"] == {"prepost": "isce",
+                                         "control": "isce"}
+    assert result["pixel_size_m"] == pytest.approx(40.0)
+    assert result["min_object_area_ha"] == pytest.approx(6 * 0.16)
+    assert result["product_info"]["prepost"]["pid"] == "AEB4"
+    _ds_mask = gdal.Open(result["mask"])
+    mask = _ds_mask.GetRasterBand(1).ReadAsArray()
+    _ds_mask = None
+    assert ((mask > 0) & coh_pair_dirs["blob"]).sum() > 0
+    assert ((mask > 0) & ~coh_pair_dirs["blob"]).sum() == 0

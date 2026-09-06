@@ -578,3 +578,21 @@ Stage Summary:
 - Плагин v1.1.0: ретроспективные события 2001-2024 -> маска леса GFC на год, предшествующий событию, строится в QGIS без скачивания тайлов; coh_delta получает честный фон лес@Y (validated на 12 событиях изд.8 разд.9); 133/133 тестов; download/sentinel1_windthrow_plugin_v1.1.0.zip
 - Отчёт изд.9 (16 стр., QA WARN 2 допустимых): download/Сводный_отчет_объекты_валидации_изд9_2026-09-06.pdf = reports/
 - Эксперимент масок был и остаётся в отчёте (разд.9 изд.7-9, табл. 9, рис. 3): средний AUC 0.620->0.618 (незначимо) — ценность маски в семантике фон/кандидат и защите от «масок из будущего», не в приросте метрики
+
+---
+Task ID: 33
+Agent: Super Z (main)
+Task: Позиция v1.2 «бёрст-пары 40 м» — Burst InSAR в режиме coh_delta + фикс конвенции водной маски (запрос: «начнем с позиции burst-пары 40 м»)
+
+Work Log:
+- Верифицирован продукт по официальному гайду ASF (hyp3-docs, Burst InSAR Product Guide): нейминг S1_<track>_<burstIDs>_IW_<ref>_<sec>_<pol>_INT<sp>_<id>, шаг 20/40/80 м (5x1/10x2/20x4 looks), 1 кредит на 1–4 пары; позиция изд.9 «бёрст-пары 40 м» = INSAR_ISCE_BURST 10x2
+- НАЙДЕН ЛАТЕНТНЫЙ БАГ v1.0/v1.1: водные маски продуктов HyP3 кодируются 1=суша/0=вода (гайды GAMMA и ISCE), а код считал наоборот: sane_water_mask считал долю >0 «водой» (у реальных тайжных кадров это доля суши 97–99% → маски отбрасывались как «битые»; подтверждено results/step12c_did_extension water_mask_flagged_fraction 0.97–0.99), а детекции ограничивались маской >0 = ВОДОЙ (на акваториальных кадрах ветровалы клипповались). Валидированные метрики проекта не пострадали: маски в step12c не применялись (>50% «флага»)
+- sources/coh_delta.py: (1) parse_hyp3_product + _granule_names/_GAMMA_RE/_ISCE_RE — парсинг семейства/трека/burst-id/полины/шага из имени гранулы (zip/каталог/_corr.tif/_unw.tif, переименованные → family=None); грабли: splitext срезает .tif до проверки суффиксов (сравнение по полному basename), платформа GAMMA двубуквенная S1AA/S1AB (ref+sec); (2) _validate_did_pair — запрет смешения GAMMA/ISCE, для burst: обязателен ТОТ ЖЕ бёрст (burst_key+track+pol), иначе ValueError с подсказкой; несовпадение шага → warning; (3) sane_water_mask(water_value=0) — доля нулей как вода, легаси 1=вода через water_value=1; (4) _water_mask_to_land_keep — nearest-warp на сетку DiD (bilinear/dstNodata старого ensure_aligned непригодны для байтовых кодов), keep 255=суша, no-coverage=2 исключён; (5) диагностика в result: pixel_size_m, min_object_area_ha, product_flavors, product_info; (6) подсказка min_pixels при <2 га на 40 м
+- Тесты 133 → 144 (+11): парсинг (GAMMA zip/corr/dir, ISCE single/multi, кастом), 4 теста валидатора, сквозной 40-м бёрст-прогон с проверкой product_flavors/pixel_size_m; 4 теста водной маски переписаны под конвенцию ASF (тест рестрикции стал НЕВАКУУМНЫМ: блоб в водном поясе не детектируется, блоб на суше детектируется) + legacy water_value=1
+- GUI: подсказки coh-вкладки (бёрст-пары, тот же бёрст для контроля, конвенция маски, 0.16 га/px), About 0.7.0 → 1.2.0; METHOD.md §7 переписан; README (badge 144, таблица, дерево, Limitations v1.2); metadata 1.2.0; RELEASE_NOTES_v1.2.0.md
+- Сборка: build_plugin_zip.py (новый, параметризован версией из metadata) → plugin_dist/sentinel1_windthrow_plugin_v1.2.0.zip (35 файлов) + копия в download/; дифф с v1.1.0 — только dir-записи zip + новые нотсы
+
+Stage Summary:
+- Плагин v1.2.0: «бёрст-пары 40 м» работают в режиме coh_delta (DiD-схема сохранена, пары валидируются на тот же бёрст); 144/144 тестов; download/sentinel1_windthrow_plugin_v1.2.0.zip
+- Фикс водной маски меняет поведение coh_delta на реальных продуктах: маски применяются (а не отбрасываются), вода исключается из детекций — задокументировано в RELEASE_NOTES/METHOD
+- Остаток v1.2: FNF-пресет (JAXA года события), помощник заказа HyP3 (INSAR_BURST из Vertex/API)
