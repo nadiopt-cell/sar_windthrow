@@ -381,3 +381,92 @@ def test_warp_fill_sentinel_excluded_from_stats(coh_pair_dirs, tmp_path):
     mask = mask_ds.GetRasterBand(1).ReadAsArray()
     mask_ds = None
     assert ((mask > 0) & coh_pair_dirs["blob"]).sum() > 0
+
+
+# ----------------------------------------------------------------------
+# v1.1: statistics-only background mask (GFW rescore semantics)
+# ----------------------------------------------------------------------
+def test_background_mask_shifts_stats_not_detections(coh_pair_dirs,
+                                                     tmp_path):
+    """``background_mask_path`` restricts ONLY the adaptive statistics.
+
+    The top 60% of the frame carries a seasonal drift (dcoh +0.25);
+    the background mask excludes it from the statistics sample, so the
+    median (and the threshold) drops to the clean-forest level and the
+    drift area becomes detectable — while detections themselves are NOT
+    restricted by the background mask (report ed.8 §9: event-year
+    losses stay in the candidates, only the background sample is
+    cleaned).
+    """
+    pytest.importorskip("osgeo.gdal")
+    from osgeo import gdal, osr
+    size = 100
+    drift = np.zeros((size, size), dtype=bool)
+    drift[:60, :] = True                      # seasonal-drift half
+
+    # Rewrite the pre/post layer with the drift half less coherent.
+    prepost = coh_pair_dirs["prepost_arr"].copy()   # 0.8 bg, blob 0.2
+    prepost[drift] = 0.55
+    drift_dir = tmp_path / "id-drift-prepost" / "S1BB_pair_DR1F"
+    drift_dir.mkdir(parents=True)
+    _make_corr_tiff(str(drift_dir / "S1BB_pair_DR1F_corr.tif"), prepost)
+
+    # Background mask = clean (non-drift) half only.
+    bg_mask = np.zeros((size, size), dtype=np.uint8)
+    bg_mask[~drift] = 255
+    mask_path = str(tmp_path / "bg_clean_half.tif")
+    ds = gdal.GetDriverByName("GTiff").Create(
+        mask_path, size, size, 1, gdal.GDT_Byte)
+    ds.SetGeoTransform((500000.0, 80.0, 0.0, 5000000.0, 0.0, -80.0))
+    srs = osr.SpatialReference()
+    srs.ImportFromEPSG(32633)
+    ds.SetProjection(srs.ExportToWkt())
+    ds.GetRasterBand(1).WriteArray(bg_mask)
+    ds.GetRasterBand(1).SetNoDataValue(0)
+    ds = None
+
+    out_plain = str(tmp_path / "run_plain" / "event")
+    det_plain = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    res_plain = det_plain.detect_file(
+        prepost_products=[str(drift_dir)],
+        control_products=[coh_pair_dirs["control_dir"]],
+        output_base=out_plain,
+    )
+    # Median over the whole frame = drift level (60 % of pixels).
+    assert det_plain.median_dcoh == pytest.approx(0.25, abs=0.02)
+    assert det_plain.threshold_used == pytest.approx(0.35, abs=0.03)
+
+    out_masked = str(tmp_path / "run_masked" / "event")
+    det_masked = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    res_masked = det_masked.detect_file(
+        prepost_products=[str(drift_dir)],
+        control_products=[coh_pair_dirs["control_dir"]],
+        output_base=out_masked,
+        background_mask_path=mask_path,
+    )
+    # Statistics now come from the clean half only -> median ~0.
+    assert det_masked.median_dcoh == pytest.approx(0.0, abs=0.02)
+    assert det_masked.threshold_used == pytest.approx(0.1, abs=0.03)
+    assert res_masked["background_mask"] and os.path.isfile(
+        res_masked["background_mask"])
+    # ...and detections are NOT restricted: the drifted area (above the
+    # lowered threshold) is detected, i.e. the mask did not clip it.
+    mask_ds = gdal.Open(res_masked["mask"])
+    mask = mask_ds.GetRasterBand(1).ReadAsArray()
+    mask_ds = None
+    assert (mask[drift] > 0).mean() > 0.5
+    # With the whole-frame statistics the drifted area stays BELOW the
+    # higher threshold — the mask changed the outcome.
+    mask_ds = gdal.Open(res_plain["mask"])
+    mask_plain = mask_ds.GetRasterBand(1).ReadAsArray()
+    mask_ds = None
+    assert (mask_plain[drift] > 0).mean() < 0.05
+
+    # Missing file -> ValueError
+    det_bad = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    with pytest.raises(ValueError, match="Background mask file not found"):
+        det_bad.detect_file(
+            prepost_products=[str(drift_dir)],
+            control_products=[coh_pair_dirs["control_dir"]],
+            output_base=str(tmp_path / "run_bad" / "event"),
+            background_mask_path=str(tmp_path / "missing.tif"))

@@ -58,31 +58,76 @@ separation of damaged from intact pixels.
 Reported accuracies of the original method: PA 0.85–0.88, UA
 0.65–0.81 (areas ≥ 0.5 ha, 10 m grid).
 
-## 3b. Forest mask (v0.9)
+## 3b. Forest mask (v0.9 / v1.1)
 
 Detections and the adaptive-threshold mean can be restricted to forest.
-Two sources are built in:
+Three sources are built in:
 
+* **GFW Hansen GFC — forest on the year before the event (v1.1, the
+  retrospective mask of record).** From the storm year `Y` the mask is
+  reconstructed as
+
+  ```
+  forest_candidate(Y) = treecover2000 >= tau
+                        AND NOT (1 <= lossyear <= Y-2001)
+  ```
+
+  i.e. the forest as of the year preceding the event: GFC losses of
+  2001..Y−1 are excluded, the loss of the event year (the windthrow
+  itself) is kept in the candidates.  A second `background` variant
+  additionally removes event-year losses:
+
+  ```
+  forest_background(Y) = treecover2000 >= tau
+                         AND NOT (1 <= lossyear <= Y-2000)
+  ```
+
+  («пиксели с потерей в год события из фона исключаются, но из
+  маски-кандидата не убираются» — отчёт изд.8, разд. 9).  Defaults:
+  `tau = 30 %`, the boolean candidate raster is averaged onto the
+  reference grid and a target pixel is forest when the forest fraction
+  ≥ 0.5 (the validated 30 m → 80 m rescore settings); a tau grid of
+  20/30/50 % showed robust conclusions.  Layers (`treecover2000`,
+  `lossyear`) of Hansen GFC-2024-v1.12 are read through `/vsicurl/`
+  window by window — only the AOI is transferred (no auth needed).
+  Files written: `<base>_forest_gfc<Y>.tif` (candidates; both WI and
+  Coherence DiD modes) and `<base>_forestbg_gfc<Y>.tif` (background;
+  Coherence DiD only).  Caveat: GFC is annual — intra-year pre-storm
+  logging is not resolvable (the ID654 lesson), and losses after the
+  product year are unknown.
 * **ESA WorldCover 10 m** (`esa-worldcover` on Planetary Computer,
   epochs 2020 / 2021): Tree-cover class (10) is warped onto the radar
   grid (nearest), cleaned with a 3×3 majority filter and written as
   `<base>_forest_wc<year>.tif`. The STAC search, SAS signing and
   windowed COG reading (`/vsicurl/`) reuse the plugin's PC client —
-  no local land-cover download is required.
+  no local land-cover download is required.  Single-epoch: acceptable
+  for near-real-time use only.
 * **User file** — any raster (values > 0) or vector (polygons).
 
 The forest mask is intersected with the analysis mask; when no separate
 background mask is given, offsets and the mean WI are computed over the
-forest sample (paper behaviour). Caveat: WorldCover epochs postdate many
-storms — young regrowth inside old windthrows may be classified as
-shrub/grass, so prefer the epoch closest to (but not after) the event,
-or enable a closing operation in pipeline use.
+forest sample (paper behaviour). In the Coherence DiD mode the two GFC
+masks split responsibilities: the candidate mask restricts the
+detection area, the background mask restricts only the statistics
+sample (`background_mask_path` of
+`CoherenceDeltaDetector.detect_file`).
 
-Validation on event ID666 (squall 30.07.2017, ~950 ha; thresholds held
-identical to the baseline run): PA unchanged (reference coverage
-98–100 %), UA +13–15 % relative, false-alarm area −19…−40 % depending
-on the variant. Remaining false positives are small forest-internal
-disturbances — increase `n` or switch index for those.
+Validation (report ed.8 §9, 12 events of 2015–2017): the GFC@Y
+background shrinks 28–53 % versus the unmasked baseline; mean AUC is
+statistically unchanged (0.620 → 0.618) — the mask's value is correct
+forest-vs-forest background semantics, not metric inflation.  The
+single-epoch WorldCover-2021 mask, in contrast, is a "mask from the
+future": it left ZERO background pixels around the 30.07.2017 squall
+ID655 (regrowth reclassified as shrub) and broke the method.  Rule of
+thumb: retrospective events 2001–2024 → GFC@Y; monitoring of current
+dates → WorldCover.
+
+Historic note — v0.9 validation on event ID666 (squall 30.07.2017,
+~950 ha; thresholds held identical to the baseline run): PA unchanged
+(reference coverage 98–100 %), UA +13–15 % relative, false-alarm area
+−19…−40 % depending on the variant. Remaining false positives are
+small forest-internal disturbances — increase `n` or switch index for
+those.
 
 ### 3.1 Background normalization (v0.8, not in the paper)
 

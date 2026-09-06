@@ -11,8 +11,10 @@ Public API:
                         Tanase et al. 2018: LDI = ΔHH + ΔHV, inverted sign)
     CoherenceDeltaDetector — coherence DiD detector over HyP3 INSAR-GAMMA
                         products (v1.0, dcoh = coh_control − coh_prepost)
-    forest_mask       — forest-mask providers (v0.9): ESA WorldCover via
-                        PC STAC / user file, on the radar reference grid
+    forest_mask       — forest-mask providers (v0.9/v1.1): Hansen GFC
+                        (GFW) annual reconstruction on the year before
+                        the event, ESA WorldCover via PC STAC / user
+                        file, on the radar reference grid
 """
 
 from . import pc_client as _pc_client
@@ -34,12 +36,22 @@ from .windthrow import (
 from . import forest_mask as forest_mask
 from .forest_mask import (
     DEFAULT_FOREST_CLASSES,
+    GFC_DEFAULT_FRAC,
+    GFC_DEFAULT_TAU,
+    GFC_LOSS_YEARS,
+    GFC_VERSION,
     bbox_4326,
     build_forest_mask,
     build_forest_mask_from_rasters,
+    build_gfc_forest_mask,
     build_worldcover_forest_mask,
     classify_forest,
     fetch_worldcover_hrefs,
+    gfc_forest_background,
+    gfc_forest_candidate,
+    gfc_forest_parts,
+    gfc_layer_url,
+    gfc_tiles_for_bbox,
     majority_filter_mask,
     read_ref_info,
 )
@@ -75,12 +87,22 @@ __all__ = [
     "pair_by_polarization",
     "forest_mask",
     "DEFAULT_FOREST_CLASSES",
+    "GFC_DEFAULT_FRAC",
+    "GFC_DEFAULT_TAU",
+    "GFC_LOSS_YEARS",
+    "GFC_VERSION",
     "bbox_4326",
     "build_forest_mask",
     "build_forest_mask_from_rasters",
+    "build_gfc_forest_mask",
     "build_worldcover_forest_mask",
     "classify_forest",
     "fetch_worldcover_hrefs",
+    "gfc_forest_background",
+    "gfc_forest_candidate",
+    "gfc_forest_parts",
+    "gfc_layer_url",
+    "gfc_tiles_for_bbox",
     "majority_filter_mask",
     "read_ref_info",
 ]

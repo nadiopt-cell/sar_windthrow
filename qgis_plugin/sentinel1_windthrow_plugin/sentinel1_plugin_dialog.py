@@ -67,7 +67,10 @@ from .sources import (
     extract_polarization,
     pair_by_polarization,
 )
-from .sources.coh_delta import CoherenceDeltaDetector
+from .sources.coh_delta import (
+    CoherenceDeltaDetector,
+    find_correlation_tif,
+)
 from .sources.lband import LbandDeclineDetector
 from .sources import forest_mask
 from .ui import DrawnRectangleTool
@@ -1391,14 +1394,26 @@ class Sentinel1PluginDialog(QDialog):
         self.wt_mask_source_combo.addItem(
             "Custom file (raster / vector)", "file")
         self.wt_mask_source_combo.addItem(
+            "GFW Hansen GFC — forest on the year before the event "
+            "(auto-download)", "gfc")
+        self.wt_mask_source_combo.addItem(
             "ESA WorldCover 10 m (auto-download)", "worldcover")
         self.wt_mask_source_combo.setToolTip(
-            "v0.9 forest mask source. \u2018Custom file\u2019 uses your own "
-            "raster (values &gt; 0 = forest) or vector layer. \u2018ESA "
-            "WorldCover\u2019 searches the esa-worldcover collection on "
-            "Planetary Computer for the AOI, takes the 10 m Tree-cover "
-            "class and resamples it onto the radar grid — no local "
-            "land-cover file needed."
+            "Forest-mask source. \u2018Custom file\u2019 uses your own "
+            "raster (values &gt; 0 = forest) or vector layer. "
+            "\u2018GFW Hansen GFC\u2019 (v1.1, recommended for "
+            "retrospective events 2001–2024) reconstructs the forest "
+            "as of the year preceding the storm from treecover2000 + "
+            "lossyear — losses of 2001..Y−1 are excluded, the event-year "
+            "loss (the windthrow itself) stays; in Coherence DiD mode a "
+            "second, clean-forest mask additionally removes event-year "
+            "losses from the background sample (report ed.8 §9). "
+            "\u2018ESA WorldCover\u2019 searches the esa-worldcover "
+            "collection on Planetary Computer for the AOI, takes the "
+            "10 m Tree-cover class and resamples it onto the radar grid "
+            "— single-epoch: near-real-time use only, for retrospective "
+            "events it is a \u2018mask from the future\u2019 (it left "
+            "0 background px around squall ID655)."
         )
         params_form.addRow("Mask source:", self.wt_mask_source_combo)
         self.wt_wc_year_combo = QComboBox(page)
@@ -1411,6 +1426,21 @@ class Sentinel1PluginDialog(QDialog):
         )
         self.wt_wc_year_combo.setEnabled(False)
         params_form.addRow("WorldCover year:", self.wt_wc_year_combo)
+        self.wt_gfc_year_spin = QSpinBox(page)
+        self.wt_gfc_year_spin.setRange(2001, 2024)
+        self.wt_gfc_year_spin.setValue(2017)
+        self.wt_gfc_year_spin.setToolTip(
+            "Storm event year Y (GFC-2024-v1.12 maps losses for "
+            "2001–2024). The mask reconstructs the forest as of the year "
+            "preceding the event: GFC losses of 2001..Y−1 are excluded; "
+            "the loss of the event year (the windthrow itself) remains "
+            "in the mask-candidate and is excluded only from the "
+            "background sample in Coherence DiD mode. Treecover "
+            "threshold τ=30 %, forest fraction ≥ 0.5 per output pixel "
+            "(the validated rescore settings)."
+        )
+        self.wt_gfc_year_spin.setEnabled(False)
+        params_form.addRow("GFC event year (Y):", self.wt_gfc_year_spin)
         self.wt_mask_edit = QLineEdit(page)
         self.wt_mask_edit.setPlaceholderText(
             "Forest mask / AOI (GeoTIFF, GeoPackage, Shapefile…)"
@@ -1425,12 +1455,13 @@ class Sentinel1PluginDialog(QDialog):
 
         def _sync_mask_source() -> None:
             """Enable exactly the widgets of the active mask source."""
-            is_file = (
-                self.wt_mask_source_combo.currentData() or "file") == "file"
+            src = (self.wt_mask_source_combo.currentData() or "file")
+            is_file = src == "file"
             on = self.wt_mask_chk.isChecked()
             self.wt_mask_edit.setEnabled(on and is_file)
             wt_mask_browse.setEnabled(on and is_file)
-            self.wt_wc_year_combo.setEnabled(on and not is_file)
+            self.wt_wc_year_combo.setEnabled(on and src == "worldcover")
+            self.wt_gfc_year_spin.setEnabled(on and src == "gfc")
 
         self.wt_mask_chk.toggled.connect(_sync_mask_source)
         self.wt_mask_source_combo.currentIndexChanged.connect(
@@ -1460,8 +1491,11 @@ class Sentinel1PluginDialog(QDialog):
             "<code>area_ha</code>), and when several scenes are composited, "
             "<code>&lt;base&gt;_pre_&lt;pol&gt;.tif</code> / "
             "<code>&lt;base&gt;_post_&lt;pol&gt;.tif</code>; in WorldCover "
-            "mask mode also <code>&lt;base&gt;_forest_wc&lt;year&gt;.tif</code> "
-            "(the forest mask).</small>",
+            "mask mode also <code>&lt;base&gt;_forest_wc&lt;year&gt;.tif</code>, "
+            "in GFW GFC mask mode <code>&lt;base&gt;_forest_gfc&lt;Y&gt;.tif</code> "
+            "(forest-candidates@Y; Coherence DiD additionally writes "
+            "<code>&lt;base&gt;_forestbg_gfc&lt;Y&gt;.tif</code> — the clean-forest "
+            "background mask).</small>",
             page,
         )
         out_hint.setWordWrap(True)
@@ -1721,7 +1755,8 @@ class Sentinel1PluginDialog(QDialog):
 
         mask_path = None
         mask_source = "file"
-        wc_year = 2020
+        wc_year = int(self.wt_wc_year_combo.currentData() or 2020)
+        gfc_year = int(self.wt_gfc_year_spin.value())
         if self.wt_mask_chk.isChecked():
             mask_source = self.wt_mask_source_combo.currentData() or "file"
             if mask_source == "file":
@@ -1733,8 +1768,6 @@ class Sentinel1PluginDialog(QDialog):
                         "mask option or pick a valid file.",
                     )
                     return
-            else:
-                wc_year = int(self.wt_wc_year_combo.currentData() or 2020)
 
         common_detector_kwargs = dict(
             threshold_mode=self.wt_mode_combo.currentData() or "adaptive",
@@ -1760,24 +1793,39 @@ class Sentinel1PluginDialog(QDialog):
                 (lambda f, m: task.setProgress(float(f))) if task else None
             )
             cancel_cb = task.isCanceled if task else None
-            # v0.9: auto-download of the forest mask (ESA WorldCover)
-            # takes ~0-20% of the progress bar, the detection the rest.
+            # v0.9/v1.1: auto-download of the forest mask (ESA
+            # WorldCover / GFW GFC) takes ~0-20% of the progress bar,
+            # the detection the rest.
             forest_path = None
-            if mask_source == "worldcover":
+            if mask_source in ("worldcover", "gfc"):
                 ref_path = pair_by_polarization(post_paths)[pols[0]][0]
                 ref_info = forest_mask.read_ref_info(ref_path)
                 bbox = forest_mask.bbox_4326(ref_info)
-                forest_path = forest_mask.build_forest_mask(
-                    "worldcover",
-                    ref_info,
-                    f"{output_base}_forest_wc{wc_year}.tif",
-                    bbox=bbox,
-                    year=wc_year,
-                    progress_cb=(
-                        (lambda f, m: task.setProgress(20.0 * float(f) / 100.0))
-                        if task else None),
-                    cancel_cb=cancel_cb,
-                )
+                mask_prog = (
+                    (lambda f, m: task.setProgress(
+                        20.0 * float(f) / 100.0)) if task else None)
+                if mask_source == "worldcover":
+                    forest_path = forest_mask.build_forest_mask(
+                        "worldcover",
+                        ref_info,
+                        f"{output_base}_forest_wc{wc_year}.tif",
+                        bbox=bbox,
+                        year=wc_year,
+                        progress_cb=mask_prog,
+                        cancel_cb=cancel_cb,
+                    )
+                else:
+                    # v1.1: GFW GFC forest-candidates@Y — event-year
+                    # losses stay inside the analysis area (report ed.8 §9).
+                    forest_path = forest_mask.build_forest_mask(
+                        "gfc",
+                        ref_info,
+                        f"{output_base}_forest_gfc{gfc_year}.tif",
+                        bbox=bbox,
+                        event_year=gfc_year,
+                        progress_cb=mask_prog,
+                        cancel_cb=cancel_cb,
+                    )
             detect_progress = (
                 (lambda f, m: task.setProgress(
                     20.0 + 0.8 * float(f))) if task else None)
@@ -1794,6 +1842,7 @@ class Sentinel1PluginDialog(QDialog):
         mask_label = {
             "file": "forest mask file",
             "worldcover": f"WorldCover {wc_year}",
+            "gfc": f"GFC forest@{gfc_year - 1}",
         }.get(mask_source, "") if self.wt_mask_chk.isChecked() else ""
         desc = (f"Windthrow detection ({pol_label}, "
                 f"{os.path.basename(output_base)}"
@@ -1845,16 +1894,20 @@ class Sentinel1PluginDialog(QDialog):
             output_base = os.path.splitext(output_base)[0]
 
         mask_path = None
-        if (self.wt_mask_chk.isChecked()
-                and (self.wt_mask_source_combo.currentData() or "file") == "file"):
-            mask_path = self.wt_mask_edit.text().strip()
-            if not mask_path or not os.path.isfile(mask_path):
-                QMessageBox.warning(
-                    self, "Invalid mask",
-                    "The analysis mask file does not exist. Uncheck the "
-                    "mask option or pick a valid file.",
-                )
-                return
+        mask_source = "file"
+        wc_year = int(self.wt_wc_year_combo.currentData() or 2020)
+        gfc_year = int(self.wt_gfc_year_spin.value())
+        if self.wt_mask_chk.isChecked():
+            mask_source = self.wt_mask_source_combo.currentData() or "file"
+            if mask_source == "file":
+                mask_path = self.wt_mask_edit.text().strip()
+                if not mask_path or not os.path.isfile(mask_path):
+                    QMessageBox.warning(
+                        self, "Invalid mask",
+                        "The analysis mask file does not exist. Uncheck the "
+                        "mask option or pick a valid file.",
+                    )
+                    return
 
         detector = CoherenceDeltaDetector(
             threshold_mode=self.wt_mode_combo.currentData() or "adaptive",
@@ -1863,24 +1916,69 @@ class Sentinel1PluginDialog(QDialog):
             min_pixels=self.wt_min_px_spin.value(),
             median_filter_size=int(self.wt_median_combo.currentData() or 0),
         )
+        mask_label = {
+            "file": "analysis mask file",
+            "worldcover": f"WorldCover {wc_year}",
+            "gfc": f"GFC forest@{gfc_year - 1}",
+        }.get(mask_source, "") if self.wt_mask_chk.isChecked() else ""
         desc = (f"Coherence DiD ({os.path.basename(prepost)}"
                 + (f" vs {os.path.basename(control)}" if control else " — no control")
+                + (f", {mask_label}" if mask_label else "")
                 + f", {os.path.basename(output_base)})")
 
         holder: dict = {}
 
         def _work() -> dict:
             task = holder.get("task")
-            progress_cb = (
-                (lambda f, m: task.setProgress(float(f))) if task else None
-            )
             cancel_cb = task.isCanceled if task else None
+            # v1.1: forest masks (GFW GFC / WorldCover) are built on the
+            # DiD grid — the pre/post product defines it, so resolve its
+            # coherence layer first.  The forest-candidates@Y mask
+            # restricts the detection area, the clean-forest@Y mask the
+            # background sample of the adaptive statistics (report
+            # ed.8 §9).  Mask building takes ~0-20% of the progress bar.
+            analysis_mask = mask_path
+            bg_mask = None
+            if mask_source in ("worldcover", "gfc"):
+                tmp_dir = os.path.join(
+                    os.path.dirname(os.path.abspath(output_base)) or ".",
+                    "_coh_tmp")
+                os.makedirs(tmp_dir, exist_ok=True)
+                corr_tif = find_correlation_tif(prepost, tmp_dir)
+                ref_info = forest_mask.read_ref_info(corr_tif)
+                bbox = forest_mask.bbox_4326(ref_info)
+                mask_prog = (
+                    (lambda f, m: task.setProgress(
+                        20.0 * float(f) / 100.0)) if task else None)
+                if mask_source == "gfc":
+                    analysis_mask = forest_mask.build_forest_mask(
+                        "gfc", ref_info,
+                        f"{output_base}_forest_gfc{gfc_year}.tif",
+                        bbox=bbox, event_year=gfc_year,
+                        gfc_variant="candidate",
+                        progress_cb=mask_prog, cancel_cb=cancel_cb)
+                    bg_mask = forest_mask.build_forest_mask(
+                        "gfc", ref_info,
+                        f"{output_base}_forestbg_gfc{gfc_year}.tif",
+                        bbox=bbox, event_year=gfc_year,
+                        gfc_variant="background",
+                        progress_cb=mask_prog, cancel_cb=cancel_cb)
+                else:
+                    analysis_mask = forest_mask.build_forest_mask(
+                        "worldcover", ref_info,
+                        f"{output_base}_forest_wc{wc_year}.tif",
+                        bbox=bbox, year=wc_year,
+                        progress_cb=mask_prog, cancel_cb=cancel_cb)
+            detect_progress = (
+                (lambda f, m: task.setProgress(
+                    20.0 + 0.8 * float(f))) if task else None)
             return detector.detect_file(
                 prepost_products=[prepost],
                 control_products=[control] if control else [],
                 output_base=output_base,
-                analysis_mask_path=mask_path,
-                progress_cb=progress_cb,
+                analysis_mask_path=analysis_mask,
+                background_mask_path=bg_mask,
+                progress_cb=detect_progress,
                 cancel_cb=cancel_cb,
             )
 

@@ -296,6 +296,7 @@ class CoherenceDeltaDetector:
         control_products: Sequence[str],
         output_base: str,
         analysis_mask_path: Optional[str] = None,
+        background_mask_path: Optional[str] = None,
         progress_cb: ProgressCallback = None,
         cancel_cb: CancelCallback = None,
     ) -> dict:
@@ -311,9 +312,19 @@ class CoherenceDeltaDetector:
             ``<base>_dcoh.tif``, ``<base>_mask.tif`` and ``<base>.gpkg``.
         :param analysis_mask_path: optional raster/vector restriction
             of the detection area (also used for the adaptive mean).
+        :param background_mask_path: v1.1 — optional mask restricting
+            ONLY the background sample of the adaptive statistics
+            (median/mean and their threshold); detections are NOT
+            restricted by it.  This is the GFW-rescore semantics
+            (report ed.8 §9): pass the GFC clean-forest@Y mask here
+            (``build_forest_mask(..., "gfc", gfc_variant="background")``)
+            and the GFC forest-candidates@Y mask as the analysis mask —
+            «пиксели с потерей в год события из фона исключаются, но
+            из маски-кандидата не убираются».
         :return: dict with ``dcoh``, ``mask``, ``vector``,
             ``threshold``, ``mean_dcoh``, ``n_objects``,
-            ``control_used``, ``water_mask_ignored``.
+            ``control_used``, ``water_mask_ignored``,
+            ``background_mask``.
         """
         if gdal is None:
             raise RuntimeError("GDAL (osgeo) is required for coherence detection")
@@ -358,6 +369,17 @@ class CoherenceDeltaDetector:
                     f"Mask file not found: {analysis_mask_path}")
             mask_raster = _resolve_mask_raster(
                 analysis_mask_path, ref_info, tmp_dir)
+
+        # v1.1: statistics-only background mask (GFW rescore semantics —
+        # clean forest@Y for the adaptive-threshold sample).
+        bg_mask_raster: Optional[str] = None
+        if background_mask_path:
+            if not os.path.isfile(background_mask_path):
+                raise ValueError(
+                    f"Background mask file not found: "
+                    f"{background_mask_path}")
+            bg_mask_raster = _resolve_mask_raster(
+                background_mask_path, ref_info, tmp_dir)
 
         self.water_mask_ignored = []
         for product in (prepost_products[0], control_products[0] if use_did else None):
@@ -415,6 +437,11 @@ class CoherenceDeltaDetector:
         if mask_raster:
             mask_ds = gdal.Open(mask_raster, gdal.GA_ReadOnly)
             mask_band = mask_ds.GetRasterBand(1)
+        bg_ds = None
+        bg_band = None
+        if bg_mask_raster:
+            bg_ds = gdal.Open(bg_mask_raster, gdal.GA_ReadOnly)
+            bg_band = bg_ds.GetRasterBand(1)
 
         running_sum = 0.0
         running_count = 0
@@ -450,6 +477,10 @@ class CoherenceDeltaDetector:
                     inside = mask_band.ReadAsArray(
                         0, y0, width, rows) > 0
                     finite &= inside
+                if bg_band is not None:
+                    bg_inside = bg_band.ReadAsArray(
+                        0, y0, width, rows) > 0
+                    finite &= bg_inside
                 vals = chunk[finite].astype(np.float64, copy=False)
                 if vals.size:
                     running_sum += float(vals.sum())
@@ -471,6 +502,8 @@ class CoherenceDeltaDetector:
             ctl_band = None
             mask_ds = None
             mask_band = None
+            bg_ds = None
+            bg_band = None
 
         if running_count == 0:
             raise RuntimeError(
@@ -611,6 +644,8 @@ class CoherenceDeltaDetector:
             "n_objects": self.n_objects,
             "control_used": use_did,
             "water_mask_ignored": list(self.water_mask_ignored),
+            "background_mask": (os.path.abspath(bg_mask_raster)
+                                if bg_mask_raster else None),
         }
 
 

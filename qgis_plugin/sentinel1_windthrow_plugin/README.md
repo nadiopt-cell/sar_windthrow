@@ -1,9 +1,9 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-127%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/tests-133%20passed-success.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 **windthrow** (storm-damaged forest) with THREE validated methods:
@@ -18,7 +18,7 @@ difference-in-differences** over ASF HyP3 InSAR pairs (v1.0).
 |---------------------|----------------------------------------------------------------------------------|
 | Search & Download   | STAC search on Microsoft Planetary Computer (GRD **or** RTC) + COG download      |
 | Preprocess          | Linear→dB, Lee speckle filter, optional land/water mask                          |
-| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** (ESA WorldCover auto-download or your own file, v0.9)  |
+| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** — v1.1 adds **GFW Hansen GFC reconstructed on the year before the event** (retrospective mask of record), plus ESA WorldCover (monitoring) or your own file |
 | Settings            | Default folders + detection parameters, persisted in `QgsSettings`               |
 
 Outputs of a detection run:
@@ -78,6 +78,25 @@ Corrupt product water masks are auto-detected and ignored.
 See METHOD.md §6–7 for the full description, parameters and
 validation tables.
 
+### GFW GFC forest mask on the event year — v1.1
+
+For retrospective storms (2001–2024) the forest mask must not be newer
+than the event. v1.1 reconstructs the forest **as of the year
+preceding the event** from Hansen GFC (`treecover2000 ≥ τ = 30 %`,
+losses of 2001..Y−1 excluded, event-year losses kept in the
+candidates): pick *GFW Hansen GFC* as the mask source and set the
+storm year. In the Coherence DiD mode a second, clean-forest mask
+(additionally excluding event-year losses) restricts the background
+sample of the adaptive threshold. Validated on 12 events (report
+ed.8 §9): background shrinks 28–53 %, mean AUC unchanged (0.620 →
+0.618) — correct forest-vs-forest semantics without metric inflation;
+the single-epoch WorldCover-2021 alternative is a "mask from the
+future" and broke on ID655 (0 background pixels). Layers are read
+window-by-window through `/vsicurl/` — no tile downloads, no
+authentication.
+
+See METHOD.md §3b for the recipe and the validation summary.
+
 ## Requirements
 
 - QGIS **≥ 3.28** (PyQt bundled; no extra Qt install)
@@ -91,7 +110,7 @@ SNAP, snappy, torch or tensorflow.
 ## Installation
 
 1. **Plugins → Manage and Install Plugins → Install from ZIP**.
-2. Select `sentinel1_windthrow_plugin_v0.7.0.zip`.
+2. Select `sentinel1_windthrow_plugin_v1.1.0.zip`.
 3. The toolbar button and the **Plugins → Sentinel-1 Windthrow** menu
    entry appear.
 
@@ -152,7 +171,7 @@ sentinel1_windthrow_plugin/
 ├── sentinel1_plugin_dialog.py   # 4-tab QDialog + QgsTask subclasses
 ├── logger.py                    # QgsMessageLog wrapper (QGIS-optional)
 ├── metadata.txt / icon.svg / LICENSE
-├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v0.7.0.md / RELEASE_NOTES_v0.8.0.md
+├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md (+ older)
 ├── ui/
 │   └── draw_rectangle_tool.py   # "Draw on map" AOI tool
 ├── sources/
@@ -160,6 +179,9 @@ sentinel1_windthrow_plugin/
 │   ├── pc_client.py             # stdlib-only PC STAC client (retry/backoff)
 │   ├── planetary_computer.py    # search + resumable download
 │   ├── preprocessor.py          # SARPreprocessor (dB, Lee, land mask)
+│   ├── forest_mask.py           # GFC / WorldCover / file forest masks (v0.9/v1.1)
+│   ├── lband.py                 # LbandDeclineDetector (v1.0)
+│   ├── coh_delta.py             # CoherenceDeltaDetector (v1.0)
 │   └── windthrow.py             # WindthrowDetector + compositing helpers
 └── tests/                       # pytest suite (runs without QGIS)
 ```
@@ -176,7 +198,7 @@ full-size IW scene never sits in RAM. The connected-component cleanup
 250 × 170 km scene) is the only RAM-heavy step; on memory-limited
 machines, clip the AOI first or raise `min_pixels`.
 
-## Limitations (v1.0)
+## Limitations (v1.1)
 
 - Sentinel-1 GRD products are not radiometrically calibrated in the
   plugin (raw DN → dB); an inter-sensor (S1A/S1B) offset of ~0.1–0.3 dB

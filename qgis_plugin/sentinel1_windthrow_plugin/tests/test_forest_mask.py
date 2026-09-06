@@ -419,3 +419,149 @@ def test_detect_file_without_forest_mask_unchanged(two_blob_scene,
     ds = None
     assert (mask[blob_a] == 255).mean() > 0.5
     assert (mask[blob_b] == 255).mean() > 0.5
+
+
+# ======================================================================
+# GFW Hansen GFC — annual forest reconstruction (v1.1)
+# ======================================================================
+def test_gfc_tiles_for_bbox_naming():
+    """Tiles are named by their UPPER-LEFT corner (10-deg grid)."""
+    # Komi squall ID666 (61.6-62.1 N, 42.7-43.7 E) lives in 70N_*, NOT
+    # 60N_* — the real pitfall caught during the rescore.
+    assert forest_mask.gfc_tiles_for_bbox(
+        (42.7, 61.6, 43.7, 62.6)) == ["70N_040E"]
+    assert forest_mask.gfc_tiles_for_bbox(
+        (42.7, 51.6, 43.7, 52.6)) == ["60N_040E"]
+    # Two longitude columns
+    assert forest_mask.gfc_tiles_for_bbox(
+        (38.0, 61.0, 42.0, 62.0)) == ["70N_030E", "70N_040E"]
+    # Southern hemisphere + zero-padding
+    assert forest_mask.gfc_tiles_for_bbox(
+        (20.0, -12.5, 21.0, -11.4)) == ["10S_020E"]
+    with pytest.raises(ValueError):
+        forest_mask.gfc_tiles_for_bbox((5.0, 95.0, 6.0, 96.0))  # 95 N
+
+
+def test_gfc_layer_url():
+    url = forest_mask.gfc_layer_url("70N_040E", "treecover2000")
+    assert url == (
+        "https://storage.googleapis.com/earthenginepartners-hansen/"
+        "GFC-2024-v1.12/Hansen_GFC-2024-v1.12_treecover2000_70N_040E.tif")
+    with pytest.raises(ValueError):
+        forest_mask.gfc_layer_url("70N_040E", "datamask")
+
+
+def test_gfc_forest_recipe():
+    """forest@Y-1: losses 2001..Y-1 excluded, event-year loss kept as
+    candidate / removed from background (report ed.8 §9)."""
+    tc = np.array([[80, 80, 80, 10],
+                   [80, 80, 80, 80]], dtype=np.uint8)
+    ly = np.array([[0, 17, 16, 0],
+                   [18, 5, 0, 17]], dtype=np.int16)
+    cand, bg = forest_mask.gfc_forest_parts(tc, ly, event_year=2017, tau=30)
+    np.testing.assert_array_equal(
+        cand, np.array([[True, True, False, False],
+                        [True, False, True, True]]))
+    np.testing.assert_array_equal(
+        bg, np.array([[True, False, False, False],
+                      [True, False, True, False]]))
+    # Wrappers agree with the parts
+    np.testing.assert_array_equal(
+        forest_mask.gfc_forest_candidate(tc, ly, 2017), cand)
+    np.testing.assert_array_equal(
+        forest_mask.gfc_forest_background(tc, ly, 2017), bg)
+    # Event at/before 2000: no mapped losses before it — tau only
+    cand0, bg0 = forest_mask.gfc_forest_parts(tc, ly, event_year=2000)
+    np.testing.assert_array_equal(cand0, bg0)
+    np.testing.assert_array_equal(cand0, tc >= 30)
+    # Custom tau
+    cand50, _ = forest_mask.gfc_forest_parts(tc, ly, 2017, tau=85)
+    assert not cand50.any()
+
+
+def _write_gfc_like_tiff(path, arr, gt):
+    """Byte EPSG:4326 raster mimicking a GFC layer window."""
+    pytest.importorskip("osgeo.gdal")
+    from osgeo import gdal, osr
+    ds = gdal.GetDriverByName("GTiff").Create(
+        path, arr.shape[1], arr.shape[0], 1, gdal.GDT_Byte)
+    ds.SetGeoTransform(gt)
+    srs = osr.SpatialReference()
+    srs.ImportFromEPSG(4326)
+    ds.SetProjection(srs.ExportToWkt())
+    ds.GetRasterBand(1).WriteArray(arr)
+    ds = None
+    return path
+
+
+def test_build_gfc_forest_mask_variants(ref_grid, tmp_path, monkeypatch):
+    """Synthetic GFC layers -> candidate/background masks on the radar
+    grid, with the event-year-loss stripe present only in the
+    candidate variant (averaging + fraction threshold included)."""
+    pytest.importorskip("osgeo.gdal")
+    # ref_grid = EPSG:32633 (500000, 5000000) -> lon 15.000-15.015,
+    # lat 45.143-45.154; split the synthetic GFC window so that BOTH
+    # cuts cross that bbox.
+    res = 0.00025                       # native GFC resolution (~30 m)
+    lon0, lat_top = 14.95, 45.30        # 0.30-deg window (~33 km)
+    n = 1200
+    gt = (lon0, res, 0.0, lat_top, 0.0, -res)
+    tc = np.full((n, n), 85, dtype=np.uint8)
+    ly = np.zeros((n, n), dtype=np.uint8)
+    # West of 15.008 E lost forest in 2016 (before the 2017 event):
+    # not forest in EITHER variant; the cut crosses the ref bbox.
+    ly[:, :232] = 16
+    # South of 45.148 N lost forest in the EVENT year 2017 (east of the
+    # 2016 cut): candidate=forest, background=not forest; the cut also
+    # crosses the ref bbox.
+    ly[608:, 232:] = 17
+    tc_path = _write_gfc_like_tiff(str(tmp_path / "tc.tif"), tc, gt)
+    ly_path = _write_gfc_like_tiff(str(tmp_path / "ly.tif"), ly, gt)
+    bbox = (lon0, lat_top - n * res, lon0 + n * res, lat_top)
+
+    monkeypatch.setattr(forest_mask, "gfc_tiles_for_bbox",
+                        lambda b: ["50N_010E"])
+    monkeypatch.setattr(
+        forest_mask, "_fetch_gfc_layer",
+        lambda b, layer, tiles, created:
+            tc_path if layer == "treecover2000" else ly_path)
+
+    out_cand = forest_mask.build_gfc_forest_mask(
+        bbox, ref_grid, str(tmp_path / "gfc_cand.tif"), event_year=2017)
+    out_bg = forest_mask.build_gfc_forest_mask(
+        bbox, ref_grid, str(tmp_path / "gfc_bg.tif"), event_year=2017,
+        variant="background")
+    assert os.path.isfile(out_cand) and os.path.isfile(out_bg)
+
+    from osgeo import gdal
+    ds = gdal.Open(out_cand, gdal.GA_ReadOnly)
+    cand = ds.GetRasterBand(1).ReadAsArray()
+    ds = None
+    ds = gdal.Open(out_bg, gdal.GA_ReadOnly)
+    bg = ds.GetRasterBand(1).ReadAsArray()
+    ds = None
+    assert cand.shape == (120, 120) and bg.shape == (120, 120)
+    # East of the 2016 cut the grid is forest in the candidate mask
+    # (~half); the background additionally loses the event-year stripe.
+    assert 0.35 < (cand == 255).mean() < 0.65
+    assert 0.15 < (bg == 255).mean() < 0.5
+    assert (cand == 255).mean() > (bg == 255).mean()
+    # Event-year losses are candidates but NOT background
+    assert (bg > cand).sum() == 0
+    stripe_c = (cand == 255) & (bg == 0)
+    stripe_b = (cand == 0) & (bg == 0)
+    assert stripe_c.any(), "event-year-loss stripe missing from candidate"
+    # And the 2016-loss (western) part exists too
+    assert stripe_b.any()
+    # No stray temp files left next to the outputs
+    assert not os.path.exists(out_cand + ".warp_tmp.tif")
+
+
+def test_build_gfc_forest_mask_requires_year(ref_grid, tmp_path):
+    with pytest.raises(ValueError, match="event_year"):
+        forest_mask.build_forest_mask(
+            "gfc", ref_grid, str(tmp_path / "x.tif"),
+            bbox=(15.0, 45.0, 15.1, 45.1))
+    with pytest.raises(ValueError, match="bbox"):
+        forest_mask.build_forest_mask(
+            "gfc", ref_grid, str(tmp_path / "x.tif"), event_year=2017)
