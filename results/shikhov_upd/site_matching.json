@@ -1,0 +1,363 @@
+[
+ {
+  "site_id": 666,
+  "old": {
+   "type": "squall",
+   "date": "30.07.2017",
+   "window": [
+    "2017-07-29",
+    "2017-08-02"
+   ],
+   "site_area_ha": 661.6219871969406
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 539,
+    "type": "шквал",
+    "date": "2017-07-30",
+    "date_unit": "D",
+    "region": "Архангельская область",
+    "area_ha": 950.333491841,
+    "inter_ha": 525.8378912231677,
+    "iou": 0.484
+   }
+  ],
+  "best_iou": 0.484,
+  "best_new_id": 539
+ },
+ {
+  "site_id": 694,
+  "old": {
+   "type": "tornado",
+   "date": "19.09.2017",
+   "window": [
+    "2017-09-04",
+    "2017-10-02"
+   ],
+   "site_area_ha": 147.9265377511928
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 361,
+    "type": "смерч",
+    "date": "2017-09-19",
+    "date_unit": "D",
+    "region": "Коми",
+    "area_ha": 161.896704974,
+    "inter_ha": 112.89399089310288,
+    "iou": 0.574
+   }
+  ],
+  "best_iou": 0.574,
+  "best_new_id": 361
+ },
+ {
+  "site_id": 655,
+  "old": {
+   "type": "squall",
+   "date": "30.07.2017",
+   "window": [
+    "2017-07-20",
+    "2017-08-02"
+   ],
+   "site_area_ha": 1618.4983657562082
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 546,
+    "type": "шквал",
+    "date": "2017-07-30",
+    "date_unit": "D",
+    "region": "Костромская область",
+    "area_ha": 1817.69910863,
+    "inter_ha": 1295.0049367923818,
+    "iou": 0.605
+   }
+  ],
+  "best_iou": 0.605,
+  "best_new_id": 546
+ },
+ {
+  "site_id": 583,
+  "old": {
+   "type": "squall",
+   "date": "26.07.2015",
+   "window": [
+    "2015-07-25",
+    "2015-08-05"
+   ],
+   "site_area_ha": 609.3959325004995
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 593,
+    "type": "шквал",
+    "date": "2015-07-26",
+    "date_unit": "D",
+    "region": "Новгородская область",
+    "area_ha": 841.028456387,
+    "inter_ha": 473.4293993100539,
+    "iou": 0.485
+   }
+  ],
+  "best_iou": 0.485,
+  "best_new_id": 593
+ },
+ {
+  "site_id": 674,
+  "old": {
+   "type": "tornado",
+   "date": "02.08.2017",
+   "window": [
+    "2017-07-31",
+    "2017-08-16"
+   ],
+   "site_area_ha": 576.7303131207545
+  },
+  "n_candidates_spatial": 3,
+  "matches": [
+   {
+    "new_id": 220,
+    "type": "смерч",
+    "date": "2017-08-02",
+    "date_unit": "D",
+    "region": "Тверская область",
+    "area_ha": 912.243664242,
+    "inter_ha": 425.50365506665446,
+    "iou": 0.4
+   },
+   {
+    "new_id": 3863,
+    "type": "шквал",
+    "date": "2017-08-02",
+    "date_unit": "D",
+    "region": "Тверская область",
+    "area_ha": 47.5397847008,
+    "inter_ha": 0.072920649936955,
+    "iou": 0.0
+   }
+  ],
+  "best_iou": 0.4,
+  "best_new_id": 220
+ },
+ {
+  "site_id": 608,
+  "old": {
+   "type": "tornado",
+   "date": "13.07.2016",
+   "window": [
+    "2016-06-29",
+    "2016-07-15"
+   ],
+   "site_area_ha": 389.3642915986429
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 157,
+    "type": "смерч",
+    "date": "2016-07-13",
+    "date_unit": "D",
+    "region": "Московская область",
+    "area_ha": 438.870738927,
+    "inter_ha": 228.36711645955072,
+    "iou": 0.381
+   }
+  ],
+  "best_iou": 0.381,
+  "best_new_id": 157
+ },
+ {
+  "site_id": 646,
+  "old": {
+   "type": "squall",
+   "date": "29.05.2017",
+   "window": [
+    "2017-05-27",
+    "2017-06-09"
+   ],
+   "site_area_ha": 240.53763115497512
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 588,
+    "type": "шквал",
+    "date": "2017-05-29",
+    "date_unit": "D",
+    "region": "Московская область",
+    "area_ha": 391.731111214,
+    "inter_ha": 192.70383413943705,
+    "iou": 0.439
+   }
+  ],
+  "best_iou": 0.439,
+  "best_new_id": 588
+ },
+ {
+  "site_id": 579,
+  "old": {
+   "type": "tornado",
+   "date": "03.07.2015",
+   "window": [
+    "2015-07-02",
+    "2015-07-18"
+   ],
+   "site_area_ha": 59.776155995913534
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 251,
+    "type": "смерч",
+    "date": "2015-07-03",
+    "date_unit": "D",
+    "region": "Карелия",
+    "area_ha": 68.3308088034,
+    "inter_ha": 49.78031653115931,
+    "iou": 0.636
+   }
+  ],
+  "best_iou": 0.636,
+  "best_new_id": 251
+ },
+ {
+  "site_id": 683,
+  "old": {
+   "type": "tornado",
+   "date": "02.08.2017",
+   "window": [
+    "2017-08-01",
+    "2017-08-11"
+   ],
+   "site_area_ha": 107.5377760895279
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 224,
+    "type": "смерч",
+    "date": "2017-08-02",
+    "date_unit": "D",
+    "region": "Новгородская область",
+    "area_ha": 155.152337653,
+    "inter_ha": 92.46969809885951,
+    "iou": 0.544
+   }
+  ],
+  "best_iou": 0.544,
+  "best_new_id": 224
+ },
+ {
+  "site_id": 606,
+  "old": {
+   "type": "squall",
+   "date": "27.06.2016",
+   "window": [
+    "2016-06-18",
+    "2016-07-04"
+   ],
+   "site_area_ha": 244.53169686823125
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 576,
+    "type": "шквал",
+    "date": "2016-06-27",
+    "date_unit": "D",
+    "region": "Нижегородская область",
+    "area_ha": 396.714585,
+    "inter_ha": 193.46544142171228,
+    "iou": 0.432
+   }
+  ],
+  "best_iou": 0.432,
+  "best_new_id": 576
+ },
+ {
+  "site_id": 654,
+  "old": {
+   "type": "tornado",
+   "date": "23.07.2017",
+   "window": [
+    "2017-07-16",
+    "2017-07-30"
+   ],
+   "site_area_ha": 80.85652781499026
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 357,
+    "type": "смерч",
+    "date": "2017-07-24",
+    "date_unit": "D",
+    "region": "Архангельская область",
+    "area_ha": 64.1789931615,
+    "inter_ha": 53.27206843505794,
+    "iou": 0.581
+   }
+  ],
+  "best_iou": 0.581,
+  "best_new_id": 357
+ },
+ {
+  "site_id": 658,
+  "old": {
+   "type": "squall",
+   "date": "30.07.2017",
+   "window": [
+    "2017-07-29",
+    "2017-08-21"
+   ],
+   "site_area_ha": 92.22855483984073
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 543,
+    "type": "шквал",
+    "date": "2017-07-30",
+    "date_unit": "D",
+    "region": "Архангельская область",
+    "area_ha": 197.275003061,
+    "inter_ha": 76.71060899117576,
+    "iou": 0.361
+   }
+  ],
+  "best_iou": 0.361,
+  "best_new_id": 543
+ },
+ {
+  "site_id": 696,
+  "old": {
+   "type": "squall",
+   "date": "None",
+   "window": [
+    "2017-07-23",
+    "2017-07-23"
+   ],
+   "site_area_ha": 54.000057192607215
+  },
+  "n_candidates_spatial": 1,
+  "matches": [
+   {
+    "new_id": 624,
+    "type": "шквал",
+    "date": "2017-07-01",
+    "date_unit": "M",
+    "region": "Смоленская область",
+    "area_ha": 68.8538782235,
+    "inter_ha": 41.6719455890267,
+    "iou": 0.514
+   }
+  ],
+  "best_iou": 0.514,
+  "best_new_id": 624
+ }
+]
