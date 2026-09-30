@@ -512,6 +512,203 @@ def test_background_mask_shifts_stats_not_detections(coh_pair_dirs,
 
 
 # ----------------------------------------------------------------------
+# v1.2.2: forest safeguard «вне_леса@Y» (article ID654 lesson)
+# ----------------------------------------------------------------------
+def _make_byte_mask_tiff(path, arr, pixel=80.0):
+    osgeo = pytest.importorskip("osgeo")
+    gdal, osr = osgeo.gdal, osgeo.osr
+    h, w = arr.shape
+    ds = gdal.GetDriverByName("GTiff").Create(
+        path, w, h, 1, gdal.GDT_Byte)
+    ds.SetGeoTransform((500000.0, pixel, 0.0, 5000000.0, 0.0, -pixel))
+    srs = osr.SpatialReference()
+    srs.ImportFromEPSG(32633)
+    ds.SetProjection(srs.ExportToWkt())
+    ds.GetRasterBand(1).WriteArray(arr.astype(np.uint8))
+    ds = None
+    return path
+
+
+def _make_product_pair(tmp_path, prepost, control, tag):
+    """Two unpacked 'products' with custom coherence arrays."""
+    pre_dir = tmp_path / f"{tag}-prepost" / f"S1BB_pair_{tag}1"
+    ctl_dir = tmp_path / f"{tag}-control" / f"S1BB_pair_{tag}2"
+    pre_dir.mkdir(parents=True)
+    ctl_dir.mkdir(parents=True)
+    _make_corr_tiff(str(pre_dir / f"S1BB_pair_{tag}1_corr.tif"), prepost)
+    _make_corr_tiff(str(ctl_dir / f"S1BB_pair_{tag}2_corr.tif"), control)
+    return str(pre_dir), str(ctl_dir)
+
+
+def test_safeguard_thresholds_match_article():
+    """The «вне_леса@Y» limits are exactly the article's numbers."""
+    from sentinel1_windthrow_plugin.sources.coh_delta import (
+        COH_NONFOREST_MAX, FOREST_SHARE_MIN)
+    # ID654: pre/post coherence 0.635 (bare ground), AUC 0.051.
+    assert COH_NONFOREST_MAX == pytest.approx(0.6)
+    # «при доле леса GFC@Y ниже 0,3 плагин выставляет флаг вне_леса@Y».
+    assert FOREST_SHARE_MIN == pytest.approx(0.3)
+
+
+def test_safeguard_flags_nonforest_coherence(tmp_path):
+    """ID654 case: pre/post coherence > 0.6 inside the zone -> flag.
+
+    A clearcut inside the year keeps the damage-window pair coherent
+    (0.7 here) — the bare-ground signature; detections in such a zone
+    are not interpretable as windthrow.
+    """
+    pytest.importorskip("osgeo.gdal")
+    size = 60
+    prepost = np.full((size, size), 0.7, dtype=np.float32)
+    control = np.full((size, size), 0.75, dtype=np.float32)
+    pre_dir, ctl_dir = _make_product_pair(
+        tmp_path, prepost, control, "654")
+    # Analysis 'polygon' over half the scene (50 % -> no share flag).
+    zone = np.zeros((size, size), dtype=np.uint8)
+    zone[:, : size // 2] = 255
+    mask_path = _make_byte_mask_tiff(str(tmp_path / "aoi.tif"), zone)
+
+    det = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[pre_dir],
+        control_products=[ctl_dir],
+        output_base=str(tmp_path / "run" / "id654"),
+        analysis_mask_path=mask_path,
+    )
+    guard = result["forest_safeguard"]
+    assert guard["flagged"] is True
+    assert "вне_леса@Y" in guard["flags"]
+    assert guard["zone"] == "analysis"
+    assert guard["coh_prepost_mean"] == pytest.approx(0.7, abs=0.01)
+    assert guard["forest_share"] == pytest.approx(0.5, abs=0.02)
+    assert len(guard["reasons"]) == 1  # coherence only, share is 0.5
+    # The detector instance diagnostics mirror the result dict.
+    assert det.forest_safeguard["flagged"] is True
+
+
+def test_safeguard_flags_low_forest_share(tmp_path):
+    """GFC@Y forest share of the scene < 0.3 -> flag (article limit)."""
+    pytest.importorskip("osgeo.gdal")
+    size = 60
+    yy, xx = np.ogrid[:size, :size]
+    blob = (yy - 30) ** 2 + (xx - 30) ** 2 <= 8 ** 2
+    prepost = np.full((size, size), 0.3, dtype=np.float32)
+    prepost[blob] = 0.1
+    control = np.full((size, size), 0.8, dtype=np.float32)
+    pre_dir, ctl_dir = _make_product_pair(
+        tmp_path, prepost, control, "shr")
+    # Background clean-forest@Y mask: only the top 20 % is forest.
+    forest = np.zeros((size, size), dtype=np.uint8)
+    forest[: size // 5, :] = 255
+    bg_path = _make_byte_mask_tiff(str(tmp_path / "bg.tif"), forest)
+
+    det = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[pre_dir],
+        control_products=[ctl_dir],
+        output_base=str(tmp_path / "run" / "shr"),
+        background_mask_path=bg_path,
+    )
+    guard = result["forest_safeguard"]
+    assert guard["flagged"] is True
+    assert guard["zone"] == "background"
+    # Coherence inside the forest zone is healthy (0.3, the blob is
+    # outside it) — the flag fires via the share, not the coherence.
+    assert guard["coh_prepost_mean"] == pytest.approx(0.3, abs=0.01)
+    assert guard["forest_share"] == pytest.approx(0.2, abs=0.02)
+    assert len(guard["reasons"]) == 1
+    assert "share" in guard["reasons"][0] or "mask covers" in guard["reasons"][0]
+
+
+def test_safeguard_healthy_forest_not_flagged(tmp_path):
+    """A healthy forest scene with a full forest mask stays unflagged."""
+    pytest.importorskip("osgeo.gdal")
+    size = 60
+    yy, xx = np.ogrid[:size, :size]
+    blob = (yy - 30) ** 2 + (xx - 30) ** 2 <= 8 ** 2
+    prepost = np.full((size, size), 0.3, dtype=np.float32)
+    prepost[blob] = 0.1
+    control = np.full((size, size), 0.8, dtype=np.float32)
+    pre_dir, ctl_dir = _make_product_pair(
+        tmp_path, prepost, control, "ok")
+    forest = np.full((size, size), 255, dtype=np.uint8)
+    bg_path = _make_byte_mask_tiff(str(tmp_path / "bg.tif"), forest)
+
+    det = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[pre_dir],
+        control_products=[ctl_dir],
+        output_base=str(tmp_path / "run" / "ok"),
+        background_mask_path=bg_path,
+    )
+    guard = result["forest_safeguard"]
+    assert guard["flagged"] is False
+    assert guard["flags"] == []
+    assert guard["reasons"] == []
+    assert guard["zone"] == "background"
+    assert guard["coh_prepost_mean"] == pytest.approx(0.29, abs=0.01)
+    assert guard["forest_share"] == pytest.approx(1.0, abs=0.001)
+    # The run itself is unaffected: the blob is still detected.
+    assert result["n_objects"] >= 1
+
+
+def test_safeguard_scene_zone_without_masks(tmp_path):
+    """No masks -> the whole scene is the zone; healthy -> unflagged."""
+    pytest.importorskip("osgeo.gdal")
+    size = 60
+    yy, xx = np.ogrid[:size, :size]
+    blob = (yy - 30) ** 2 + (xx - 30) ** 2 <= 8 ** 2
+    prepost = np.full((size, size), 0.25, dtype=np.float32)
+    prepost[blob] = 0.15
+    control = np.full((size, size), 0.9, dtype=np.float32)
+    pre_dir, ctl_dir = _make_product_pair(
+        tmp_path, prepost, control, "scn")
+
+    det = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[pre_dir],
+        control_products=[ctl_dir],
+        output_base=str(tmp_path / "run" / "scn"),
+    )
+    guard = result["forest_safeguard"]
+    assert guard["flagged"] is False
+    assert guard["zone"] == "scene"
+    assert guard["coh_prepost_mean"] == pytest.approx(0.24, abs=0.01)
+    # Without a forest mask there is nothing to measure the share of.
+    assert guard["forest_share"] is None
+
+
+def test_safeguard_share_from_analysis_mask_when_no_background(tmp_path):
+    """Without a background mask the analysis mask provides the share."""
+    pytest.importorskip("osgeo.gdal")
+    size = 60
+    prepost = np.full((size, size), 0.3, dtype=np.float32)
+    control = np.full((size, size), 0.8, dtype=np.float32)
+    pre_dir, ctl_dir = _make_product_pair(
+        tmp_path, prepost, control, "aoi")
+    # AOI covering a quarter of the scene; coherence inside is healthy.
+    zone = np.zeros((size, size), dtype=np.uint8)
+    zone[: size // 2, : size // 2] = 255
+    mask_path = _make_byte_mask_tiff(str(tmp_path / "aoi.tif"), zone)
+
+    det = CoherenceDeltaDetector(a_coh=0.1, min_pixels=6)
+    result = det.detect_file(
+        prepost_products=[pre_dir],
+        control_products=[ctl_dir],
+        output_base=str(tmp_path / "run" / "aoi"),
+        analysis_mask_path=mask_path,
+    )
+    guard = result["forest_safeguard"]
+    # Coherence inside the AOI is healthy (0.3 < 0.6) — but the mask
+    # covers only 25 % of the scene, so the share check fires.
+    assert guard["flagged"] is True
+    assert guard["zone"] == "analysis"
+    assert guard["coh_prepost_mean"] == pytest.approx(0.3, abs=0.01)
+    assert guard["forest_share"] == pytest.approx(0.25, abs=0.02)
+    assert len(guard["reasons"]) == 1
+
+
+# ----------------------------------------------------------------------
 # v1.2: HyP3 granule parsing (GAMMA vs ISCE burst)
 # ----------------------------------------------------------------------
 GAMMA_GRANULE = "S1AB_20171111T150004_20171117T145926_VVP006_INT80_G_ueF_4D09"

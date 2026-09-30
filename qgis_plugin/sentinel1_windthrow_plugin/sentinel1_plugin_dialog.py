@@ -2060,6 +2060,18 @@ class Sentinel1PluginDialog(QDialog):
             if ignored:
                 wm_note = ("\nIgnored corrupt water mask(s): "
                            + ", ".join(os.path.basename(p) for p in ignored))
+            # v1.2.2: forest safeguard «вне_леса@Y» (article ID654) —
+            # the zone was non-forest before the storm, detections
+            # inside it are not interpretable as windthrow.
+            guard = result.get("forest_safeguard") or {}
+            guard_note = ""
+            if guard.get("flagged"):
+                guard_note = (
+                    "\n\n⚠ FLAG вне_леса@Y (outside-forest@Y):\n"
+                    + "\n".join("- " + r for r in guard.get("reasons", []))
+                    + "\nThe zone does not behave as forest before the "
+                    "storm —\ndetections there are NOT interpretable as "
+                    "windthrow.")
             index_path = result.get("dcoh") or result.get("wi") or ""
             QMessageBox.information(
                 self, "Windthrow detection complete",
@@ -2067,13 +2079,17 @@ class Sentinel1PluginDialog(QDialog):
                 f"{stat_label}: {mean:.3f}{units}\n"
                 f"Threshold used: {thr:.3f}{units}\n\n"
                 f"Outputs:\n{index_path}\n{result.get('mask')}\n"
-                f"{vector_path}" + forest_note + wm_note,
+                f"{vector_path}" + forest_note + wm_note + guard_note,
             )
             log_info(
                 f"Windthrow detection finished: {n_obj} objects, "
                 f"threshold {thr:.3f}{units} (mean {index_name} "
                 f"{mean:.3f}{units})"
             )
+            if guard.get("flagged"):
+                log_warning(
+                    "Forest safeguard вне_леса@Y: "
+                    + "; ".join(guard.get("reasons", [])))
         else:
             msg = str(task.exception) if task.exception else "Task was cancelled."
             if task.exception is not None:
@@ -2263,7 +2279,7 @@ class Sentinel1PluginDialog(QDialog):
         QMessageBox.information(
             self, "About — Sentinel-1 Windthrow Detector",
             "<h3>Sentinel-1 Windthrow Detector</h3>"
-            "<p>Version 1.2.1</p>"
+            "<p>Version 1.2.2</p>"
             "<p>Rapid windthrow (storm forest damage) mapping from SAR "
             "imagery: STAC search and download on Microsoft Planetary "
             "Computer (Sentinel-1 GRD / RTC, ALOS PALSAR), preprocessing "
@@ -2272,7 +2288,8 @@ class Sentinel1PluginDialog(QDialog):
             "Windthrow Index (Rüetschi et al. 2019), L-band decline "
             "(Tanase et al. 2018) and interferometric coherence DiD over "
             "ASF HyP3 products — full INSAR-GAMMA frames (80 m) or Burst "
-            "InSAR pairs (20/40/80 m, same-burst validation; v1.2). "
+            "InSAR pairs (20/40/80 m, same-burst validation; v1.2) — "
+            "with the outside-forest@Y safeguard flag (v1.2.2). "
             "Vectorised GeoPackage output with per-object area in "
             "hectares.</p>"
             "<p><b>Dependencies:</b> numpy, scipy, GDAL (osgeo). "

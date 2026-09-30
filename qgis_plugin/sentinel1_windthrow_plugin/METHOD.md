@@ -299,6 +299,43 @@ Implementation notes baked into the plugin:
   the pre/post pair (static decorrelation) and the plugin warns —
   that score is NOT robust against harvests and seasonal anomalies.
 
+## 7b. Forest safeguard «вне_леса@Y» (v1.2.2)
+
+A zone that was NOT forest before the storm cannot produce a DiD
+windthrow signal: the article's ID654 lesson (a polygon logged inside
+the year kept the damage-window pair coherent at 0.635 — a bare-ground
+signature — while every scoring by modern vegetation maps still said
+"forest"; the event ended as a degenerate point with AUC 0.051 and an
+inverted excess). Since v1.2.2 the detector computes two checks from
+data the run already loads and reports them in
+`result["forest_safeguard"]`:
+
+1. **Mean pre/post coherence inside the zone** — the zone is the
+   analysis mask («внутри полигона»), else the background forest
+   mask, else the whole scene. Above **0.6** it is the bare-ground /
+   non-forest signature (ID654: 0.635) and the zone is flagged.
+2. **Forest share of the scene** — taken from the background
+   clean-forest@Y mask when available (the GFC@Y workflow builds it),
+   else from the analysis mask. Below **0.3** the zone is outside the
+   applicability limit («при доле леса GFC@Y ниже 0,3 плагин
+   выставляет флаг вне_леса@Y»).
+
+The run is NOT aborted — the flag is logged as a warning, carried in
+the result dict (`flagged`, `flags`, `reasons`, `zone`,
+`coh_prepost_mean`, `forest_share`) and shown in the GUI result box.
+Interpretation caveats:
+
+* a scene-wide zone without any mask dilutes the coherence check —
+  an agricultural region flags correctly (nothing forest to detect),
+  a mixed scene may not;
+* the share check assumes the mask IS a forest map (GFC@Y or
+  WorldCover — the GUI workflow guarantees this); a custom AOI mask
+  only measures its own coverage, so a small AOI triggers the share
+  flag even over healthy forest — read `zone` and `forest_share`
+  before acting on the flag;
+* thresholds are the article's numbers, not tuned: 0.6 coherence,
+  0.3 forest share.
+
 ## 8. References
 
 - Rüetschi, Small, Waser (2019), *Remote Sensing* 11(2):115.

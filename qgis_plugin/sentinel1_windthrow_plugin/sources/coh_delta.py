@@ -66,6 +66,22 @@ v1.2 additions:
   the sanity heuristic counts zeros (water) instead.  Legacy masks
   with the opposite encoding can still be consumed via
   ``sane_water_mask(..., water_value=1)``.
+
+v1.2.2 additions:
+
+* **Forest safeguard «вне_леса@Y»** (the article's ID654 lesson): a
+  zone that was non-forest before the storm cannot produce a DiD
+  windthrow signal.  Two checks are computed from data the run
+  already loads and reported in ``result["forest_safeguard"]``:
+  the mean pre/post coherence inside the zone (analysis mask, else
+  the background forest mask, else the whole scene) — above 0.6 it
+  is the bare-ground signature (ID654: 0.635, AUC 0.051) — and the
+  forest share of the scene (background clean-forest@Y mask when
+  available, else the analysis mask) — below 0.3 the zone is outside
+  the applicability limit.  The run is NOT aborted: the flag is
+  logged as a warning and shown in the GUI result box, so the user
+  can judge the mask semantics (a custom AOI mask is not a forest
+  map — see METHOD.md §7b).
 """
 
 import os
@@ -127,6 +143,17 @@ WATER_VALUE = 0
 #: Physically plausible coherence range; anything outside (e.g. the
 #: +-9999 fill of a warped control product) is treated as no-data.
 COH_MIN, COH_MAX = -0.01, 1.01
+
+#: v1.2.2 forest safeguard «вне_леса@Y» (article, ID654 case): mean
+#: pre/post coherence inside the zone above this value is the
+#: bare-ground / non-forest signature (ID654: 0.635 with AUC 0.051).
+COH_NONFOREST_MAX = 0.6
+
+#: v1.2.2 forest safeguard: forest share of the scene below this
+#: value puts the zone outside the method applicability limit
+#: (article: «при доле леса GFC@Y ниже 0,3 плагин выставляет флаг
+#: вне_леса@Y»).
+FOREST_SHARE_MIN = 0.3
 
 # ----------------------------------------------------------------------
 # HyP3 granule-name parsing (v1.2: burst support)
@@ -602,6 +629,8 @@ class CoherenceDeltaDetector:
         self.threshold_used: Optional[float] = None
         self.n_objects: int = 0
         self.water_mask_ignored: List[str] = []
+        # v1.2.2: forest safeguard «вне_леса@Y» (None until a run).
+        self.forest_safeguard: Optional[dict] = None
 
     # ------------------------------------------------------------------
     def detect_file(
@@ -640,7 +669,11 @@ class CoherenceDeltaDetector:
             ``control_used``, ``water_mask_ignored``,
             ``background_mask``; v1.2 adds ``pixel_size_m``,
             ``min_object_area_ha``, ``product_flavors`` and
-            ``product_info`` (parsed granule metadata).
+            ``product_info`` (parsed granule metadata); v1.2.2 adds
+            ``forest_safeguard`` (dict with ``flagged``, ``flags``,
+            ``reasons``, ``zone``, ``coh_prepost_mean`` and
+            ``forest_share`` — the «вне_леса@Y» checks of the
+            article's ID654 lesson).
         """
         if gdal is None:
             raise RuntimeError("GDAL (osgeo) is required for coherence detection")
@@ -785,6 +818,13 @@ class CoherenceDeltaDetector:
         running_sum = 0.0
         running_count = 0
         median_sample: List[np.ndarray] = []
+        # v1.2.2 forest safeguard accumulators («вне_леса@Y»): mean
+        # pre/post coherence inside the zone + forest share of the
+        # scene (see module docstring and METHOD.md §7b).
+        pre_zone_sum = 0.0
+        pre_zone_count = 0
+        forest_px = 0
+        forest_total = 0
 
         def _sanitize(coh: np.ndarray, ndv) -> np.ndarray:
             """Registered no-data and non-physical values -> NaN."""
@@ -812,14 +852,36 @@ class CoherenceDeltaDetector:
                 dcoh_band.WriteArray(chunk, 0, y0)
 
                 finite = chunk != DCOH_NODATA
+                inside = None
                 if mask_band is not None:
                     inside = mask_band.ReadAsArray(
                         0, y0, width, rows) > 0
                     finite &= inside
+                bg_inside = None
                 if bg_band is not None:
                     bg_inside = bg_band.ReadAsArray(
                         0, y0, width, rows) > 0
                     finite &= bg_inside
+
+                # v1.2.2 — safeguard zone («внутри полигона» of the
+                # article): the analysis mask first, else the
+                # background forest mask, else the whole scene.
+                zone = inside if inside is not None else bg_inside
+                pre_ok = np.isfinite(coh_pp)
+                if zone is not None:
+                    pre_ok &= zone
+                pre_vals = coh_pp[pre_ok]
+                if pre_vals.size:
+                    pre_zone_sum += float(pre_vals.sum())
+                    pre_zone_count += int(pre_vals.size)
+                # v1.2.2 — forest share: the background (clean
+                # forest@Y) mask when available, else the analysis
+                # mask itself.
+                share_zone = bg_inside if bg_inside is not None else inside
+                if share_zone is not None:
+                    forest_px += int(np.count_nonzero(share_zone))
+                    forest_total += int(share_zone.size)
+
                 vals = chunk[finite].astype(np.float64, copy=False)
                 if vals.size:
                     running_sum += float(vals.sum())
@@ -859,6 +921,48 @@ class CoherenceDeltaDetector:
                      if self.threshold_mode == "adaptive"
                      else self.fixed_threshold)
         self.threshold_used = threshold
+
+        # ---- 4b. Forest safeguard «вне_леса@Y» (v1.2.2) ---------------
+        # The article's ID654 lesson: a zone that was non-forest
+        # before the storm (bare ground after an in-year clearcut:
+        # pre/post coherence 0.635, AUC 0.051 with excess inversion)
+        # cannot produce a DiD windthrow signal.  Flag it instead of
+        # silently returning an empty / inverted detection.
+        safeguard = {
+            "flagged": False,
+            "flags": [],
+            "reasons": [],
+            "zone": ("analysis" if mask_raster
+                     else "background" if bg_mask_raster else "scene"),
+            "coh_prepost_mean": None,
+            "forest_share": None,
+        }
+        if pre_zone_count:
+            coh_mean = pre_zone_sum / pre_zone_count
+            safeguard["coh_prepost_mean"] = round(coh_mean, 4)
+            if coh_mean > COH_NONFOREST_MAX:
+                safeguard["flagged"] = True
+                safeguard["flags"].append("вне_леса@Y")
+                safeguard["reasons"].append(
+                    f"mean pre/post coherence in the {safeguard['zone']} "
+                    f"zone is {coh_mean:.3f} > {COH_NONFOREST_MAX} — "
+                    "bare-ground / non-forest signature before the "
+                    "storm (ID654 case)")
+        if forest_total:
+            share = forest_px / float(forest_total)
+            safeguard["forest_share"] = round(share, 4)
+            if share < FOREST_SHARE_MIN:
+                safeguard["flagged"] = True
+                if "вне_леса@Y" not in safeguard["flags"]:
+                    safeguard["flags"].append("вне_леса@Y")
+                safeguard["reasons"].append(
+                    f"mask covers {share:.2f} of the scene < "
+                    f"{FOREST_SHARE_MIN} — forest share below the "
+                    "applicability limit (вне_леса@Y)")
+        if safeguard["flagged"]:
+            log_warning("Forest safeguard вне_леса@Y: "
+                        + "; ".join(safeguard["reasons"]))
+        self.forest_safeguard = safeguard
 
         # ---- 5. Threshold pass (median filter, halo) --------------------
         full_mask = np.zeros((height, width), dtype=bool)
@@ -997,6 +1101,8 @@ class CoherenceDeltaDetector:
                 "prepost": prepost_info,
                 "control": (control_info if use_did else None),
             },
+            # v1.2.2: forest safeguard «вне_леса@Y» (article ID654).
+            "forest_safeguard": safeguard,
         }
 
 

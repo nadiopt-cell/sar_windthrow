@@ -1,9 +1,9 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-144%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/tests-150%20passed-success.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
 **windthrow** (storm-damaged forest) with THREE validated methods:
@@ -18,7 +18,7 @@ difference-in-differences** over ASF HyP3 InSAR pairs (v1.0).
 |---------------------|----------------------------------------------------------------------------------|
 | Search & Download   | STAC search on Microsoft Planetary Computer (GRD **or** RTC) + COG download      |
 | Preprocess          | Linear→dB, Lee speckle filter, optional land/water mask                          |
-| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** — v1.1 adds **GFW Hansen GFC reconstructed on the year before the event** (retrospective mask of record), plus ESA WorldCover (monitoring) or your own file; v1.2 adds **Burst InSAR pairs** (INSAR_ISCE_BURST, 20/40/80 m) with same-burst DiD validation |
+| Windthrow Detection | Three methods (v1.0): **C-band WI** (ΔVV + ΔVH), **L-band decline** (PALSAR, ΔHH + ΔHV inverted) and **Coherence DiD** (HyP3 InSAR pairs); threshold → object filter → polygons; optional **forest mask** — v1.1 adds **GFW Hansen GFC reconstructed on the year before the event** (retrospective mask of record), plus ESA WorldCover (monitoring) or your own file; v1.2 adds **Burst InSAR pairs** (INSAR_ISCE_BURST, 20/40/80 m) with same-burst DiD validation; v1.2.2 adds the **outside-forest@Y safeguard** («вне_леса@Y»: mean pre/post coherence in the zone > 0.6 or forest share < 0.3 → warning flag, article ID654) |
 | Settings            | Default folders + detection parameters, persisted in `QgsSettings`               |
 
 Outputs of a detection run:
@@ -110,7 +110,7 @@ SNAP, snappy, torch or tensorflow.
 ## Installation
 
 1. **Plugins → Manage and Install Plugins → Install from ZIP**.
-2. Select `sentinel1_windthrow_plugin_v1.2.1.zip`.
+2. Select `sentinel1_windthrow_plugin_v1.2.2.zip`.
 3. The toolbar button and the **Plugins → Sentinel-1 Windthrow** menu
    entry appear.
 
@@ -171,7 +171,7 @@ sentinel1_windthrow_plugin/
 ├── sentinel1_plugin_dialog.py   # 4-tab QDialog + QgsTask subclasses
 ├── logger.py                    # QgsMessageLog wrapper (QGIS-optional)
 ├── metadata.txt / icon.svg / LICENSE
-├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md / RELEASE_NOTES_v1.2.1.md (+ older)
+├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md / RELEASE_NOTES_v1.2.1.md / RELEASE_NOTES_v1.2.2.md (+ older)
 ├── ui/
 │   └── draw_rectangle_tool.py   # "Draw on map" AOI tool
 ├── sources/
@@ -238,7 +238,7 @@ python -m pytest tests -v          # from the parent of the plugin folder
 
 Array-level tests run with numpy + scipy only; the file-level pipeline
 tests run wherever GDAL bindings are available and skip otherwise.
-See `TESTING_PLAN.md` (v2.0, plugin v1.2.1) for the real-data testing
+See `TESTING_PLAN.md` (v2.0, plugin v1.2.1+) for the real-data testing
 protocol: smoke test, coherence DiD 80 m, Burst InSAR 40 m ordering
 and GUI workflow, L-band and reference WI tracks, regression checklist
 and the 12-event reference AUC table (Shikhov et al. 2020 events).
