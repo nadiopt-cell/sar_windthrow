@@ -89,6 +89,14 @@ from .numpy_ops import (  # noqa: E402
 )
 from .types import DetectionResult
 
+# Shared postprocess stages (v1.3.0 refactor, spec §4):
+from .pipeline import (
+    polygonize_mask,
+    remove_small_objects,
+    threshold_pass,
+    write_mask_raster,
+)
+
 # GDAL-level helpers moved to raster_utils.py (v1.3.0 refactor) and
 # re-exported here for backward compatibility (coh_delta and forest_mask
 # import them from this module; tests exercise them via the detector).
@@ -571,35 +579,17 @@ class WindthrowDetector:
                 threshold = self.fixed_threshold_db
             self.threshold_used = threshold
 
-            # ---- 4. Threshold pass (optional median filter, halo) ----
-            full_mask = np.zeros((height, width), dtype=bool)
-            r = self.median_filter_size // 2 if self.median_filter_size >= 3 else 0
-            filter_active = self.median_filter_size >= 3 and scipy is not None
-            if self.median_filter_size >= 3 and scipy is None:
-                from ..logger import log_warning
-                log_warning("scipy unavailable — WI median filter skipped")
-            for y0 in range(0, height, _CHUNK_ROWS):
-                if cancelled():
-                    raise OperationCancelled()
-                rows = min(_CHUNK_ROWS, height - y0)
-                ry0, ry1 = max(0, y0 - r), min(height, y0 + rows + r)
-                tile = wi_band.ReadAsArray(0, ry0, width, ry1 - ry0)
-                if tile is None:
-                    raise RuntimeError(f"Failed to re-read rows {ry0}..{ry1}")
-                invalid = tile == WI_NODATA
-                tile = tile.astype(np.float32, copy=False)
-                tile[invalid] = np.nan
-                if filter_active:
-                    tile = median_filter_nan(tile, self.median_filter_size)
-                centre = tile[y0 - ry0: y0 - ry0 + rows]
-                flagged = mask_from_threshold(centre, threshold)
-                flagged &= ~np.isnan(centre)
-                if mask_band is not None:
-                    inside = mask_band.ReadAsArray(0, y0, width, rows) > 0
-                    flagged &= inside
-                full_mask[y0:y0 + rows] = flagged
-                report(70.0 + 10.0 * (y0 + rows) / float(height),
-                       "Thresholding")
+            # ---- 4. Threshold pass via the shared pipeline (v1.3.0) ----
+            # Chunked NaN-aware median filter + thresholding + inside-
+            # mask restriction now live in sources/pipeline.py (spec
+            # §4); the in-memory WI band is only read here and the
+            # legacy progress mapping (70-80 %) / "WI" warning label
+            # are preserved.
+            full_mask = threshold_pass(
+                wi_band, width, height, threshold,
+                nodata=WI_NODATA, median_size=self.median_filter_size,
+                inside_band=mask_band, report=report, cancelled=cancelled,
+                progress_start=70.0, progress_span=10.0, median_label="WI")
         finally:
             wi_ds = None
             datasets.clear()
@@ -608,67 +598,14 @@ class WindthrowDetector:
             bg_mask_ds = None
             bg_mask_band = None
 
-        # ---- 5. Object cleanup (connected components) ------------------
-        if self.min_pixels > 1:
-            full_mask = filter_small_objects(full_mask, self.min_pixels)
-
-        # ---- 6. Write the cleaned mask raster --------------------------
-        mask_path = f"{output_base}_mask.tif"
-        mask_out = driver.Create(
-            mask_path, width, height, 1, gdal.GDT_Byte,
-            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
-        )
-        if mask_out is None:
-            raise RuntimeError(f"Cannot create output file: {mask_path}")
-        try:
-            mask_out.SetGeoTransform(ref_info["geotransform"])
-            if ref_info["projection"]:
-                mask_out.SetProjection(ref_info["projection"])
-            mband = mask_out.GetRasterBand(1)
-            mband.WriteArray(full_mask.astype(np.uint8) * 255)
-            mband.SetNoDataValue(0)
-            mband.FlushCache()
-            try:
-                mband.ComputeStatistics(False)
-            except Exception:
-                pass
-        finally:
-            mask_out = None
-
-        # ---- 7. Polygonise + attribute + size filter -------------------
-        vector_path = (output_base if output_base.lower().endswith((".gpkg", ".shp"))
-                       else output_base + ".gpkg")
-        vds, layer = _create_output_vector(vector_path, ref_info["projection"])
-        px_area_m2 = _pixel_area_m2(ref_info["geotransform"], ref_info["projection"])
-        try:
-            mask_rd = gdal.Open(mask_path, gdal.GA_ReadOnly)
-            band = mask_rd.GetRasterBand(1)
-            gdal.Polygonize(band, band, layer, -1, ["8CONNECTED=8"], None)
-            min_area_m2 = self.min_pixels * px_area_m2 if self.min_pixels > 0 else 0.0
-            # Collect first, modify after: OGR does not guarantee safe
-            # iteration while features are being deleted.
-            fid_area = []
-            layer.ResetReading()
-            for feat in layer:
-                geom = feat.GetGeometryRef()
-                area_m2 = geom.GetArea() if geom is not None else 0.0
-                fid_area.append((feat.GetFID(), area_m2))
-            n_kept = 0
-            for fid, area_m2 in fid_area:
-                if area_m2 < min_area_m2:
-                    layer.DeleteFeature(fid)
-                else:
-                    f = layer.GetFeature(fid)
-                    if f is not None:
-                        f.SetField("area_ha", area_m2 / 10000.0)
-                        layer.SetFeature(f)
-                        f = None
-                    n_kept += 1
-            layer.ResetReading()
-            mask_rd = None
-            self.n_objects = n_kept
-        finally:
-            vds = None
+        # ---- 5-7. Shared postprocess pipeline (v1.3.0, spec §4) --------
+        # speckle cleanup -> mask raster -> polygonize; stage bodies
+        # moved verbatim to sources/pipeline.py (the one place to fix
+        # polygonize/area bugs).
+        full_mask = remove_small_objects(full_mask, self.min_pixels)
+        mask_path = write_mask_raster(full_mask, ref_info, output_base)
+        vector_path, self.n_objects = polygonize_mask(
+            mask_path, ref_info, output_base, self.min_pixels)
 
         # ---- 8. Best-effort cleanup of temporaries ---------------------
         try:
