@@ -171,20 +171,35 @@ sentinel1_windthrow_plugin/
 ├── sentinel1_plugin_dialog.py   # 4-tab QDialog + QgsTask subclasses
 ├── logger.py                    # QgsMessageLog wrapper (QGIS-optional)
 ├── metadata.txt / icon.svg / LICENSE
-├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md / RELEASE_NOTES_v1.2.1.md / RELEASE_NOTES_v1.2.2.md (+ older)
+├── README.md / METHOD.md / TESTING_PLAN.md / RELEASE_NOTES_v1.1.0.md / RELEASE_NOTES_v1.2.0.md / RELEASE_NOTES_v1.2.1.md / RELEASE_NOTES_v1.2.2.md / RELEASE_NOTES_v1.3.0.md (+ older)
 ├── ui/
 │   └── draw_rectangle_tool.py   # "Draw on map" AOI tool
-├── sources/
+├── sources/                     # layered layout since v1.3.0 (refactor-only)
+│   ├── constants.py             # single source of frozen numeric defaults (paper refs)
+│   ├── errors.py                # typed exceptions (WindthrowPluginError hierarchy)
+│   ├── types.py                 # DetectionResult / ForestSafeguard dataclasses
+│   ├── numpy_ops.py             # pure-numpy index/threshold/morphology helpers
 │   ├── base.py                  # BaseSARSource, Scene, OperationCancelled
 │   ├── pc_client.py             # stdlib-only PC STAC client (retry/backoff)
 │   ├── planetary_computer.py    # search + resumable download
 │   ├── preprocessor.py          # SARPreprocessor (dB, Lee, land mask)
+│   ├── raster_utils.py          # GDAL grid/warp/rasterize/polygonize helpers
+│   ├── hyp3_utils.py            # HyP3 parsing, burst validation, water mask
+│   ├── pipeline.py              # shared postprocess: threshold→filter→mask→polygons
 │   ├── forest_mask.py           # GFC / WorldCover / file forest masks (v0.9/v1.1)
 │   ├── lband.py                 # LbandDeclineDetector (v1.0)
 │   ├── coh_delta.py             # CoherenceDeltaDetector (v1.0; burst products + water-mask fix v1.2)
-│   └── windthrow.py             # WindthrowDetector + compositing helpers
+│   └── windthrow.py             # WindthrowDetector (C-band WI) + compositing
 └── tests/                       # pytest suite (runs without QGIS)
 ```
+
+Import layering (v1.3.0, no cycles): `constants` → (`numpy_ops`,
+`raster_utils`) → `pipeline` / `hyp3_utils` → detectors; `errors` and
+`types` are stdlib-only leaves every module may import. All frozen
+science defaults (WI offset 2.9 dB, coherence thresholds 0.6/0.3,
+min-pixel sizes, forest-mask shares) live in `sources/constants.py`
+with pointers to the paper values (Rüetschi et al. 2019 and friends) —
+the numbers themselves are unchanged since v1.2.2.
 
 All long operations run in background `QgsTask` threads with progress
 bars and Cancel buttons; downloads resume via HTTP `Range` requests;
