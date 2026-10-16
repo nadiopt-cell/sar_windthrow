@@ -56,8 +56,8 @@ from .forest_mask import (
     read_ref_info,
 )
 from .lband import LbandDeclineDetector
-from .coh_delta import (
-    CoherenceDeltaDetector,
+from .coh_delta import CoherenceDeltaDetector
+from .hyp3_utils import (
     find_correlation_tif,
     find_water_mask,
     parse_hyp3_product,
