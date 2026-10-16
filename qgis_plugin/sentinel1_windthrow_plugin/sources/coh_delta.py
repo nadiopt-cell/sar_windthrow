@@ -133,6 +133,9 @@ from .raster_utils import (
 )
 from .types import DetectionResult, ForestSafeguard
 
+# Shared postprocess stages (v1.3.0 refactor, spec §4):
+from .pipeline import PipelineConfig, run_postprocess
+
 # HyP3 product naming/discovery/water-mask logic moved to hyp3_utils.py
 # (v1.3.0 refactor) and re-exported here for backward compatibility:
 # tests import parse_hyp3_product / _validate_did_pair / ... from this
@@ -566,106 +569,31 @@ class CoherenceDeltaDetector:
                         + "; ".join(safeguard.reasons))
         self.forest_safeguard = safeguard
 
-        # ---- 5. Threshold pass (median filter, halo) --------------------
-        full_mask = np.zeros((height, width), dtype=bool)
-        r = self.median_filter_size // 2 if self.median_filter_size >= 3 else 0
-        filter_active = self.median_filter_size >= 3 and scipy is not None
-        if self.median_filter_size >= 3 and scipy is None:
-            log_warning("scipy unavailable — dcoh median filter skipped")
-        dcoh_rd = gdal.Open(dcoh_path, gdal.GA_ReadOnly)
-        dcoh_band_rd = dcoh_rd.GetRasterBand(1)
-        mask_rd = gdal.Open(mask_raster, gdal.GA_ReadOnly) if mask_raster else None
-        mask_band_rd = mask_rd.GetRasterBand(1) if mask_rd else None
-        try:
-            for y0 in range(0, height, _CHUNK_ROWS):
-                if cancelled():
-                    raise OperationCancelled()
-                rows = min(_CHUNK_ROWS, height - y0)
-                ry0, ry1 = max(0, y0 - r), min(height, y0 + rows + r)
-                tile = dcoh_band_rd.ReadAsArray(0, ry0, width, ry1 - ry0)
-                invalid = tile == DCOH_NODATA
-                tile = tile.astype(np.float32, copy=False)
-                tile[invalid] = np.nan
-                if filter_active:
-                    tile = median_filter_nan(tile, self.median_filter_size)
-                centre = tile[y0 - ry0: y0 - ry0 + rows]
-                flagged = mask_from_threshold(centre, threshold)
-                flagged &= ~np.isnan(centre)
-                if mask_band_rd is not None:
-                    inside = mask_band_rd.ReadAsArray(
-                        0, y0, width, rows) > 0
-                    flagged &= inside
-                full_mask[y0:y0 + rows] = flagged
-                report(55.0 + 15.0 * (y0 + rows) / float(height),
-                       "Thresholding")
-        finally:
-            dcoh_rd = None
-            dcoh_band_rd = None
-            mask_rd = None
-            mask_band_rd = None
-
-        # ---- 6. Object cleanup ------------------------------------------
-        if self.min_pixels > 1:
-            full_mask = filter_small_objects(full_mask, self.min_pixels)
-
-        # ---- 7. Mask raster ----------------------------------------------
-        mask_path = f"{output_base}_mask.tif"
-        mask_out = driver.Create(
-            mask_path, width, height, 1, gdal.GDT_Byte,
-            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
+        # ---- 5-8. Shared postprocess pipeline (v1.3.0, spec §4) --------
+        # threshold -> speckle cleanup -> mask raster -> polygonize;
+        # stage bodies moved verbatim to sources/pipeline.py (the one
+        # place to fix polygonize/area bugs).  The legacy progress
+        # mapping (55-70 %) and the "dcoh" median-filter warning label
+        # are preserved.
+        post = run_postprocess(
+            dcoh_path, ref_info,
+            PipelineConfig(
+                threshold=threshold,
+                min_pixels=self.min_pixels,
+                median_size=self.median_filter_size,
+                nodata=DCOH_NODATA,
+                output_base=output_base,
+                median_label="dcoh",
+            ),
+            inside_mask_path=mask_raster,
+            report=report,
+            cancelled=cancelled,
+            progress_start=55.0,
+            progress_span=15.0,
         )
-        if mask_out is None:
-            raise RuntimeError(f"Cannot create output file: {mask_path}")
-        try:
-            mask_out.SetGeoTransform(ref_info["geotransform"])
-            if ref_info["projection"]:
-                mask_out.SetProjection(ref_info["projection"])
-            mband = mask_out.GetRasterBand(1)
-            mband.WriteArray(full_mask.astype(np.uint8) * 255)
-            mband.SetNoDataValue(0)
-            mband.FlushCache()
-            try:
-                mband.ComputeStatistics(False)
-            except Exception:
-                pass
-        finally:
-            mask_out = None
-
-        # ---- 8. Polygonise + attribute + size filter ---------------------
-        vector_path = (output_base
-                       if output_base.lower().endswith((".gpkg", ".shp"))
-                       else output_base + ".gpkg")
-        vds, layer = _create_output_vector(vector_path, ref_info["projection"])
-        px_area_m2 = _pixel_area_m2(
-            ref_info["geotransform"], ref_info["projection"])
-        try:
-            mask_src = gdal.Open(mask_path, gdal.GA_ReadOnly)
-            band = mask_src.GetRasterBand(1)
-            gdal.Polygonize(band, band, layer, -1, ["8CONNECTED=8"], None)
-            min_area_m2 = (self.min_pixels * px_area_m2
-                           if self.min_pixels > 0 else 0.0)
-            fid_area = []
-            layer.ResetReading()
-            for feat in layer:
-                geom = feat.GetGeometryRef()
-                area_m2 = geom.GetArea() if geom is not None else 0.0
-                fid_area.append((feat.GetFID(), area_m2))
-            n_kept = 0
-            for fid, area_m2 in fid_area:
-                if area_m2 < min_area_m2:
-                    layer.DeleteFeature(fid)
-                else:
-                    f = layer.GetFeature(fid)
-                    if f is not None:
-                        f.SetField("area_ha", area_m2 / 10000.0)
-                        layer.SetFeature(f)
-                        f = None
-                    n_kept += 1
-            layer.ResetReading()
-            mask_src = None
-            self.n_objects = n_kept
-        finally:
-            vds = None
+        mask_path = post.mask_path
+        vector_path = post.vector_path
+        self.n_objects = post.n_objects
 
         # ---- 9. Temp cleanup ----------------------------------------------
         try:
