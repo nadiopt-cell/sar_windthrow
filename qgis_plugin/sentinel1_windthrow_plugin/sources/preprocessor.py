@@ -12,6 +12,8 @@ from typing import Tuple, Optional
 
 import numpy as np
 
+from ..logger import log_info
+
 try:
     from osgeo import gdal  # always present in QGIS Python env
     gdal.UseExceptions()
@@ -427,8 +429,11 @@ class SARPreprocessor:
             except Exception:
                 try:
                     os.remove(output_path)
-                except OSError:
-                    pass
+                except OSError as exc:
+                    # Spec 7.3: last-mile fallback failure is logged;
+                    # the Create below will fail loudly if it matters.
+                    log_info(f"Could not delete stale output "
+                             f"{output_path}: {exc}")
 
         dst = driver.Create(
             output_path,

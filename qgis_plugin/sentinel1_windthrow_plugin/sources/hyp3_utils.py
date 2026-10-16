@@ -44,8 +44,9 @@ from .constants import (
     LAND_VALUE,
     WATER_VALUE,
 )
+from .errors import InputValidationError, ProductMismatchError
 from .raster_utils import _same_grid_safe
-from ..logger import log_warning
+from ..logger import log_info, log_warning
 
 __all__ = [
     "_CORR_SUFFIX",
@@ -208,7 +209,7 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
       resampling makes the DiD statistically noisy; warn loudly.
     """
     if prepost_info["family"] != control_info["family"]:
-        raise ValueError(
+        raise ProductMismatchError(
             "Mixing product families in one DiD is not supported: "
             f"pre/post is {prepost_info['family']} "
             f"({prepost_info['granule']}), control is "
@@ -217,7 +218,7 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
             "INSAR_GAMMA frames or INSAR_ISCE_BURST bursts.")
     if prepost_info["family"] == "isce":
         if prepost_info["burst_key"] != control_info["burst_key"]:
-            raise ValueError(
+            raise ProductMismatchError(
                 "Burst InSAR DiD requires the SAME burst footprint: "
                 f"pre/post burst ids {prepost_info['burst_ids']} != "
                 f"control burst ids {control_info['burst_ids']} "
@@ -227,7 +228,7 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
                 "same burst (Vertex: same burst ID, dates outside the "
                 "damage window).")
         if prepost_info["pol"] != control_info["pol"]:
-            raise ValueError(
+            raise ProductMismatchError(
                 "Burst InSAR DiD polarization mismatch: "
                 f"{prepost_info['pol']} vs {control_info['pol']}.")
     if (prepost_info["spacing_m"] and control_info["spacing_m"]
@@ -283,7 +284,7 @@ def find_correlation_tif(source: str, tmp_dir: Optional[str] = None) -> str:
         if not hits:
             raise FileNotFoundError(
                 f"No *_corr.tif layer found under {source}")
-        raise ValueError(
+        raise InputValidationError(
             f"Multiple coherence layers under {source}: pick one:\n  "
             + "\n  ".join(hits))
     raise FileNotFoundError(f"HyP3 product not found: {source}")
@@ -397,8 +398,10 @@ def _water_mask_to_land_keep(
         if os.path.exists(aligned):
             try:
                 gdal.GetDriverByName("GTiff").Delete(aligned)
-            except Exception:
-                pass
+            except Exception as exc:
+                # Spec 7.3: best-effort deletes are logged, not swallowed.
+                log_info(f"Could not delete stale aligned water mask "
+                         f"{aligned}: {exc}")
         gdal.Warp(
             aligned,
             water_mask_path,
@@ -424,8 +427,9 @@ def _water_mask_to_land_keep(
     if os.path.exists(out_path):
         try:
             gdal.GetDriverByName("GTiff").Delete(out_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_info(f"Could not delete stale land-keep raster "
+                     f"{out_path}: {exc}")
     driver = gdal.GetDriverByName("GTiff")
     width, height = ref_info["width"], ref_info["height"]
     out = driver.Create(

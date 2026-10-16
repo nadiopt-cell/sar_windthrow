@@ -70,6 +70,7 @@ except ImportError:  # pragma: no cover - fallback path below
     _scipy_median_filter = None
 
 from .base import OperationCancelled
+from ..logger import log_info
 from .constants import (
     DEFAULT_FOREST_CLASSES,
     GFC_BASE_URL,
@@ -289,8 +290,10 @@ def build_forest_mask_from_rasters(
     finally:
         try:
             gdal.GetDriverByName("GTiff").Delete(warp_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: best-effort temp cleanup stays best-effort, but
+            # the failure is logged instead of silently swallowed.
+            log_info(f"Could not delete temp warp {warp_path}: {exc}")
 
     report(90.0, "Forest mask: writing output")
     driver = gdal.GetDriverByName("GTiff")
@@ -540,8 +543,8 @@ def _fetch_gfc_layer(
         for p in pieces:
             try:
                 gdal.GetDriverByName("GTiff").Delete(p)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_info(f"Could not delete GFC piece {p}: {exc}")
         raise
     finally:
         created.extend(pieces)
@@ -650,12 +653,12 @@ def build_gfc_forest_mask(
         for p in created:
             try:
                 gdal.GetDriverByName("GTiff").Delete(p)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_info(f"Could not delete GFC temp {p}: {exc}")
         try:
             gdal.GetDriverByName("GTiff").Delete(warp_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_info(f"Could not delete temp warp {warp_path}: {exc}")
 
     report(90.0, "GFC: writing output")
     driver = gdal.GetDriverByName("GTiff")

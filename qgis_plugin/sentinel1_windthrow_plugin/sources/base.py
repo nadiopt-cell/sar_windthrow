@@ -9,14 +9,22 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Callable, Dict, List, Optional, Tuple
 
+from .errors import CancelledError
+
 #: Callbacks used to report progress (0..100) and cancellation while a
 #: long operation runs inside a QgsTask.
 ProgressCallback = Optional[Callable[[int], None]]
 CancelCallback = Optional[Callable[[], bool]]
 
 
-class OperationCancelled(Exception):
-    """Raised when a long operation is cancelled by the user."""
+class OperationCancelled(CancelledError):
+    """Raised when a long operation is cancelled by the user.
+
+    Kept in ``base`` because every detector, test and dialog imports it
+    from here; it is now also part of the typed hierarchy
+    (``sources.errors``, spec 7.1), so the dialog can tell "user
+    cancelled" from a real failure.
+    """
 
 
 @dataclass

@@ -153,7 +153,7 @@ from .hyp3_utils import (  # noqa: E402
     parse_hyp3_product,
     sane_water_mask,
 )
-from ..logger import log_warning
+from ..logger import log_info, log_warning
 
 # ======================================================================
 # Pure-numpy helper (unit-testable without GDAL)
@@ -385,8 +385,11 @@ class CoherenceDeltaDetector:
         if os.path.exists(dcoh_path):
             try:
                 gdal.GetDriverByName("GTiff").Delete(dcoh_path)
-            except Exception:
-                pass
+            except Exception as exc:
+                # Spec 7.3: a failed best-effort delete is logged, not
+                # swallowed - the Create below will fail loudly anyway.
+                log_info(f"Could not delete stale dcoh raster "
+                         f"{dcoh_path}: {exc}")
         driver = gdal.GetDriverByName("GTiff")
         dcoh_ds = driver.Create(
             dcoh_path, width, height, 1, gdal.GDT_Float32,
@@ -603,8 +606,10 @@ class CoherenceDeltaDetector:
                 except OSError:
                     pass
             os.rmdir(tmp_dir)
-        except OSError:
-            pass
+        except OSError as exc:
+            # Spec 7.3: temp cleanup failures are visible at info level;
+            # they never mask detection errors (raised above this block).
+            log_info(f"Temp dir cleanup failed ({tmp_dir}): {exc}")
 
         report(100.0, "Done")
         # v1.3.0: typed result (sources/types.py).  DetectionResult is a

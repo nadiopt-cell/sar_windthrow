@@ -65,7 +65,7 @@ from .raster_utils import (
     _ensure_gdal,
     _pixel_area_m2,
 )
-from ..logger import log_warning
+from ..logger import log_info, log_warning
 
 __all__ = [
     "PipelineConfig",
@@ -222,8 +222,10 @@ def write_mask_raster(
         mband.FlushCache()
         try:
             mband.ComputeStatistics(False)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: optional stats stay best-effort, but the failure
+            # is logged instead of silently swallowed.
+            log_info(f"Could not compute mask statistics: {exc}")
     finally:
         mask_out = None
     return mask_path

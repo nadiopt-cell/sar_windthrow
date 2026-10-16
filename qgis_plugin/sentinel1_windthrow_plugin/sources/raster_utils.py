@@ -33,12 +33,14 @@ except Exception:  # pragma: no cover
     osr = None  # type: ignore
 
 from .constants import _CHUNK_ROWS, INDEX_NODATA
+from ..logger import log_info
 
 __all__ = [
     "_ensure_gdal",
     "_read_raster_info",
     "_same_grid",
     "_same_grid_safe",
+    "choose_chunk_rows",
     "ensure_aligned",
     "rasterize_vector_mask",
     "_pixel_area_m2",
@@ -46,6 +48,36 @@ __all__ = [
     "_intersect_masks",
     "_create_output_vector",
 ]
+
+
+#: Chunk-row clamp bounds for :func:`choose_chunk_rows` (spec 8.1).
+CHUNK_ROWS_MIN = 128
+CHUNK_ROWS_MAX = 2048
+
+
+def choose_chunk_rows(
+    width: int,
+    dtype_size: int = 4,
+    max_bytes: int = 64 * 1024**2,
+) -> int:
+    """Rows per chunk that keeps a row-band under ``max_bytes`` (spec 8.1).
+
+    Aim: one chunk of ``rows x width`` float32 cells (plus the matching
+    write buffer) should fit into ``max_bytes`` of RAM.  The result is
+    clamped to ``[CHUNK_ROWS_MIN, CHUNK_ROWS_MAX]`` so tiny and huge
+    rasters both behave sanely; ``constants.CHUNK_ROWS`` (512) stays the
+    wired default until a real memory need is demonstrated - this helper
+    exists so that wiring later is a one-line change per loop.
+
+    :param width: raster width in pixels (columns of one row-band).
+    :param dtype_size: bytes per cell (float32 = 4).
+    :param max_bytes: RAM budget per chunk row-band (read + write).
+    :returns: chunk height in rows, always within the clamp bounds.
+    """
+    if width <= 0:
+        return _CHUNK_ROWS
+    rows = int(max_bytes // (max(int(width), 1) * max(int(dtype_size), 1)))
+    return max(CHUNK_ROWS_MIN, min(CHUNK_ROWS_MAX, rows))
 
 
 def _ensure_gdal() -> None:
@@ -115,8 +147,9 @@ def ensure_aligned(path: str, ref_info: Dict, tmp_dir: str) -> str:
     if os.path.exists(out_path):
         try:
             gdal.GetDriverByName("GTiff").Delete(out_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: best-effort delete logged, not swallowed.
+            log_info(f"Could not delete stale warped raster {out_path}: {exc}")
     gdal.Warp(
         out_path,
         path,
@@ -149,8 +182,9 @@ def rasterize_vector_mask(
     if os.path.exists(out_path):
         try:
             gdal.GetDriverByName("GTiff").Delete(out_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: best-effort delete logged, not swallowed.
+            log_info(f"Could not delete stale mask raster {out_path}: {exc}")
     gt = ref_info["geotransform"]
     gdal.Rasterize(
         out_path,
@@ -221,8 +255,10 @@ def _intersect_masks(
     if os.path.exists(out_path):
         try:
             gdal.GetDriverByName("GTiff").Delete(out_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: best-effort delete logged, not swallowed.
+            log_info(f"Could not delete stale intersection raster "
+                     f"{out_path}: {exc}")
     ds_a = gdal.Open(mask_a, gdal.GA_ReadOnly)
     ds_b = gdal.Open(mask_b, gdal.GA_ReadOnly)
     if ds_a is None or ds_b is None:
@@ -282,8 +318,9 @@ def _create_output_vector(
     if os.path.exists(vector_path):
         try:
             driver.DeleteDataSource(vector_path)
-        except Exception:
-            pass
+        except Exception as exc:
+            # Spec 7.3: best-effort delete logged, not swallowed.
+            log_info(f"Could not delete stale vector {vector_path}: {exc}")
     parent = os.path.dirname(os.path.abspath(vector_path))
     os.makedirs(parent, exist_ok=True)
     ds = driver.CreateDataSource(vector_path)

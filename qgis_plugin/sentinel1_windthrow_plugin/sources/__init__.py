@@ -19,6 +19,13 @@ Public API:
 
 from . import pc_client as _pc_client
 from .base import BaseSARSource, OperationCancelled, Scene
+from .errors import (
+    CancelledError,
+    DataAccessError,
+    InputValidationError,
+    ProductMismatchError,
+    WindthrowPluginError,
+)
 from .pc_client import PCError, PlanetaryComputerClient
 from .planetary_computer import PlanetaryComputerSource
 from .preprocessor import SARPreprocessor
@@ -77,6 +84,11 @@ __all__ = [
     "BaseSARSource",
     "OperationCancelled",
     "Scene",
+    "WindthrowPluginError",
+    "InputValidationError",
+    "ProductMismatchError",
+    "DataAccessError",
+    "CancelledError",
     "PlanetaryComputerSource",
     "PlanetaryComputerClient",
     "PCError",

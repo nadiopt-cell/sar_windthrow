@@ -71,6 +71,7 @@ from .sources.coh_delta import (
     CoherenceDeltaDetector,
     find_correlation_tif,
 )
+from .sources.errors import WindthrowPluginError
 from .sources.lband import LbandDeclineDetector
 from .sources.types import DetectionResult
 from .sources import forest_mask
@@ -2097,13 +2098,34 @@ class Sentinel1PluginDialog(QDialog):
                     "Forest safeguard вне_леса@Y: "
                     + "; ".join(guard.get("reasons", [])))
         else:
-            msg = str(task.exception) if task.exception else "Task was cancelled."
-            if task.exception is not None:
-                log_warning(
-                    f"Windthrow detection failed: {msg}\n"
-                    f"{format_exception(task.exception)}"
-                )
-            QMessageBox.warning(self, "Windthrow detection failed", msg)
+            exc = task.exception
+            if exc is None:
+                QMessageBox.warning(
+                    self, "Windthrow detection failed", "Task was cancelled.")
+                return
+            log_warning(
+                f"Windthrow detection failed: {exc}\n"
+                f"{format_exception(exc)}"
+            )
+            if isinstance(exc, OperationCancelled):
+                # Spec 7.2: a user cancel is not a failure.  Legacy code
+                # landed here with str(OperationCancelled()) == "" in
+                # the box; say what actually happened instead.
+                QMessageBox.information(
+                    self, "Windthrow detection", "Detection was cancelled.")
+            elif isinstance(exc, WindthrowPluginError):
+                # Spec 7.2: typed plugin errors (mixed HyP3 families,
+                # burst-footprint mismatch, bad input, ...) carry a
+                # short, actionable message - show it and point at the
+                # QGIS log for the full traceback (already logged).
+                QMessageBox.warning(
+                    self, "Windthrow detection failed",
+                    f"{exc}\n\nDetails in the QGIS log "
+                    "(sentinel1-windthrow).")
+            else:
+                msg = str(exc)
+                QMessageBox.warning(
+                    self, "Windthrow detection failed", msg)
 
     def _add_vector_to_map(self, path: str, name: str = "") -> bool:
         """Load a written vector file into the current project."""

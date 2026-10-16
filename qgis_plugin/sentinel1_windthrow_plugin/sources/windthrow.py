@@ -96,6 +96,7 @@ from .pipeline import (
     threshold_pass,
     write_mask_raster,
 )
+from ..logger import log_info
 
 # GDAL-level helpers moved to raster_utils.py (v1.3.0 refactor) and
 # re-exported here for backward compatibility (coh_delta and forest_mask
@@ -153,8 +154,10 @@ def build_median_composite(
         if os.path.exists(output_path):
             try:
                 gdal.GetDriverByName("GTiff").Delete(output_path)
-            except Exception:
-                pass
+            except Exception as exc:
+                # Spec 7.3: best-effort delete logged, not swallowed.
+                log_info(f"Could not delete stale output "
+                         f"{output_path}: {exc}")
         driver = gdal.GetDriverByName("GTiff")
         dst = driver.Create(
             output_path, width, height, 1, gdal.GDT_Float32,
@@ -477,8 +480,9 @@ class WindthrowDetector:
         if os.path.exists(wi_path):
             try:
                 gdal.GetDriverByName("GTiff").Delete(wi_path)
-            except Exception:
-                pass
+            except Exception as exc:
+                # Spec 7.3: best-effort delete logged, not swallowed.
+                log_info(f"Could not delete stale WI raster {wi_path}: {exc}")
         driver = gdal.GetDriverByName("GTiff")
         wi_ds = driver.Create(
             wi_path, width, height, 1, gdal.GDT_Float32,
@@ -615,8 +619,10 @@ class WindthrowDetector:
                 except OSError:
                     pass
             os.rmdir(tmp_dir)
-        except OSError:
-            pass
+        except OSError as exc:
+            # Spec 7.3: visible at info level; never hides detection
+            # errors (those were raised before this block).
+            log_info(f"Temp dir cleanup failed ({tmp_dir}): {exc}")
 
         report(100.0, "Done")
         # v1.3.0: typed result (sources/types.py).  DetectionResult is a
