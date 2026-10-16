@@ -123,8 +123,10 @@ from .windthrow import (
     _read_raster_info,
     _resolve_mask_raster,
     _intersect_masks,
-    adaptive_threshold,
     ensure_aligned,
+)
+from .numpy_ops import (
+    adaptive_threshold,
     filter_small_objects,
     mask_from_threshold,
     median_filter_nan,

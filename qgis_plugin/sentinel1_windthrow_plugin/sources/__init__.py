@@ -22,8 +22,8 @@ from .base import BaseSARSource, OperationCancelled, Scene
 from .pc_client import PCError, PlanetaryComputerClient
 from .planetary_computer import PlanetaryComputerSource
 from .preprocessor import SARPreprocessor
-from .windthrow import (
-    WindthrowDetector,
+from .windthrow import WindthrowDetector
+from .numpy_ops import (
     background_offset_db,
     common_polarizations,
     compute_wi,
