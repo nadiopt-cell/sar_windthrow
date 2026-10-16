@@ -1,0 +1,75 @@
+# Sentinel-1 windthrow plugin CI (v1.3.0 refactor, spec §6.1).
+#
+# Two jobs:
+#   * full-gdal  — the real thing: osgeo/gdal container pinned to
+#     3.10.3 (matches the dev environment), full test-suite + coverage;
+#   * pure-numpy — fast feedback without the raster stack: numpy/scipy
+#     only; tests/conftest.py (WINDTHROW_PURE_CI=1) skips every module
+#     whose source touches gdal/osgeo, so IO-free units still guard
+#     every push.
+#
+# Trigger: pushes/PRs touching the plugin or this workflow.
+
+name: plugin-tests
+
+on:
+  push:
+    paths:
+      - "qgis_plugin/**"
+      - ".github/workflows/test-plugin.yml"
+  pull_request:
+    paths:
+      - "qgis_plugin/**"
+      - ".github/workflows/test-plugin.yml"
+
+jobs:
+  full-gdal:
+    name: Unit tests (full, GDAL ${{ matrix.gdal }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gdal: ["3.10.3"]
+    container:
+      image: ghcr.io/osgeo/gdal:ubuntu-small-${{ matrix.gdal }}
+    steps:
+      - name: Install base packages (git for checkout, pip for deps)
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git python3-pip
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: |
+          python3 -m pip install --break-system-packages \
+            numpy scipy pytest pytest-cov
+      - name: Run plugin tests (with coverage)
+        working-directory: qgis_plugin
+        run: |
+          python3 -m pytest \
+            --cov=sentinel1_windthrow_plugin/sources \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.gdal }}
+          path: qgis_plugin/coverage.xml
+          if-no-files-found: warn
+
+  pure-numpy:
+    name: Unit tests (pure, no raster IO)
+    runs-on: ubuntu-latest
+    env:
+      WINDTHROW_PURE_CI: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python3 -m pip install numpy scipy pytest
+      - name: Run lightweight tests
+        working-directory: qgis_plugin
+        run: python3 -m pytest -p no:cacheprovider
