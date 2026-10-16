@@ -104,6 +104,12 @@ class LbandDeclineDetector(WindthrowDetector):
     def _index_suffix(self) -> str:
         return "_ldi_norm" if self.normalize_background else "_ldi"
 
+    def _result_mode(self) -> str:
+        # Same legacy result keys as the C-band base class (the index
+        # raster is reported under "wi", the threshold under
+        # "threshold_db"); only the mode tag differs.
+        return "lband_decline"
+
     def _restrict_polarizations(self, pols: List[str]) -> List[str]:
         allowed = self.polarizations if self.polarizations else list(LBAND_POLS)
         picked = [p for p in pols if p.lower() in allowed]

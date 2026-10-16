@@ -87,6 +87,7 @@ from .numpy_ops import (  # noqa: E402
     pair_by_polarization,
     to_db_domain_chunk,
 )
+from .types import DetectionResult
 
 # GDAL-level helpers moved to raster_utils.py (v1.3.0 refactor) and
 # re-exported here for backward compatibility (coh_delta and forest_mask
@@ -250,6 +251,15 @@ class WindthrowDetector:
     def _index_suffix(self) -> str:
         """File-name suffix of the float32 index raster."""
         return "_wi_norm" if self.normalize_background else "_wi"
+
+    def _result_mode(self) -> str:
+        """Mode tag of the structured :class:`DetectionResult` (v1.3.0).
+
+        The C-band base class reports "wi"; the L-band subclass
+        overrides this to "lband_decline".  Both share the legacy
+        result keys (``wi`` / ``threshold_db``).
+        """
+        return "wi"
 
     def _restrict_polarizations(self, pols: List[str]) -> List[str]:
         """Filter the common polarisation list (no-op in the base class)."""
@@ -672,16 +682,23 @@ class WindthrowDetector:
             pass
 
         report(100.0, "Done")
-        return {
-            "wi": os.path.abspath(wi_path),
-            "mask": os.path.abspath(mask_path),
-            "vector": os.path.abspath(vector_path),
-            "composites": list(self.composites),
-            "threshold_db": self.threshold_used,
-            "mean_wi": self.mean_wi,
-            "n_objects": self.n_objects,
-            "offset_db": dict(self.offset_db),
-            "normalize_background": self.normalize_background,
-            "forest_mask": (os.path.abspath(forest_raster)
-                            if forest_raster else None),
-        }
+        # v1.3.0: typed result (sources/types.py).  DetectionResult is a
+        # read-only Mapping view over its legacy dict shape, so the GUI
+        # and the tests keep using result["wi"] / result.get(...) as
+        # before; use attributes / .to_dict() in new code.
+        return DetectionResult(
+            mode=self._result_mode(),
+            index_path=os.path.abspath(wi_path),
+            mask_path=os.path.abspath(mask_path),
+            vector_path=os.path.abspath(vector_path),
+            n_objects=self.n_objects,
+            threshold=self.threshold_used,
+            forest_mask_path=(os.path.abspath(forest_raster)
+                              if forest_raster else None),
+            extras={
+                "composites": list(self.composites),
+                "mean_wi": self.mean_wi,
+                "offset_db": dict(self.offset_db),
+                "normalize_background": self.normalize_background,
+            },
+        )

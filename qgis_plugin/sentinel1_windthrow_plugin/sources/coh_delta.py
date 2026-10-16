@@ -131,6 +131,7 @@ from .raster_utils import (
     _same_grid_safe,
     ensure_aligned,
 )
+from .types import DetectionResult, ForestSafeguard
 
 # HyP3 product naming/discovery/water-mask logic moved to hyp3_utils.py
 # (v1.3.0 refactor) and re-exported here for backward compatibility:
@@ -533,40 +534,36 @@ class CoherenceDeltaDetector:
         # pre/post coherence 0.635, AUC 0.051 with excess inversion)
         # cannot produce a DiD windthrow signal.  Flag it instead of
         # silently returning an empty / inverted detection.
-        safeguard = {
-            "flagged": False,
-            "flags": [],
-            "reasons": [],
-            "zone": ("analysis" if mask_raster
-                     else "background" if bg_mask_raster else "scene"),
-            "coh_prepost_mean": None,
-            "forest_share": None,
-        }
+        # v1.3.0: typed as ForestSafeguard (sources/types.py); the
+        # legacy dict shape stays available via .to_dict() / [] access.
+        zone = ("analysis" if mask_raster
+                else "background" if bg_mask_raster else "scene")
+        safeguard = ForestSafeguard(zone=zone)
         if pre_zone_count:
             coh_mean = pre_zone_sum / pre_zone_count
-            safeguard["coh_prepost_mean"] = round(coh_mean, 4)
+            safeguard.coh_prepost_mean = round(coh_mean, 4)
             if coh_mean > COH_NONFOREST_MAX:
-                safeguard["flagged"] = True
-                safeguard["flags"].append("вне_леса@Y")
-                safeguard["reasons"].append(
-                    f"mean pre/post coherence in the {safeguard['zone']} "
+                safeguard.flagged = True
+                safeguard.flags.append("вне_леса@Y")
+                safeguard.reasons.append(
+                    f"mean pre/post coherence in the {zone} "
                     f"zone is {coh_mean:.3f} > {COH_NONFOREST_MAX} — "
                     "bare-ground / non-forest signature before the "
                     "storm (ID654 case)")
         if forest_total:
             share = forest_px / float(forest_total)
-            safeguard["forest_share"] = round(share, 4)
+            safeguard.forest_share = round(share, 4)
             if share < FOREST_SHARE_MIN:
-                safeguard["flagged"] = True
-                if "вне_леса@Y" not in safeguard["flags"]:
-                    safeguard["flags"].append("вне_леса@Y")
-                safeguard["reasons"].append(
+                safeguard.flagged = True
+                if "вне_леса@Y" not in safeguard.flags:
+                    safeguard.flags.append("вне_леса@Y")
+                safeguard.reasons.append(
                     f"mask covers {share:.2f} of the scene < "
                     f"{FOREST_SHARE_MIN} — forest share below the "
                     "applicability limit (вне_леса@Y)")
-        if safeguard["flagged"]:
+        if safeguard.flagged:
             log_warning("Forest safeguard вне_леса@Y: "
-                        + "; ".join(safeguard["reasons"]))
+                        + "; ".join(safeguard.reasons))
         self.forest_safeguard = safeguard
 
         # ---- 5. Threshold pass (median filter, halo) --------------------
@@ -682,30 +679,36 @@ class CoherenceDeltaDetector:
             pass
 
         report(100.0, "Done")
-        return {
-            "dcoh": os.path.abspath(dcoh_path),
-            "mask": os.path.abspath(mask_path),
-            "vector": os.path.abspath(vector_path),
-            "threshold": self.threshold_used,
-            "mean_dcoh": self.mean_dcoh,
-            "median_dcoh": self.median_dcoh,
-            "n_objects": self.n_objects,
-            "control_used": use_did,
-            "water_mask_ignored": list(self.water_mask_ignored),
-            "background_mask": (os.path.abspath(bg_mask_raster)
-                                if bg_mask_raster else None),
-            # v1.2: product flavour + posting diagnostics
-            "pixel_size_m": round(px_size_m, 3),
-            "min_object_area_ha": round(
-                self.min_pixels * px_area_ha, 3),
-            "product_flavors": {
-                "prepost": prepost_info["family"],
-                "control": (control_info["family"] if use_did else None),
+        # v1.3.0: typed result (sources/types.py).  DetectionResult is a
+        # read-only Mapping view over its legacy dict shape, so the GUI
+        # and the tests keep using result["dcoh"] / result.get(...) as
+        # before; use attributes / .to_dict() in new code.
+        return DetectionResult(
+            mode="coh_delta",
+            index_path=os.path.abspath(dcoh_path),
+            mask_path=os.path.abspath(mask_path),
+            vector_path=os.path.abspath(vector_path),
+            n_objects=self.n_objects,
+            threshold=self.threshold_used,
+            background_mask_path=(os.path.abspath(bg_mask_raster)
+                                  if bg_mask_raster else None),
+            forest_safeguard=safeguard,
+            extras={
+                "mean_dcoh": self.mean_dcoh,
+                "median_dcoh": self.median_dcoh,
+                "control_used": use_did,
+                "water_mask_ignored": list(self.water_mask_ignored),
+                # v1.2: product flavour + posting diagnostics
+                "pixel_size_m": round(px_size_m, 3),
+                "min_object_area_ha": round(
+                    self.min_pixels * px_area_ha, 3),
+                "product_flavors": {
+                    "prepost": prepost_info["family"],
+                    "control": (control_info["family"] if use_did else None),
+                },
+                "product_info": {
+                    "prepost": prepost_info,
+                    "control": (control_info if use_did else None),
+                },
             },
-            "product_info": {
-                "prepost": prepost_info,
-                "control": (control_info if use_did else None),
-            },
-            # v1.2.2: forest safeguard «вне_леса@Y» (article ID654).
-            "forest_safeguard": safeguard,
-        }
+        )

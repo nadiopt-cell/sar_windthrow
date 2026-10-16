@@ -63,6 +63,7 @@ from .hyp3_utils import (
     parse_hyp3_product,
     sane_water_mask,
 )
+from .types import DetectionResult, ForestSafeguard
 
 # Route pc_client warnings (retry notices, SAS-sign failures, token-cache
 # problems) into the QGIS log panel under the Sentinel1SAR tag. The hook
@@ -83,6 +84,8 @@ __all__ = [
     "WindthrowDetector",
     "LbandDeclineDetector",
     "CoherenceDeltaDetector",
+    "DetectionResult",
+    "ForestSafeguard",
     "find_correlation_tif",
     "find_water_mask",
     "parse_hyp3_product",

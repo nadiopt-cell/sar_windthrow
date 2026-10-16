@@ -72,6 +72,7 @@ from .sources.coh_delta import (
     find_correlation_tif,
 )
 from .sources.lband import LbandDeclineDetector
+from .sources.types import DetectionResult
 from .sources import forest_mask
 from .ui import DrawnRectangleTool
 
@@ -2030,7 +2031,12 @@ class Sentinel1PluginDialog(QDialog):
         self.analysis_progress.setVisible(False)
         self.analysis_cancel_btn.setVisible(False)
         if success:
-            result = task.output_path if isinstance(task.output_path, dict) else {}
+            # v1.3.0: detectors return the typed DetectionResult (a
+            # read-only Mapping view over the legacy dict), plain dicts
+            # keep working for custom/legacy callables.
+            result = (task.output_path
+                      if isinstance(task.output_path, (dict, DetectionResult))
+                      else {})
             vector_path = result.get("vector", "")
             # Load all artifacts when the Settings option is enabled.
             if self.add_to_map_chk.isChecked():
