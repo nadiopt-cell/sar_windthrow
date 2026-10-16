@@ -80,7 +80,7 @@ from .constants import (
     GFC_VERSION,
 )
 from .pc_client import PlanetaryComputerClient
-from .windthrow import _ensure_gdal, _read_raster_info
+from .raster_utils import _ensure_gdal, _read_raster_info
 
 #: Raised when the user cancels a forest-mask build (same type the
 #: detector and the SAR source raise, so the QGIS task machinery can

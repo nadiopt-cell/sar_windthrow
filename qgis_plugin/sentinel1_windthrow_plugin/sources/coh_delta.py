@@ -105,6 +105,7 @@ except Exception:  # pragma: no cover
 
 from .base import OperationCancelled
 from .constants import (
+    _CHUNK_ROWS,
     COH_MAX,
     COH_MIN,
     COH_NONFOREST_MAX,
@@ -117,19 +118,21 @@ from .constants import (
 from .windthrow import (
     CancelCallback,
     ProgressCallback,
-    _CHUNK_ROWS,
-    _create_output_vector,
-    _pixel_area_m2,
-    _read_raster_info,
-    _resolve_mask_raster,
-    _intersect_masks,
-    ensure_aligned,
 )
 from .numpy_ops import (
     adaptive_threshold,
     filter_small_objects,
     mask_from_threshold,
     median_filter_nan,
+)
+from .raster_utils import (
+    _create_output_vector,
+    _intersect_masks,
+    _pixel_area_m2,
+    _read_raster_info,
+    _resolve_mask_raster,
+    _same_grid_safe,
+    ensure_aligned,
 )
 from ..logger import log_warning
 
@@ -1088,13 +1091,3 @@ class CoherenceDeltaDetector:
             # v1.2.2: forest safeguard «вне_леса@Y» (article ID654).
             "forest_safeguard": safeguard,
         }
-
-
-def _same_grid_safe(path: str, ref_info: dict) -> bool:
-    """Grid comparison that tolerates a missing/unsupported reference."""
-    try:
-        return _read_raster_info(path)["geotransform"] == ref_info["geotransform"] \
-            and _read_raster_info(path)["width"] == ref_info["width"] \
-            and _read_raster_info(path)["height"] == ref_info["height"]
-    except Exception:
-        return False
