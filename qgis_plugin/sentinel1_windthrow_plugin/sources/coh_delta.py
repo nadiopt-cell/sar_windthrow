@@ -104,6 +104,16 @@ except Exception:  # pragma: no cover
     scipy = None  # type: ignore
 
 from .base import OperationCancelled
+from .constants import (
+    COH_MAX,
+    COH_MIN,
+    COH_NONFOREST_MAX,
+    DEFAULT_MAX_WATER_FRAC,
+    DCOH_NODATA,
+    FOREST_SHARE_MIN,
+    LAND_VALUE,
+    WATER_VALUE,
+)
 from .windthrow import (
     CancelCallback,
     ProgressCallback,
@@ -121,39 +131,11 @@ from .windthrow import (
 )
 from ..logger import log_warning
 
-#: No-data value written to the float32 dcoh raster.
-DCOH_NODATA = -9999.0
-
 #: Filename suffix of the HyP3 coherence layer.
 _CORR_SUFFIX = "_corr.tif"
 
 #: Filename suffixes accepted as HyP3 water-mask layers.
 _WATER_SUFFIXES = ("_wm.tif", "_water_mask.tif")
-
-#: A water mask claiming more than this fraction of a frame is corrupt.
-DEFAULT_MAX_WATER_FRAC = 0.5
-
-#: HyP3 water-mask encoding (ASF product guides, GAMMA **and** ISCE):
-#: «Pixel values of 1 indicate land and 0 indicate water».  v1.0/v1.1
-#: wrongly assumed 1 = water — the v1.2 fix is documented in the
-#: module docstring and RELEASE_NOTES_v1.2.0.
-LAND_VALUE = 1
-WATER_VALUE = 0
-
-#: Physically plausible coherence range; anything outside (e.g. the
-#: +-9999 fill of a warped control product) is treated as no-data.
-COH_MIN, COH_MAX = -0.01, 1.01
-
-#: v1.2.2 forest safeguard «вне_леса@Y» (article, ID654 case): mean
-#: pre/post coherence inside the zone above this value is the
-#: bare-ground / non-forest signature (ID654: 0.635 with AUC 0.051).
-COH_NONFOREST_MAX = 0.6
-
-#: v1.2.2 forest safeguard: forest share of the scene below this
-#: value puts the zone outside the method applicability limit
-#: (article: «при доле леса GFC@Y ниже 0,3 плагин выставляет флаг
-#: вне_леса@Y»).
-FOREST_SHARE_MIN = 0.3
 
 # ----------------------------------------------------------------------
 # HyP3 granule-name parsing (v1.2: burst support)

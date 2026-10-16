@@ -70,6 +70,15 @@ except ImportError:  # pragma: no cover - fallback path below
     _scipy_median_filter = None
 
 from .base import OperationCancelled
+from .constants import (
+    DEFAULT_FOREST_CLASSES,
+    GFC_BASE_URL,
+    GFC_DEFAULT_FRAC,
+    GFC_DEFAULT_TAU,
+    GFC_LAYERS,
+    GFC_LOSS_YEARS,
+    GFC_VERSION,
+)
 from .pc_client import PlanetaryComputerClient
 from .windthrow import _ensure_gdal, _read_raster_info
 
@@ -82,28 +91,13 @@ OperationCancelledError = OperationCancelled
 WC_COLLECTION = "esa-worldcover"
 #: COG asset with the 10 m classification ("Discrete Classification").
 WC_ASSET = "map"
-#: ESA WorldCover legend — 10 = Tree cover.
-DEFAULT_FOREST_CLASSES: Tuple[int, ...] = (10,)
+# ESA WorldCover legend (DEFAULT_FOREST_CLASSES) and the GFC_* block
+# (version, bucket, layers, tau/frac thresholds) live in constants.py
+# since the v1.3.0 refactor and are re-exported above.
 
 # ======================================================================
 # Hansen / UMD Global Forest Change (GFW) — annual reconstruction (v1.1)
 # ======================================================================
-#: Published GFC version used by the project (report ed.8 §9).
-GFC_VERSION = "GFC-2024-v1.12"
-#: Public Google Cloud Storage bucket of the GFC tiles (no auth needed).
-GFC_BASE_URL = (
-    "https://storage.googleapis.com/earthenginepartners-hansen/"
-    + GFC_VERSION)
-#: Layers required by the reconstruction recipe.
-GFC_LAYERS = ("treecover2000", "lossyear")
-#: Valid event years for GFC-2024-v1.12 (loss years 2001-2024).
-GFC_LOSS_YEARS = (2001, 2024)
-#: Default treecover2000 threshold in % (tau grid 20/30/50 was tested —
-#: conclusions robust; tau=30 is the primary value of report ed.8 §9).
-GFC_DEFAULT_TAU = 30
-#: Default forest-fraction threshold of an aggregated target pixel
-#: (mirrors the validated 30 m -> 80 m "average" rescore).
-GFC_DEFAULT_FRAC = 0.5
 #: GFC tiles are 10 x 10 degrees named by their UPPER-LEFT corner
 #: ("60N_040E" covers 50-60 N, 40-50 E — a real pitfall caught during
 #: the rescore: events at 61-62 N live in *70N_* tiles).

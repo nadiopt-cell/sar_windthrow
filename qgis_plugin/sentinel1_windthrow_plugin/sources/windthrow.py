@@ -65,18 +65,13 @@ except Exception:  # pragma: no cover
     scipy = None  # type: ignore
 
 from .base import OperationCancelled
-
-#: Fraction of negative pixels marking a chunk as "already in dB"
-#: (kept in sync with the preprocessor's heuristic).
-_DB_DETECT_FRACTION = 0.05
-#: Values below this are no-data sentinels, not physical dB.
-_DB_NODATA_FLOOR = -100.0
-#: No-data value written to the float32 WI raster.
-WI_NODATA = -9999.0
-#: Sentinel used to neutralise NaN inside the median filter window.
-_MEDIAN_SENTINEL = 1.0e6
-#: Default row-band height for chunked processing (pixels).
-_CHUNK_ROWS = 512
+from .constants import (  # single source of truth (v1.3.0 refactor)
+    _CHUNK_ROWS,
+    _DB_DETECT_FRACTION,
+    _DB_NODATA_FLOOR,
+    _MEDIAN_SENTINEL,
+    WI_NODATA,
+)
 
 ProgressCallback = Optional[Callable[[float, str], None]]
 CancelCallback = Optional[Callable[[], bool]]
