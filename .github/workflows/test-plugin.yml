@@ -40,10 +40,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Install test dependencies
         run: |
-          # numpy is already in the image (Debian-packaged, ABI-matched to
-          # python3-gdal) and pip cannot "uninstall" it (RECORD missing) -
-          # install only the missing test deps on top of it.
-          python3 -m pip install --break-system-packages --ignore-installed \
+          # The image ships Debian numpy 1.26 (ABI-matched to python3-gdal)
+          # and pip cannot uninstall it (no RECORD). "numpy<2" is already
+          # satisfied by it, so pip neither reinstalls it nor lets a newer
+          # scipy drag in numpy 2.x, which would break the gdal bindings.
+          python3 -m pip install --break-system-packages "numpy<2" \
             scipy pytest pytest-cov
       - name: Run plugin tests (with coverage)
         working-directory: qgis_plugin
