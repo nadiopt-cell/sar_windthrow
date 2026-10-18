@@ -4,8 +4,12 @@
 Usage: python3 build_plugin_zip.py [version]
 
 Produces plugin_dist/sentinel1_windthrow_plugin_v<version>.zip with the
-package root folder (sentinel1_windthrow_plugin/...) inside, plus a copy
-in /home/z/my-project/download/.  Excludes __pycache__ and test caches.
+package root folder (sentinel1_windthrow_plugin/...) inside. Excludes
+__pycache__ and test caches.
+
+Set the environment variable WINDTHROW_DOWNLOAD_DIR to also copy the finished
+ZIP there (e.g. a browser downloads folder); when it is unset no extra copy
+is made, so the script stays portable.
 """
 import os
 import shutil
@@ -15,7 +19,7 @@ import zipfile
 PLUGIN_ROOT = os.path.dirname(os.path.abspath(__file__))
 PKG = "sentinel1_windthrow_plugin"
 DIST = os.path.join(os.path.dirname(PLUGIN_ROOT), "plugin_dist")
-DOWNLOAD = "/home/z/my-project/download"
+DOWNLOAD = os.environ.get("WINDTHROW_DOWNLOAD_DIR") or None
 EXCLUDE_DIRS = {"__pycache__", ".pytest_cache", ".git"}
 
 
@@ -47,9 +51,12 @@ def main() -> None:
                 rel = os.path.join(PKG, os.path.relpath(full, src))
                 z.write(full, rel)
                 n += 1
-    os.makedirs(DOWNLOAD, exist_ok=True)
-    shutil.copy2(out_path, os.path.join(DOWNLOAD, out_name))
-    print(f"OK {out_name}: {n} files -> {out_path} (+download)")
+    extra = ""
+    if DOWNLOAD:
+        os.makedirs(DOWNLOAD, exist_ok=True)
+        shutil.copy2(out_path, os.path.join(DOWNLOAD, out_name))
+        extra = f" (+copy to {DOWNLOAD})"
+    print(f"OK {out_name}: {n} files -> {out_path}{extra}")
 
 
 if __name__ == "__main__":
