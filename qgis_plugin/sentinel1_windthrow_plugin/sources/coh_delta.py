@@ -82,6 +82,30 @@ v1.2.2 additions:
   logged as a warning and shown in the GUI result box, so the user
   can judge the mask semantics (a custom AOI mask is not a forest
   map — see METHOD.md §7b).
+
+v1.3.1 additions:
+
+* **Spatial averaging ``smooth_size``** (opt-in; default 1 = OFF, so the
+  frozen v1.2.2 behaviour is unchanged).  A NaN-aware box mean over a
+  ``smooth_size x smooth_size`` window is applied to dcoh before the
+  median filter and the threshold.  Why: the coherence of a single
+  12-day pair carries a per-pixel estimation noise of sigma ~ 0.20
+  coherence units, the same order as the windthrow excess, so the
+  validated ``a_coh = 0.25`` flags ~8-14 % of the frame (thousands of
+  objects per scene — the «scene covered by detection»
+  complaint).  Averaging over N pixels divides that noise by sqrt(N)
+  and, because a windthrow patch is much wider than one 80 m pixel,
+  RAISES the class separation instead of trading it away.  Measured on
+  the 23-event Shikhov re-run (ring 2-10 km AUC / frame-wide flagged
+  area): 0.720 / 11.0 % as-is -> 0.755 / 7.1 % at 3x3 -> 0.772 / 5.1 %
+  at 5x5; on wide swaths the ring false-alarm rate falls 5.2 % -> 0.1 %.
+  Pair it with a larger ``min_pixels`` (~50 px = 32 ha at 80 m).
+  Caveat, measured on the same re-run: a target NARROWER than the
+  window is diluted — the Shikhov contours are thin strips (median
+  width 1-3 px at 80 m) and lose recall (ID654: pixel PA 0.42 -> 0.00,
+  its whole reference is 99 px), while wide patches gain a lot.  Keep it
+  OFF when the expected contours are thinner than ~2 pixels and prefer
+  20 m burst products there — see testing/ОТЧЁТ_вариантА.md.
 """
 
 import os
@@ -107,6 +131,7 @@ from .constants import (
     COH_MIN,
     COH_NONFOREST_MAX,
     DEFAULT_MAX_WATER_FRAC,
+    DEFAULT_SMOOTH_SIZE,
     DCOH_NODATA,
     FOREST_SHARE_MIN,
     LAND_VALUE,
@@ -215,6 +240,13 @@ class CoherenceDeltaDetector:
         objects.
     median_filter_size:
         Optional median filter on dcoh before thresholding.
+    smooth_size:
+        v1.3.1, opt-in (default 1 = OFF) NaN-aware box-mean window
+        applied to dcoh before the median filter and the threshold.
+        Divides the per-pixel noise by sqrt(N) and raises the ring AUC
+        (0.720 -> 0.772 at 5x5 over 23 Shikhov events) at the price of
+        diluting targets thinner than the window — see the module
+        docstring and testing/ОТЧЁТ_вариантА.md.
     """
 
     def __init__(
@@ -224,6 +256,7 @@ class CoherenceDeltaDetector:
         fixed_threshold: float = 0.25,
         min_pixels: int = 6,
         median_filter_size: int = 3,
+        smooth_size: int = DEFAULT_SMOOTH_SIZE,
     ) -> None:
         if threshold_mode not in ("adaptive", "fixed"):
             raise ValueError("threshold_mode must be 'adaptive' or 'fixed'")
@@ -232,6 +265,7 @@ class CoherenceDeltaDetector:
         self.fixed_threshold = float(fixed_threshold)
         self.min_pixels = int(min_pixels)
         self.median_filter_size = int(median_filter_size)
+        self.smooth_size = int(smooth_size)
         # Diagnostics filled in by detect_file():
         self.mean_dcoh: Optional[float] = None
         self.median_dcoh: Optional[float] = None
@@ -584,6 +618,7 @@ class CoherenceDeltaDetector:
                 threshold=threshold,
                 min_pixels=self.min_pixels,
                 median_size=self.median_filter_size,
+                smooth_size=self.smooth_size,
                 nodata=DCOH_NODATA,
                 output_base=output_base,
                 median_label="dcoh",

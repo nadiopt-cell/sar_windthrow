@@ -3,9 +3,10 @@
 Template-method stages used by every detector (WI / L-band decline /
 coherence DiD) once the mode-specific float32 index raster exists:
 
-1. :func:`threshold_pass` — optional NaN-aware median filter with
-   chunked halo reads, then ``mask_from_threshold`` and an optional
-   ``inside`` mask intersection → boolean mask;
+1. :func:`threshold_pass` — optional NaN-aware spatial averaging
+   (box mean, v1.3.1) and/or median filter with chunked halo reads,
+   then ``mask_from_threshold`` and an optional ``inside`` mask
+   intersection → boolean mask;
 2. :func:`write_mask_raster` — cleaned mask as byte GeoTIFF (0/255,
    nodata 0);
 3. :func:`polygonize_mask` — OGR polygonize (8-connected), per-feature
@@ -54,8 +55,14 @@ except Exception:  # pragma: no cover
     scipy = None  # type: ignore
 
 from .base import OperationCancelled
-from .constants import _CHUNK_ROWS, DEFAULT_MEDIAN_SIZE, INDEX_NODATA
+from .constants import (
+    _CHUNK_ROWS,
+    DEFAULT_MEDIAN_SIZE,
+    DEFAULT_SMOOTH_SIZE,
+    INDEX_NODATA,
+)
 from .numpy_ops import (
+    box_mean_nan,
     filter_small_objects,
     mask_from_threshold,
     median_filter_nan,
@@ -94,6 +101,7 @@ class PipelineConfig:
     threshold: float
     min_pixels: int
     median_size: int = DEFAULT_MEDIAN_SIZE
+    smooth_size: int = DEFAULT_SMOOTH_SIZE
     nodata: float = INDEX_NODATA
     output_base: str = ""
     median_label: str = "index"
@@ -115,6 +123,7 @@ def threshold_pass(
     threshold: float,
     nodata: float = INDEX_NODATA,
     median_size: int = DEFAULT_MEDIAN_SIZE,
+    smooth_size: int = DEFAULT_SMOOTH_SIZE,
     inside_band=None,
     report: ProgressFn = None,
     cancelled: CancelFn = None,
@@ -130,6 +139,10 @@ def threshold_pass(
     only READ here — the caller owns its lifetime (windthrow passes an
     in-memory band, coh_delta a band of the on-disk index raster).
 
+    :param smooth_size: optional v1.3.1 NaN-aware box-mean window
+        applied to the index BEFORE the median filter (1 = off).  The
+        halo grows to ``max(median_size, smooth_size) // 2`` so chunked
+        and full-tile results stay identical.
     :param inside_band: optional byte mask band; flagged pixels must
         also be inside (value > 0) — the analysis/forest restriction.
     :param progress_start/progress_span: legacy progress mapping —
@@ -142,11 +155,18 @@ def threshold_pass(
     _cancelled = cancelled if cancelled is not None else (lambda: False)
 
     full_mask = np.zeros((height, width), dtype=bool)
-    r = median_size // 2 if median_size >= 3 else 0
+    r_median = median_size // 2 if median_size >= 3 else 0
+    r_smooth = smooth_size // 2 if smooth_size >= 3 else 0
+    r = max(r_median, r_smooth)
     filter_active = median_size >= 3 and scipy is not None
     if median_size >= 3 and scipy is None:
         log_warning(
             f"scipy unavailable — {median_label} median filter skipped")
+    smooth_active = smooth_size >= 3 and scipy is not None
+    if smooth_size >= 3 and scipy is None:
+        log_warning(
+            f"scipy unavailable — {median_label} spatial averaging "
+            "skipped")
     for y0 in range(0, height, _CHUNK_ROWS):
         if _cancelled():
             raise OperationCancelled()
@@ -158,6 +178,8 @@ def threshold_pass(
         invalid = tile == nodata
         tile = tile.astype(np.float32, copy=False)
         tile[invalid] = np.nan
+        if smooth_active:
+            tile = box_mean_nan(tile, smooth_size)
         if filter_active:
             tile = median_filter_nan(tile, median_size)
         centre = tile[y0 - ry0: y0 - ry0 + rows]
@@ -330,6 +352,7 @@ def run_postprocess(
         full_mask = threshold_pass(
             index_band, width, height, config.threshold,
             nodata=config.nodata, median_size=config.median_size,
+            smooth_size=config.smooth_size,
             inside_band=inside_band, report=report, cancelled=cancelled,
             progress_start=progress_start, progress_span=progress_span,
             median_label=config.median_label,

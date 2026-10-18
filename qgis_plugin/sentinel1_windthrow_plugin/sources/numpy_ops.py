@@ -46,6 +46,7 @@ __all__ = [
     "filter_small_objects",
     "background_offset_db",
     "median_filter_nan",
+    "box_mean_nan",
 ]
 
 
@@ -212,3 +213,51 @@ def median_filter_nan(wi: np.ndarray, size: int) -> np.ndarray:
     out = out.astype(np.float32, copy=False)
     out[invalid] = np.nan
     return out
+
+
+def box_mean_nan(
+    arr: np.ndarray,
+    size: int,
+    min_valid_frac: float = 0.30,
+) -> np.ndarray:
+    """NaN-aware box mean (spatial averaging) of an index tile.
+
+    v1.3.1 — «вариант A» of the multilook experiment.  The coherence of
+    a single 12-day pair carries a per-pixel estimation noise of
+    sigma ~ 0.20 coherence units at 80 m, i.e. the same order as the
+    windthrow excess, so a per-pixel threshold flags ~8-14 % of the
+    frame.  Averaging the index over a ``size x size`` window divides
+    that noise by ``sqrt(N)`` and, because a windthrow patch is much
+    wider than one pixel, RAISES the class separation instead of
+    trading it away (23-event Shikhov re-run, ring 2-10 km AUC:
+    0.720 -> 0.755 at 3x3 and 0.772 at 5x5; frame-wide flagged area
+    11.0 % -> 7.1 % / 5.1 %).
+
+    Only finite pixels contribute; the window mean is the mean of its
+    valid pixels, and windows whose valid fraction is below
+    ``min_valid_frac`` become NaN (they can never be flagged).  The
+    output keeps the input shape and is float32.
+
+    ``size < 3`` returns an unmodified copy (the filter is off).  The
+    caller is responsible for the halo when processing in chunks.
+
+    Caveat (measured): features NARROWER than the window are diluted —
+    the Shikhov reference contours are thin strips (median width 1-3 px
+    at 80 m) and lose recall under 5x5, while wide patches gain a lot.
+    See the report in testing/ОТЧЁТ_вариантА.md.
+    """
+    a = np.asarray(arr, dtype=np.float32)
+    if size < 3:
+        return a.copy()
+    if scipy is None:  # pragma: no cover - QGIS always ships scipy
+        raise ImportError("scipy is required for spatial averaging")
+    valid = np.isfinite(a)
+    filled = np.where(valid, a, 0.0).astype(np.float64)
+    frac = scipy.ndimage.uniform_filter(
+        valid.astype(np.float64), size=size, mode="nearest")
+    total = scipy.ndimage.uniform_filter(
+        filled, size=size, mode="nearest")
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = total / np.where(frac > 0.0, frac, 1.0)
+    out[frac < float(min_valid_frac)] = np.nan
+    return out.astype(np.float32, copy=False)

@@ -66,6 +66,20 @@ DEFAULT_COH_FIXED = 0.25
 #: Minimum object size at 80 m postings (6 px ~ 3.8 ha; ~0.96 ha at the
 #: 40 m Burst InSAR spacing).
 DEFAULT_MIN_PIXELS_80M = 6
+#: Spatial averaging (box-mean) window applied to the index before
+#: thresholding — v1.3.1, «вариант A» of the multilook experiment.
+#: 1 = OFF: the frozen v1.2.2 behaviour is preserved and the feature is
+#: opt-in from the detector argument / the GUI.  At the 80 m
+#: INSAR-GAMMA posting a 3x3 window averages 240 m and a 5x5 one
+#: 400 m; the per-pixel noise of one 12-day pair (sigma ~ 0.20
+#: coherence units) falls as sqrt(N) while a windthrow patch
+#: (>= 10 ha = 16 px at 80 m) stays resolved.  Measured on the 23-event
+#: Shikhov re-run: 5x5 takes the ring (2-10 km) AUC from 0.720 to 0.772
+#: and the frame-wide flagged area from 11.0 % to 5.1 % at an unchanged
+#: threshold offset.  Caveat: targets NARROWER than the window (thin
+#: squall-line strips, 1-3 px at 80 m) are diluted — see
+#: testing/ОТЧЁТ_вариантА.md.
+DEFAULT_SMOOTH_SIZE = 1
 
 # ======================================================================
 # Coherence DiD (coh_delta) — ranges, safeguards, water mask

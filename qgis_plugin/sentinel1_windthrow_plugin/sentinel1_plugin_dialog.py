@@ -1279,6 +1279,26 @@ class Sentinel1PluginDialog(QDialog):
             "pair by this margin are flagged."
         )
         coh_form.addRow("Fixed threshold:", self.wt_coh_fixed_spin)
+        self.wt_coh_smooth_combo = QComboBox(coh_group)
+        self.wt_coh_smooth_combo.addItem("None (off)", 1)
+        self.wt_coh_smooth_combo.addItem("3 × 3 — 240 m", 3)
+        self.wt_coh_smooth_combo.addItem("5 × 5 — 400 m", 5)
+        self.wt_coh_smooth_combo.setCurrentIndex(0)
+        self.wt_coh_smooth_combo.setToolTip(
+            "v1.3.1: spatial averaging (box mean) of dcoh before "
+            "thresholding. A single 12-day pair has a per-pixel noise of "
+            "~0.20 coherence units, so the per-pixel threshold flags "
+            "~8-14 % of the frame (thousands of objects); averaging over "
+            "N pixels cuts that noise by sqrt(N) and RAISES the class "
+            "separation, because a windthrow patch is much wider than one "
+            "80 m pixel (23-event re-run, 5 × 5: ring AUC 0.720 -> 0.772, "
+            "flagged frame area 11.0 % -> 5.1 %). Use it together with a "
+            "larger minimum object size (~50 px = 32 ha). WARNING: features "
+            "NARROWER than the window are diluted — keep it OFF when the "
+            "expected damage contours are thinner than ~2 pixels (thin "
+            "squall-line strips; see testing/REPORT_variantA.md)."
+        )
+        coh_form.addRow("Spatial averaging (dcoh):", self.wt_coh_smooth_combo)
         coh_hint = QLabel(
             "<small>dcoh = coh(control) − coh(prepost) is <b>positive</b> "
             "over windthrow. The control pair removes static low-coherence "
@@ -1935,6 +1955,7 @@ class Sentinel1PluginDialog(QDialog):
             fixed_threshold=self.wt_coh_fixed_spin.value(),
             min_pixels=self.wt_min_px_spin.value(),
             median_filter_size=int(self.wt_median_combo.currentData() or 0),
+            smooth_size=int(self.wt_coh_smooth_combo.currentData() or 1),
         )
         mask_label = {
             "file": "analysis mask file",

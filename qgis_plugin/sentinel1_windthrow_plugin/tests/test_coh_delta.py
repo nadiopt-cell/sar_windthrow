@@ -57,6 +57,7 @@ def test_detector_defaults_match_step12b_findings():
     assert det.a_coh == pytest.approx(0.25)
     assert det.min_pixels == 6  # 80 m pixels: 27 px would be 17 ha
     assert det.median_filter_size == 3
+    assert det.smooth_size == 1  # v1.3.1 spatial averaging is opt-in
     with pytest.raises(ValueError):
         CoherenceDeltaDetector(threshold_mode="bogus")
 
@@ -834,3 +835,48 @@ def test_burst_products_end_to_end(coh_pair_dirs, tmp_path):
     _ds_mask = None
     assert ((mask > 0) & coh_pair_dirs["blob"]).sum() > 0
     assert ((mask > 0) & ~coh_pair_dirs["blob"]).sum() == 0
+
+
+
+# ----------------------------------------------------------------------
+# v1.3.1 - spatial averaging (smooth_size)
+# ----------------------------------------------------------------------
+def test_detector_smooth_size_reduces_speckle_keeps_blob(tmp_path):
+    osgeo = pytest.importorskip("osgeo")
+    gdal = osgeo.gdal
+    size = 120
+    rng = np.random.default_rng(5)
+    yy, xx = np.ogrid[:size, :size]
+    blob = (yy - 60) ** 2 + (xx - 60) ** 2 <= 15 ** 2
+    prepost = np.full((size, size), 0.8, dtype=np.float32)
+    prepost[blob] = 0.2
+    prepost[(rng.random((size, size)) < 0.15) & ~blob] = 0.2
+    control = np.full((size, size), 0.8, dtype=np.float32)
+
+    pp_dir = tmp_path / "pp" / "S1BB_pair_5748"
+    ct_dir = tmp_path / "ct" / "S1BB_pair_5C8E"
+    pp_dir.mkdir(parents=True)
+    ct_dir.mkdir(parents=True)
+    _make_corr_tiff(str(pp_dir / "S1BB_pair_5748_corr.tif"), prepost)
+    _make_corr_tiff(str(ct_dir / "S1BB_pair_5C8E_corr.tif"), control)
+
+    def run(name, smooth):
+        det = CoherenceDeltaDetector(min_pixels=6, median_filter_size=1,
+                                     smooth_size=smooth)
+        res = det.detect_file([str(pp_dir)], [str(ct_dir)],
+                              str(tmp_path / name))
+        ds = gdal.Open(res["mask"])
+        arr = ds.GetRasterBand(1).ReadAsArray() == 255
+        ds = None
+        return res, arr
+
+    res_raw, raw = run("raw", 1)
+    res_smooth, smooth = run("smooth", 5)
+    # the adaptive threshold is a property of the scene, not of the filter
+    assert res_raw["threshold"] == pytest.approx(res_smooth["threshold"])
+    outside = ~blob
+    assert raw[50:70, 50:70].all()               # blob detected as-is
+    assert smooth[55:65, 55:65].all()            # ...and after averaging
+    assert smooth[blob].sum() >= 0.8 * raw[blob].sum()   # wide target kept
+    assert raw[outside].sum() > 200              # speckle was there
+    assert smooth[outside].sum() < 0.5 * raw[outside].sum()  # ...and is gone

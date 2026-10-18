@@ -10,6 +10,7 @@ import pytest
 
 from sentinel1_windthrow_plugin.sources.pipeline import threshold_pass
 from sentinel1_windthrow_plugin.sources.numpy_ops import (
+    box_mean_nan,
     mask_from_threshold,
     median_filter_nan,
 )
@@ -149,3 +150,71 @@ def test_threshold_pass_scipy_missing_keeps_raw(monkeypatch):
     # filter skipped -> isolated pixel survives, warning preserved
     assert mask.sum() == 1
     assert warnings == ["scipy unavailable — WI median filter skipped"]
+
+
+
+# ----------------------------------------------------------------------
+# v1.3.1 - spatial averaging (smooth_size / box_mean_nan)
+# ----------------------------------------------------------------------
+def test_box_mean_nan_off_returns_copy():
+    arr = np.arange(16, dtype=np.float32).reshape(4, 4)
+    out = box_mean_nan(arr, 1)
+    assert np.array_equal(out, arr)
+    assert out is not arr
+
+
+def test_box_mean_nan_is_nan_aware():
+    arr = np.full((5, 5), 2.0, dtype=np.float32)
+    arr[2, 2] = np.nan
+    out = box_mean_nan(arr, 3)
+    # the invalid pixel is ignored, not propagated to its neighbours
+    assert out[2, 2] == pytest.approx(2.0)
+    assert np.isfinite(out).all()
+
+
+def test_box_mean_nan_window_with_few_valid_pixels_is_nan():
+    arr = np.full((9, 9), 1.0, dtype=np.float32)
+    arr[0:8, 0:8] = np.nan
+    out = box_mean_nan(arr, 3, min_valid_frac=0.5)
+    assert np.isnan(out[0, 0])
+    assert np.isfinite(out[8, 8])
+
+
+def test_box_mean_nan_suppresses_isolated_speckle():
+    rng = np.random.default_rng(7)
+    arr = (rng.random((80, 80)) < 0.2).astype(np.float32) * 0.6
+    raw = int((arr > 0.25).sum())
+    smooth = box_mean_nan(arr, 5)
+    assert raw > 800
+    assert int((smooth > 0.25).sum()) < raw / 4
+
+
+def test_threshold_pass_smooth_keeps_blob_drops_speckle():
+    rng = np.random.default_rng(11)
+    arr = np.zeros((80, 80), dtype=np.float32)
+    arr[30:50, 30:50] = 0.6                      # windthrow-like patch
+    speck = rng.random((80, 80)) < 0.15
+    speck[30:50, 30:50] = False
+    arr[speck] = 0.6                             # isolated scene speckle
+    raw = threshold_pass(FakeBand(arr), 80, 80, 0.25, nodata=NODATA,
+                         median_size=1)
+    smooth = threshold_pass(FakeBand(arr), 80, 80, 0.25, nodata=NODATA,
+                            median_size=1, smooth_size=5)
+    assert smooth.sum() < 0.6 * raw.sum()
+    assert smooth[35:45, 35:45].all()            # the patch core survives
+    # far speckle is largely gone (a couple of % may survive)
+    assert smooth[0:20, 0:20].sum() < 0.2 * raw[0:20, 0:20].sum()
+
+
+def test_threshold_pass_smooth_chunked_matches_full_tile():
+    rng = np.random.default_rng(3)
+    height, width = 700, 12                      # spans two _CHUNK_ROWS blocks
+    arr = rng.normal(0.0, 1.0, size=(height, width)).astype(np.float32)
+    arr[rng.random((height, width)) < 0.05] = 10.0
+    arr[rng.random((height, width)) < 0.10] = NODATA
+    mask = threshold_pass(FakeBand(arr), width, height, 2.9, nodata=NODATA,
+                          median_size=1, smooth_size=5)
+    tile = arr.astype(np.float32, copy=True)
+    tile[tile == NODATA] = np.nan
+    expected = mask_from_threshold(box_mean_nan(tile, 5), 2.9)
+    assert np.array_equal(mask, expected)
