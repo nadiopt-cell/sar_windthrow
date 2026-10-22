@@ -12,7 +12,11 @@ import os
 import numpy as np
 import pytest
 
-from osgeo import gdal, ogr, osr
+# GDAL integration module: excluded from the GDAL-free suite.
+pytest.importorskip(
+    "osgeo", reason="test_pipeline requires GDAL (osgeo); the GDAL-free "
+    "CI suite does not run it")
+from osgeo import gdal, ogr, osr  # noqa: E402
 
 from sentinel1_windthrow_plugin.sources.pipeline import (
     PipelineConfig,
@@ -108,7 +112,9 @@ def test_polygonize_area_filter_and_area_ha(tmp_path):
     assert n_objects == 1
     infos = _feature_infos(vector_path)
     assert len(infos) == 1
-    assert infos[0][1] == pytest.approx(0.25)
+    # v1.4.1: area is measured in the equal-area EPSG:6933, so the
+    # value deviates from px*n*100 m^2 by a fraction of a percent.
+    assert infos[0][1] == pytest.approx(0.25, rel=2e-3)
 
 
 def test_polygonize_min_pixels_zero_keeps_all(tmp_path):
@@ -170,8 +176,9 @@ def test_run_postprocess_path_and_band_equivalent(tmp_path):
     areas = sorted(area for _, area in infos)
     # median keeps blob cores (edge pixels with >=5 source neighbours):
     # 4x4 -> 12 px = 0.12 ha; 3x4 -> 8 px = 0.08 ha (10 m pixels)
-    assert areas[0] == pytest.approx(8 * 100.0 / 10000.0)    # 0.08 ha
-    assert areas[1] == pytest.approx(12 * 100.0 / 10000.0)   # 0.12 ha
+    # v1.4.1: measured in EPSG:6933 (rel tolerance ~0.1 %)
+    assert areas[0] == pytest.approx(8 * 100.0 / 10000.0, rel=2e-3)
+    assert areas[1] == pytest.approx(12 * 100.0 / 10000.0, rel=2e-3)
 
 
 def test_run_postprocess_reports_threshold_progress(tmp_path):

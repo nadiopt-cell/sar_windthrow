@@ -106,10 +106,33 @@ def _read_raster_info(path: str) -> Dict:
         ds = None
 
 
+def _same_crs(wkt_a: str, wkt_b: str) -> bool:
+    """Compare raster coordinate systems, not merely pixel transforms.
+
+    GDAL builds with exceptions raise on malformed WKT; fall back to a
+    string comparison instead of failing the whole grid check.
+    """
+    if not wkt_a or not wkt_b:
+        return wkt_a == wkt_b
+    if osr is None:
+        return wkt_a == wkt_b
+    try:
+        src = osr.SpatialReference()
+        dst = osr.SpatialReference()
+        if src.ImportFromWkt(wkt_a) != 0 or dst.ImportFromWkt(wkt_b) != 0:
+            return False
+        return bool(src.IsSame(dst))
+    except Exception:
+        return wkt_a == wkt_b
+
+
 def _same_grid(info_a: Dict, info_b: Dict, tol: float = 1e-9) -> bool:
-    """True when two raster infos describe the same grid."""
+    """True only when raster shape, affine transform AND CRS match."""
     if (info_a["width"] != info_b["width"]
             or info_a["height"] != info_b["height"]):
+        return False
+    if not _same_crs(info_a.get("projection", ""),
+                     info_b.get("projection", "")):
         return False
     gt_a = tuple(info_a["geotransform"])
     gt_b = tuple(info_b["geotransform"])
@@ -119,53 +142,58 @@ def _same_grid(info_a: Dict, info_b: Dict, tol: float = 1e-9) -> bool:
 
 
 def _same_grid_safe(path: str, ref_info: dict) -> bool:
-    """Grid comparison that tolerates a missing/unsupported reference."""
+    """Grid check tolerating unreadable input (without hiding CRS issues)."""
     try:
-        return _read_raster_info(path)["geotransform"] == ref_info["geotransform"] \
-            and _read_raster_info(path)["width"] == ref_info["width"] \
-            and _read_raster_info(path)["height"] == ref_info["height"]
+        return _same_grid(_read_raster_info(path), ref_info)
     except Exception:
         return False
 
 
-def ensure_aligned(path: str, ref_info: Dict, tmp_dir: str) -> str:
-    """Return a path guaranteed to share the reference grid.
+def ensure_aligned(path: str, ref_info: Dict, tmp_dir: str,
+                   resample_alg: str = "bilinear") -> str:
+    """Reproject and align a raster to the reference CRS and exact grid.
 
-    When the input already matches the reference grid (the usual case
-    for same-track Sentinel-1 products) the original path is returned
-    untouched.  Otherwise the raster is warped (bilinear, appropriate
-    for dB data) onto the reference grid into ``tmp_dir``.
+    Coherence and radiometry can use bilinear resampling, while class
+    masks MUST use nearest neighbour to avoid non-physical class values.
+    Rotated targets are refused rather than silently misregistered.
     """
     _ensure_gdal()
     info = _read_raster_info(path)
     if _same_grid(info, ref_info):
         return path
+    if resample_alg not in ("bilinear", "near"):
+        raise ValueError("Supported resampling: bilinear or near")
+    gt = ref_info["geotransform"]
+    if abs(gt[2]) > 1e-12 or abs(gt[4]) > 1e-12:
+        raise ValueError("Rotated reference grids are not supported by alignment")
+    if not ref_info.get("projection"):
+        raise ValueError("Reference raster lacks a usable CRS")
     os.makedirs(tmp_dir, exist_ok=True)
     out_path = os.path.join(
-        tmp_dir, f"_warped_{os.path.splitext(os.path.basename(path))[0]}.tif"
+        tmp_dir, f"_warped_{resample_alg}_{os.path.splitext(os.path.basename(path))[0]}.tif"
     )
     if os.path.exists(out_path):
         try:
             gdal.GetDriverByName("GTiff").Delete(out_path)
         except Exception as exc:
-            # Spec 7.3: best-effort delete logged, not swallowed.
             log_info(f"Could not delete stale warped raster {out_path}: {exc}")
-    gdal.Warp(
-        out_path,
-        path,
-        format="GTiff",
-        width=ref_info["width"],
-        height=ref_info["height"],
-        outputBounds=(
-            ref_info["geotransform"][0],
-            ref_info["geotransform"][3] + ref_info["geotransform"][5] * ref_info["height"],
-            ref_info["geotransform"][0] + ref_info["geotransform"][1] * ref_info["width"],
-            ref_info["geotransform"][3],
-        ),
-        dstNodata=INDEX_NODATA,
-        resampleAlg="bilinear",
-        multithread=True,
+    x0, y0 = gt[0], gt[3]
+    x1 = x0 + gt[1] * ref_info["width"]
+    y1 = y0 + gt[5] * ref_info["height"]
+    warped = gdal.Warp(
+        out_path, path, format="GTiff",
+        dstSRS=ref_info["projection"],
+        width=ref_info["width"], height=ref_info["height"],
+        outputBounds=(min(x0, x1), min(y0, y1),
+                      max(x0, x1), max(y0, y1)),
+        srcNodata=info.get("nodata"), dstNodata=INDEX_NODATA,
+        resampleAlg=resample_alg, multithread=True,
     )
+    if warped is None:
+        raise RuntimeError(f"GDAL warp failed: {path}")
+    warped = None
+    if not _same_grid(_read_raster_info(out_path), ref_info):
+        raise RuntimeError(f"Aligned raster does not match reference grid: {out_path}")
     return out_path
 
 
@@ -186,10 +214,15 @@ def rasterize_vector_mask(
             # Spec 7.3: best-effort delete logged, not swallowed.
             log_info(f"Could not delete stale mask raster {out_path}: {exc}")
     gt = ref_info["geotransform"]
-    gdal.Rasterize(
+    if abs(gt[2]) > 1e-12 or abs(gt[4]) > 1e-12:
+        raise ValueError("Rotated reference grids are not supported by masks")
+    if not ref_info.get("projection"):
+        raise ValueError("A reference CRS is required to rasterize vectors")
+    raster = gdal.Rasterize(
         out_path,
         vector_path,
         format="GTiff",
+        outputSRS=ref_info["projection"],
         outputBounds=(
             gt[0],
             gt[3] + gt[5] * ref_info["height"],
@@ -202,6 +235,9 @@ def rasterize_vector_mask(
         initValues=0,
         outputType=gdal.GDT_Byte,
     )
+    if raster is None:
+        raise RuntimeError(f"Rasterization failed: {vector_path}")
+    raster = None
     return out_path
 
 
@@ -239,7 +275,7 @@ def _resolve_mask_raster(path: str, ref_info: Dict, tmp_dir: str) -> str:
     except Exception:
         is_raster = False
     if is_raster:
-        return ensure_aligned(path, ref_info, tmp_dir)
+        return ensure_aligned(path, ref_info, tmp_dir, resample_alg="near")
     return rasterize_vector_mask(path, ref_info, tmp_dir)
 
 

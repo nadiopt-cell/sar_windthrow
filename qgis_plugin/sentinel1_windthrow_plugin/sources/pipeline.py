@@ -44,10 +44,11 @@ from typing import Callable, Optional, Tuple, Union
 import numpy as np
 
 try:
-    from osgeo import gdal  # always present in the QGIS Python env
+    from osgeo import gdal, osr  # always present in the QGIS Python env
     gdal.UseExceptions()
 except Exception:  # pragma: no cover
     gdal = None  # type: ignore
+    osr = None  # type: ignore
 
 try:
     import scipy.ndimage
@@ -273,6 +274,20 @@ def polygonize_mask(
                    if output_base.lower().endswith((".gpkg", ".shp"))
                    else output_base + ".gpkg")
     vds, layer = _create_output_vector(vector_path, ref_info["projection"])
+    # OGR GetArea() returns degrees squared for a geographic CRS and is not a
+    # valid area measure; projected metres of e.g. EPSG:3857 additionally
+    # inflate true areas at boreal latitudes. Always measure polygons in a
+    # global equal-area projection instead of mixing units (v1.4.1).
+    if not ref_info.get("projection"):
+        raise ValueError("Cannot calculate area_ha: reference CRS is missing")
+    source_srs = osr.SpatialReference()
+    source_srs.ImportFromWkt(ref_info["projection"])
+    area_srs = osr.SpatialReference()
+    area_srs.ImportFromEPSG(6933)
+    if hasattr(osr, "OAMS_TRADITIONAL_GIS_ORDER"):
+        source_srs.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
+        area_srs.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
+    area_transform = osr.CoordinateTransformation(source_srs, area_srs)
     px_area_m2 = _pixel_area_m2(ref_info["geotransform"],
                                 ref_info["projection"])
     try:
@@ -286,7 +301,13 @@ def polygonize_mask(
         layer.ResetReading()
         for feat in layer:
             geom = feat.GetGeometryRef()
-            area_m2 = geom.GetArea() if geom is not None else 0.0
+            if geom is None:
+                area_m2 = 0.0
+            else:
+                geom_area = geom.Clone()
+                if geom_area.Transform(area_transform) != 0:
+                    raise RuntimeError("Failed to transform polygon for area_ha")
+                area_m2 = geom_area.GetArea()
             fid_area.append((feat.GetFID(), area_m2))
         n_kept = 0
         for fid, area_m2 in fid_area:

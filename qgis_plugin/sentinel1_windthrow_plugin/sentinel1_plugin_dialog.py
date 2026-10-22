@@ -1257,16 +1257,40 @@ class Sentinel1PluginDialog(QDialog):
         coh_control_row.addWidget(self.wt_coh_control_edit, 1)
         coh_control_row.addWidget(coh_control_browse)
         coh_form.addRow("Control pair:", coh_control_row)
+        self.wt_coh_hypothesis_combo = QComboBox(coh_group)
+        self.wt_coh_hypothesis_combo.addItem(
+            "Event drop: control minus cross-event (project default)",
+            "event_drop")
+        self.wt_coh_hypothesis_combo.addItem(
+            "Persistent gain: post/post minus pre/pre (experimental, "
+            "not calibrated)",
+            "persistent_gain")
+        self.wt_coh_hypothesis_combo.setToolTip(
+            "Event drop compares a pair STRADDLING the storm with a "
+            "comparable control pair outside the event (transient "
+            "decorrelation). Persistent gain compares two non-overlapping "
+            "stable pairs: two acquisitions BEFORE the storm versus two "
+            "AFTER it (persistent coherence change). These are different "
+            "experiments; only event_drop is used by the project's "
+            "validation corpus."
+        )
+        self.wt_coh_hypothesis_combo.setCurrentIndex(0)
+        self.wt_coh_hypothesis_combo.currentIndexChanged.connect(
+            self._sync_coh_hypothesis_widgets)
+        coh_form.addRow("Temporal hypothesis:", self.wt_coh_hypothesis_combo)
 
         self.wt_coh_a_spin = QDoubleSpinBox(coh_group)
         self.wt_coh_a_spin.setRange(0.0, 1.0)
         self.wt_coh_a_spin.setSingleStep(0.01)
         self.wt_coh_a_spin.setValue(0.25)
         self.wt_coh_a_spin.setToolTip(
-            "Offset above the background MEDIAN of dcoh (coherence units, "
-            "not dB). On the validated events 0.25 keeps the false-alarm "
-            "rate near 8-14 %; lower values flood the output on scenes "
-            "with seasonal coherence drift (e.g. autumn freeze-up)."
+            "Offset above the background MEDIAN of the score (coherence "
+            "units, not dB). 0.25 is the project default used on the "
+            "~21-event validation corpus with a GFC clean-forest "
+            "background; at this offset the object precision is low "
+            "(tenths of percent) and a research post-filter is planned, "
+            "so 0.25 is NOT a universal optimum - recalibrate on "
+            "independent reference data."
         )
         coh_form.addRow("Offset a (adaptive):", self.wt_coh_a_spin)
         self.wt_coh_fixed_spin = QDoubleSpinBox(coh_group)
@@ -1274,9 +1298,9 @@ class Sentinel1PluginDialog(QDialog):
         self.wt_coh_fixed_spin.setSingleStep(0.05)
         self.wt_coh_fixed_spin.setValue(0.25)
         self.wt_coh_fixed_spin.setToolTip(
-            "Absolute dcoh threshold (coherence units). Only pixels "
-            "where the control pair is more coherent than the pre/post "
-            "pair by this margin are flagged."
+            "Absolute score threshold (coherence units). Only pixels "
+            "whose score exceeds this margin are flagged (direction "
+            "depends on the selected temporal hypothesis)."
         )
         coh_form.addRow("Fixed threshold:", self.wt_coh_fixed_spin)
         self.wt_coh_smooth_combo = QComboBox(coh_group)
@@ -1300,15 +1324,19 @@ class Sentinel1PluginDialog(QDialog):
         )
         coh_form.addRow("Spatial averaging (dcoh):", self.wt_coh_smooth_combo)
         coh_hint = QLabel(
-            "<small>dcoh = coh(control) − coh(prepost) is <b>positive</b> "
-            "over windthrow. The control pair removes static low-coherence "
-            "anomalies and seasonal drift. A corrupt product water mask "
-            "(&gt; 50 % water) is ignored automatically; a sane mask "
-            "(HyP3 encoding: 1 = land, 0 = water) excludes water bodies. "
-            "Default min object size is 6 px — one 80 m pixel covers "
-            "0.64 ha, one 40 m burst pixel 0.16 ha (scale min px up to "
-            "≈ 20–25 for burst pairs to keep the validated 3.8 ha "
-            "object size).</small>",
+            "<small><b>Two different hypotheses.</b> <b>Event drop</b> "
+            "(default): target pair straddles the storm, control lies "
+            "outside it; dcoh = coh(control) − coh(prepost) is positive "
+            "over transient decorrelation. <b>Persistent gain</b> "
+            "(experimental): target post/post, baseline pre/pre; the "
+            "score is positive over persistent coherence change after "
+            "the storm. Signs can differ because the experiments differ; "
+            "a positive score is <b>not</b> proof of windthrow - "
+            "calibrate with independent damage / intact-forest "
+            "references. A corrupt product water mask (&gt; 50 % water) "
+            "is ignored automatically. Default min object size is 6 px "
+            "— one 80 m pixel covers 0.64 ha, one 40 m burst pixel "
+            "0.16 ha (scale min px up to ≈ 20–25 for burst pairs).</small>",
             coh_group,
         )
         coh_hint.setWordWrap(True)
@@ -1317,6 +1345,7 @@ class Sentinel1PluginDialog(QDialog):
         coh_prepost_browse.clicked.connect(self._on_wt_browse_coh_prepost)
         coh_control_browse.clicked.connect(self._on_wt_browse_coh_control)
         coh_group.setVisible(False)
+        self._sync_coh_hypothesis_widgets()
         self.wt_coh_group = coh_group
         layout.addWidget(coh_group)
 
@@ -1338,9 +1367,10 @@ class Sentinel1PluginDialog(QDialog):
             "C-band WI: amplitude increase on Sentinel-1 (default).\n"
             "L-band decline: backscatter drop on ALOS PALSAR — the "
             "opposite sign, validated invAUC up to 0.905.\n"
-            "Coherence DiD: coherence drop between the pre/post InSAR "
-            "pair relative to a same-season control pair — validated "
-            "AUC 0.908 on the 2017 tornado event."
+            "Coherence DiD: coherence change between HyP3 InSAR pairs "
+            "(event drop / persistent gain selectable inside the "
+            "coherence group); status: candidate map, independent "
+            "validation in progress."
         )
         params_form.addRow("Detection method:", self.wt_method_combo)
 
@@ -1664,16 +1694,14 @@ class Sentinel1PluginDialog(QDialog):
             "work out of the box; a forest mask is strongly recommended "
             "(regrowth fields confuse the threshold).</small>",
         "coh":
-            "<small><b>Method — coherence DiD (project step12b, 2026):</b> "
-            "interferometric coherence of the pre/post pair (HyP3 "
-            "INSAR-GAMMA 80 m full frames or Burst InSAR 40 m pairs) "
-            "drops over disturbed forest. "
-            "<b>dcoh = coh(control) − coh(prepost)</b> cancels static "
-            "anomalies and seasonal drift and is <b>positive</b> over "
-            "windthrow. Validated: AUC 0.908 on the 2017 tornado (161 ha) "
-            "— the strongest C-band result of the project. Supply a "
-            "control pair of the SAME frames (or the SAME burst) from "
-            "outside the damage window for robust results.</small>",
+            "<small><b>Coherence — two distinct temporal hypotheses:</b> "
+            "<b>event drop</b> (default): control pair minus a "
+            "storm-straddling pair (HyP3 INSAR-GAMMA 80 m or Burst "
+            "InSAR pairs); events result is a candidate map, "
+            "<b>not</b> a validated windthrow classification "
+            "(independent validation Д5 in progress). "
+            "<b>persistent gain</b>: post/post minus pre/pre, "
+            "experimental, not calibrated on reference data.</small>",
     }
 
     def _sync_method_widgets(self) -> None:
@@ -1713,6 +1741,36 @@ class Sentinel1PluginDialog(QDialog):
             self.wt_min_px_spin.setValue(6)
         elif not is_coh and self.wt_min_px_spin.value() == 6:
             self.wt_min_px_spin.setValue(27)
+
+    def _sync_coh_hypothesis_widgets(self) -> None:
+        """Keep field hints in phase with the selected hypothesis."""
+        combo = getattr(self, "wt_coh_hypothesis_combo", None)
+        if combo is None:
+            return
+        persistent = combo.currentData() == "persistent_gain"
+        self.wt_coh_prepost_edit.setPlaceholderText(
+            "POST/POST pair: both acquisitions AFTER the event"
+            if persistent else
+            "CROSS-EVENT pair: first image BEFORE, second AFTER the storm")
+        self.wt_coh_control_edit.setPlaceholderText(
+            "PRE/PRE baseline: both acquisitions BEFORE the event"
+            if persistent else
+            "Control pair product (same frames/burst, outside the damage "
+            "window) — optional but strongly recommended")
+        self.wt_coh_prepost_edit.setToolTip(
+            "Target pair. Keep track, polarization, look spacing and "
+            "temporal interval comparable with the baseline pair."
+            if persistent else
+            "The pre/post pair of the SAME frames (or the SAME burst).")
+        self.wt_coh_control_edit.setToolTip(
+            "Baseline pair required for persistent gain. Keep track, "
+            "polarization, look spacing and temporal interval comparable."
+            if persistent else
+            "DiD control pair. For Burst InSAR products this must be the "
+            "SAME burst (same relative burst ID, track and polarization) "
+            "with both dates outside the damage window — order it in "
+            "Vertex for the same burst. Mixing a full GAMMA frame with a "
+            "burst product is rejected.")
 
     def _on_wt_browse_coh_prepost(self) -> None:
         path = QFileDialog.getExistingDirectory(
@@ -1925,6 +1983,14 @@ class Sentinel1PluginDialog(QDialog):
                 self, "Invalid product",
                 f"The control product path does not exist:\n{control}")
             return
+        coherence_mode = (self.wt_coh_hypothesis_combo.currentData()
+                          or "event_drop")
+        if coherence_mode == "persistent_gain" and not control:
+            QMessageBox.warning(
+                self, "Missing baseline",
+                "Persistent gain needs TWO pairs: pre/pre baseline and "
+                "post/post target.")
+            return
         output_base = self.wt_output_edit.text().strip()
         if not output_base:
             QMessageBox.warning(
@@ -1956,13 +2022,14 @@ class Sentinel1PluginDialog(QDialog):
             min_pixels=self.wt_min_px_spin.value(),
             median_filter_size=int(self.wt_median_combo.currentData() or 0),
             smooth_size=int(self.wt_coh_smooth_combo.currentData() or 1),
+            coherence_mode=coherence_mode,
         )
         mask_label = {
             "file": "analysis mask file",
             "worldcover": f"WorldCover {wc_year}",
             "gfc": f"GFC forest@{gfc_year - 1}",
         }.get(mask_source, "") if self.wt_mask_chk.isChecked() else ""
-        desc = (f"Coherence DiD ({os.path.basename(prepost)}"
+        desc = (f"Coherence {coherence_mode} ({os.path.basename(prepost)}"
                 + (f" vs {os.path.basename(control)}" if control else " — no control")
                 + (f", {mask_label}" if mask_label else "")
                 + f", {os.path.basename(output_base)})")
@@ -2080,7 +2147,20 @@ class Sentinel1PluginDialog(QDialog):
             n_obj = result.get("n_objects")
             units = "" if is_coh_result else " dB"
             index_name = "dCoH" if is_coh_result else "WI"
-            stat_label = ("Median dCoH" if is_coh_result else "Mean WI")
+            stat_label = ("Median score" if is_coh_result else "Mean WI")
+            hypothesis_note = ""
+            if is_coh_result:
+                selected = result.get("coherence_mode") or "event_drop"
+                hypothesis_note = (
+                    "\nHypothesis: " + selected
+                    + "\nTarget median coherence: "
+                    + str(result.get("target_coherence_median"))
+                    + "\nBaseline median coherence: "
+                    + str(result.get("baseline_coherence_median"))
+                    + "\nScience audit: "
+                    + str(result.get("science_report"))
+                    + "\nCandidate change only: independent windthrow "
+                    "reference validation required.")
             forest_note = ("\nForest mask: " + str(result.get("forest_mask"))
                            if result.get("forest_mask") else "")
             wm_note = ""
@@ -2103,11 +2183,12 @@ class Sentinel1PluginDialog(QDialog):
             index_path = result.get("dcoh") or result.get("wi") or ""
             QMessageBox.information(
                 self, "Windthrow detection complete",
-                f"Detected objects: {n_obj}\n"
+                f"Candidate objects: {n_obj}\n"
                 f"{stat_label}: {mean:.3f}{units}\n"
                 f"Threshold used: {thr:.3f}{units}\n\n"
                 f"Outputs:\n{index_path}\n{result.get('mask')}\n"
-                f"{vector_path}" + forest_note + wm_note + guard_note,
+                f"{vector_path}" + forest_note + wm_note + guard_note
+                + hypothesis_note,
             )
             log_info(
                 f"Windthrow detection finished: {n_obj} objects, "

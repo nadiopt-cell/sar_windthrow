@@ -25,6 +25,7 @@ Covered concerns:
 from __future__ import annotations
 
 import os
+from datetime import datetime
 import re
 import tempfile
 import zipfile
@@ -79,7 +80,7 @@ _WATER_SUFFIXES = ("_wm.tif", "_water_mask.tif")
 _GAMMA_RE = re.compile(
     r"^S1(?P<platform>[AB]?)[AB]?_"
     r"(?P<date1>\d{8}T\d{6})_(?P<date2>\d{8}T\d{6})_"
-    r"(?P<pol>[VH][VH])P\d{3}_INT(?P<spacing>\d{2})_G_"
+    r"(?P<pol>[VH][VH])(?P<orbit_code>[A-Z]\d{3})_INT(?P<spacing>\d{2})_G_"
     r"\w{3}_(?P<pid>[0-9A-Fa-f]{4})$")
 
 #: ISCE burst / multi-burst InSAR granule, e.g.
@@ -156,6 +157,7 @@ def parse_hyp3_product(source: str) -> dict:
         "family": None, "granule": None, "platform": None, "track": None,
         "pol": None, "spacing_m": None, "pid": None,
         "date1": None, "date2": None, "burst_ids": None, "burst_key": None,
+        "orbit_code": None,
     }
     candidates = _granule_names(source)
     result["granule"] = candidates[0] if candidates else None
@@ -184,6 +186,7 @@ def parse_hyp3_product(source: str) -> dict:
                 "platform": m.group("platform") or None,
                 "track": None,
                 "pol": m.group("pol").upper(),
+                "orbit_code": m.group("orbit_code"),
                 "spacing_m": int(m.group("spacing")),
                 "pid": m.group("pid").upper(),
                 "date1": m.group("date1"),
@@ -227,10 +230,21 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
                 f"{control_info['pol']}). Order the control pair for the "
                 "same burst (Vertex: same burst ID, dates outside the "
                 "damage window).")
+        if (prepost_info.get("track") is not None
+                and control_info.get("track") is not None
+                and prepost_info["track"] != control_info["track"]):
+            raise ProductMismatchError("Burst InSAR relative track mismatch")
         if prepost_info["pol"] != control_info["pol"]:
             raise ProductMismatchError(
                 "Burst InSAR DiD polarization mismatch: "
                 f"{prepost_info['pol']} vs {control_info['pol']}.")
+    if prepost_info["family"] == "gamma":
+        if prepost_info.get("pol") != control_info.get("pol"):
+            raise ProductMismatchError("GAMMA polarization mismatch")
+        for key in ("orbit_code",):
+            if (prepost_info.get(key) and control_info.get(key)
+                    and prepost_info[key] != control_info[key]):
+                raise ProductMismatchError(f"GAMMA {key} mismatch: same orbit is required")
     if (prepost_info["spacing_m"] and control_info["spacing_m"]
             and prepost_info["spacing_m"] != control_info["spacing_m"]):
         log_warning(
@@ -460,3 +474,48 @@ def _water_mask_to_land_keep(
     finally:
         out = None
     return out_path
+
+
+def validate_temporal_pair(target_info: dict, baseline_info: dict,
+                           mode: str) -> list[str]:
+    """Return acquisition-window warnings, without guessing storm dates.
+
+    In persistent-gain mode the complete pre/pre pair must precede the
+    post/post pair. In event-drop mode a source-specific storm date is
+    needed to verify that the target actually straddles the event.
+    """
+    warnings: list[str] = []
+    if mode not in ("event_drop", "persistent_gain"):
+        raise ValueError("Invalid coherence temporal mode")
+    dates = []
+    for info in (target_info, baseline_info):
+        pair = []
+        for key in ("date1", "date2"):
+            raw = info.get(key)
+            if not raw:
+                pair = []
+                break
+            try:
+                pair.append(datetime.strptime(raw[:8], "%Y%m%d").date())
+            except ValueError:
+                pair = []
+                break
+        dates.append(pair)
+    target, baseline = dates
+    if not target or not baseline:
+        warnings.append("Dates not available from product names; verify chronology manually")
+        return warnings
+    if target[1] <= target[0] or baseline[1] <= baseline[0]:
+        raise ProductMismatchError("InSAR acquisition dates must increase")
+    days_target = (target[1] - target[0]).days
+    days_baseline = (baseline[1] - baseline[0]).days
+    if abs(days_target - days_baseline) > 1:
+        warnings.append("Temporal baseline mismatch: "
+                        f"{days_target} vs {days_baseline} days")
+    if mode == "persistent_gain" and baseline[1] >= target[0]:
+        raise ProductMismatchError("Persistent gain requires a pre/pre baseline "
+                                   "pair strictly BEFORE the post/post target pair")
+    if mode == "event_drop":
+        warnings.append("Confirm target pair STRADDLES event date; control "
+                        "must exclude event and match season/weather")
+    return warnings

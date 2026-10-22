@@ -151,10 +151,17 @@ def test_find_correlation_tif_from_zip(coh_pair_dirs, tmp_path):
 
 
 def test_find_correlation_tif_zip_without_corr_raises(tmp_path):
+    # Without GDAL the zip cannot be opened at all (RuntimeError);
+    # with GDAL present a zip without *_corr.tif is a missing file.
+    try:
+        from osgeo import gdal
+    except Exception:
+        gdal = None
     zip_path = tmp_path / "empty.zip"
     with zipfile.ZipFile(zip_path, "w") as z:
         z.writestr("readme.txt", "nothing here")
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(
+            FileNotFoundError if gdal is not None else RuntimeError):
         find_correlation_tif(str(zip_path))
 
 

@@ -22,6 +22,8 @@ import os
 import re
 from typing import Dict, List, Sequence
 
+import warnings
+
 import numpy as np
 
 try:
@@ -32,7 +34,6 @@ except Exception:  # pragma: no cover
 from .constants import (
     _DB_DETECT_FRACTION,
     _DB_NODATA_FLOOR,
-    _MEDIAN_SENTINEL,
 )
 
 __all__ = [
@@ -195,24 +196,44 @@ def background_offset_db(
 
 
 def median_filter_nan(wi: np.ndarray, size: int) -> np.ndarray:
-    """Median-filter a WI tile tolerating NaN (invalid) pixels.
+    """Apply a NaN-aware spatial median without false positive border halos.
 
-    NaNs are replaced by a large sentinel so they never drag the local
-    median down; windows that are majority-sentinel resolve to the
-    sentinel value, which cannot pass the positive windthrow threshold.
-    Callers must re-apply the original NaN positions afterwards.
+    The pre-1.4.1 implementation filled NaNs with +1e6 before filtering;
+    majority-NaN windows therefore became +1e6 and PASSED the positive
+    detection threshold, so real missing areas could appear as spurious
+    disturbance polygons at NoData/mask borders. For sparse invalid values
+    a bounded-memory sliding-window nanmedian is used; all-finite tiles
+    stay on the fast scipy median_filter path.
+
+    The result equals what a per-window ``np.nanmedian`` produces, and
+    the caller still re-applies the original NaN positions.
     """
     if scipy is None:  # pragma: no cover
         raise ImportError("scipy is required for median filtering")
-    if size < 3:
-        return np.asarray(wi, dtype=np.float32).copy()
     arr = np.asarray(wi, dtype=np.float32)
+    if size < 3:
+        return arr.copy()
+    if size % 2 == 0:
+        raise ValueError("Median filter size must be odd")
     invalid = ~np.isfinite(arr)
-    filled = np.where(invalid, _MEDIAN_SENTINEL, arr)
-    out = scipy.ndimage.median_filter(filled, size=size, mode="nearest")
-    out = out.astype(np.float32, copy=False)
-    out[invalid] = np.nan
-    return out
+    if not invalid.any():
+        return scipy.ndimage.median_filter(arr, size=size, mode="nearest")
+    from numpy.lib.stride_tricks import sliding_window_view
+    radius = size // 2
+    padded = np.pad(np.where(invalid, np.nan, arr), radius, mode="edge")
+    result = np.empty_like(arr)
+    # The padded sliding view is zero-copy; np.nanmedian allocates
+    # temporaries proportional to the number of window elements.
+    row_budget = max(16, min(128, 1_000_000 // max(1, arr.shape[1] * size * size)))
+    for y0 in range(0, arr.shape[0], row_budget):
+        y1 = min(arr.shape[0], y0 + row_budget)
+        view = sliding_window_view(
+            padded[y0:y1 + 2 * radius], (size, size))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            result[y0:y1] = np.nanmedian(view, axis=(-2, -1))
+    result[invalid] = np.nan
+    return result
 
 
 def box_mean_nan(

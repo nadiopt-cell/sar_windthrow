@@ -1,12 +1,21 @@
 # Sentinel-1 Windthrow Detector for QGIS
 
+> **v1.4.1 (engineering correctness pack):** CRS-aware grid verification,
+> nearest-neighbour resampling for masks, NaN-aware median filter (no more
+> false objects at NoData borders), object areas in equal-area EPSG:6933,
+> explicit coherence *temporal hypotheses* (`event_drop` = project default;
+> `persistent_gain` = experimental), GAMMA orbit/chronology preflight
+> checks and a `*_science.json` provenance manifest per run. Outputs are
+> **candidate** disturbance maps; the coherence signal is NOT a validated
+> windthrow classifier (independent validation `Д5` in progress).
+>
 [![QGIS](https://img.shields.io/badge/QGIS-%E2%89%A5%203.28-589632?logo=qgis&logoColor=white)](https://qgis.org)
-[![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.4.1-blue.svg)]()
 [![License: CC0](https://img.shields.io/badge/license-CC0%201.0-lightgrey.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-150%20passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/pytest-GDAL--free%20suite%20%2B%20osgeo%20info-yellow.svg)]()
 
 Search, download and preprocess Sentinel-1 SAR imagery in QGIS and map
-**windthrow** (storm-damaged forest) with THREE validated methods:
+**candidate forest-disturbance zones** in Sentinel-1 data with three detection methods (coherence modes are research instruments, NOT a validated windthrow classifier):
 the bi-temporal **Windthrow Index** of Rüetschi, Small & Waser (2019,
 *Remote Sensing* 11(2):115), the **L-band decline** of Tanase et al.
 (2018, *RSE* 209:700–711, ALOS PALSAR) and the **coherence

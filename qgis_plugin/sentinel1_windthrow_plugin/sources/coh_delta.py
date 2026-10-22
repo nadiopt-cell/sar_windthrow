@@ -85,6 +85,15 @@ v1.2.2 additions:
 
 v1.3.1 additions:
 
+* **v1.4.1 — explicit temporal hypotheses via ``coherence_mode``.**
+  ``event_drop`` (default, frozen v1.2.2 behaviour): score =
+  coh(control) − coh(pre/post), a transient decorrelation experiment.
+  ``persistent_gain`` (EXPERIMENTAL, not calibrated): target pair where
+  BOTH acquisitions are after the storm, baseline pair where BOTH are
+  before it; score = coh(postpost) − coh(prepre). These are different
+  physical questions and must never share an implicit sign; a
+  ``*_science.json`` provenance manifest is saved for every run.
+
 * **Spatial averaging ``smooth_size``** (opt-in; default 1 = OFF, so the
   frozen v1.2.2 behaviour is unchanged).  A NaN-aware box mean over a
   ``smooth_size x smooth_size`` window is applied to dcoh before the
@@ -109,6 +118,7 @@ v1.3.1 additions:
 """
 
 import os
+import json
 from typing import List, Optional, Sequence
 
 import numpy as np
@@ -125,6 +135,12 @@ except Exception:  # pragma: no cover
     scipy = None  # type: ignore
 
 from .base import OperationCancelled
+from .coherence_science import (
+    EVENT_DROP,
+    PERSISTENT_GAIN,
+    MODES,
+    coherence_score_chunk,
+)
 from .constants import (
     _CHUNK_ROWS,
     COH_MAX,
@@ -257,9 +273,13 @@ class CoherenceDeltaDetector:
         min_pixels: int = 6,
         median_filter_size: int = 3,
         smooth_size: int = DEFAULT_SMOOTH_SIZE,
+        coherence_mode: str = EVENT_DROP,
     ) -> None:
         if threshold_mode not in ("adaptive", "fixed"):
             raise ValueError("threshold_mode must be 'adaptive' or 'fixed'")
+        if coherence_mode not in MODES:
+            raise ValueError(f"Unsupported coherence_mode: {coherence_mode}")
+        self.coherence_mode = coherence_mode
         self.threshold_mode = threshold_mode
         self.a_coh = float(a_coh)
         self.fixed_threshold = float(fixed_threshold)
@@ -323,6 +343,11 @@ class CoherenceDeltaDetector:
         report = (lambda f, m: progress_cb(f, m) if progress_cb else None)
         cancelled = (lambda: bool(cancel_cb()) if cancel_cb else False)
         use_did = bool(control_products)
+        if not prepost_products:
+            raise ValueError("The target HyP3 coherence product is required")
+        if self.coherence_mode == PERSISTENT_GAIN and not use_did:
+            raise ValueError(
+                "Persistent gain requires both post/post and pre/pre products")
 
         tmp_dir = os.path.join(
             os.path.dirname(os.path.abspath(output_base)) or ".",
@@ -352,6 +377,10 @@ class CoherenceDeltaDetector:
                         if use_did else {"family": None})
         if use_did and prepost_info["family"] and control_info["family"]:
             _validate_did_pair(prepost_info, control_info)
+            from .hyp3_utils import validate_temporal_pair
+            for issue in validate_temporal_pair(
+                    prepost_info, control_info, self.coherence_mode):
+                log_warning(f"Coherence temporal compatibility: {issue}")
 
         # ---- 2. Grid: prepost defines it, control is warped on it ------
         ref_info = _read_raster_info(prepost_tif)
@@ -471,6 +500,8 @@ class CoherenceDeltaDetector:
         pre_zone_count = 0
         forest_px = 0
         forest_total = 0
+        target_samples: List[np.ndarray] = []
+        control_samples: List[np.ndarray] = []
 
         def _sanitize(coh: np.ndarray, ndv) -> np.ndarray:
             """Registered no-data and non-physical values -> NaN."""
@@ -490,7 +521,8 @@ class CoherenceDeltaDetector:
                 if ctl_band is not None:
                     coh_ct = _sanitize(
                         ctl_band.ReadAsArray(0, y0, width, rows), ctl_nd)
-                    chunk = coherence_delta_chunk(coh_pp, coh_ct)
+                    chunk = coherence_score_chunk(
+                        coh_pp, coh_ct, mode=self.coherence_mode)
                 else:
                     chunk = 1.0 - coh_pp  # static decorrelation fallback
                 chunk = chunk.astype(np.float32, copy=False)
@@ -513,10 +545,15 @@ class CoherenceDeltaDetector:
                 # article): the analysis mask first, else the
                 # background forest mask, else the whole scene.
                 zone = inside if inside is not None else bg_inside
-                pre_ok = np.isfinite(coh_pp)
+                # In the persistent-gain experiment only the baseline
+                # pre/pre coherence characterises the pre-event surface.
+                coh_for_safeguard = (
+                    coh_ct if self.coherence_mode == PERSISTENT_GAIN
+                    and ctl_band is not None else coh_pp)
+                pre_ok = np.isfinite(coh_for_safeguard)
                 if zone is not None:
                     pre_ok &= zone
-                pre_vals = coh_pp[pre_ok]
+                pre_vals = coh_for_safeguard[pre_ok]
                 if pre_vals.size:
                     pre_zone_sum += float(pre_vals.sum())
                     pre_zone_count += int(pre_vals.size)
@@ -528,6 +565,18 @@ class CoherenceDeltaDetector:
                     forest_px += int(np.count_nonzero(share_zone))
                     forest_total += int(share_zone.size)
 
+                if np.any(finite):
+                    t_vals = coh_pp[finite]
+                    if t_vals.size > 4096:
+                        t_vals = t_vals[
+                            ::int(np.ceil(t_vals.size / 4096.0))]
+                    target_samples.append(t_vals)
+                    if ctl_band is not None:
+                        c_vals = coh_ct[finite]
+                        if c_vals.size > 4096:
+                            c_vals = c_vals[
+                                ::int(np.ceil(c_vals.size / 4096.0))]
+                        control_samples.append(c_vals)
                 vals = chunk[finite].astype(np.float64, copy=False)
                 if vals.size:
                     running_sum += float(vals.sum())
@@ -563,6 +612,15 @@ class CoherenceDeltaDetector:
             self.median_dcoh = float(np.median(np.concatenate(median_sample)))
         else:
             self.median_dcoh = mean_dcoh
+        target_median = (float(np.median(np.concatenate(target_samples)))
+                         if target_samples else None)
+        control_median = (float(np.median(np.concatenate(control_samples)))
+                          if control_samples else None)
+        if abs(self.median_dcoh) < 0.05:
+            log_warning(
+                "Coherence median change is below 0.05; this may be close "
+                "to the vegetation coherence floor. Assess discrimination "
+                "using independent reference polygons.")
         threshold = (adaptive_threshold(self.median_dcoh, self.a_coh)
                      if self.threshold_mode == "adaptive"
                      else self.fixed_threshold)
@@ -582,7 +640,12 @@ class CoherenceDeltaDetector:
         if pre_zone_count:
             coh_mean = pre_zone_sum / pre_zone_count
             safeguard.coh_prepost_mean = round(coh_mean, 4)
-            if coh_mean > COH_NONFOREST_MAX:
+            # v1.4.1: the binary "high coherence => non-forest" rule is
+            # an event-drop applicability heuristic only. In
+            # persistent_gain the same numbers are recorded as
+            # diagnostics, but never as a forest classification.
+            if (self.coherence_mode == EVENT_DROP
+                    and coh_mean > COH_NONFOREST_MAX):
                 safeguard.flagged = True
                 safeguard.flags.append("вне_леса@Y")
                 safeguard.reasons.append(
@@ -590,10 +653,17 @@ class CoherenceDeltaDetector:
                     f"zone is {coh_mean:.3f} > {COH_NONFOREST_MAX} — "
                     "bare-ground / non-forest signature before the "
                     "storm (ID654 case)")
+            elif (self.coherence_mode == PERSISTENT_GAIN
+                    and coh_mean > COH_NONFOREST_MAX):
+                safeguard.reasons.append(
+                    f"informational (not a classification): mean "
+                    f"target-pair coherence in the {zone} zone is "
+                    f"{coh_mean:.3f} > {COH_NONFOREST_MAX}")
         if forest_total:
             share = forest_px / float(forest_total)
             safeguard.forest_share = round(share, 4)
-            if share < FOREST_SHARE_MIN:
+            if (self.coherence_mode == EVENT_DROP
+                    and share < FOREST_SHARE_MIN):
                 safeguard.flagged = True
                 if "вне_леса@Y" not in safeguard.flags:
                     safeguard.flags.append("вне_леса@Y")
@@ -646,6 +716,43 @@ class CoherenceDeltaDetector:
             # they never mask detection errors (raised above this block).
             log_info(f"Temp dir cleanup failed ({tmp_dir}): {exc}")
 
+        science_report_path = f"{output_base}_science.json"
+        science_report = {
+            "schema_version": 2,
+            "plugin_version": "1.4.1",
+            "coherence_hypothesis": self.coherence_mode,
+            "definition": ("control - cross_event"
+                           if self.coherence_mode == EVENT_DROP
+                           else "postpost - prepre"),
+            "target_product": os.path.abspath(prepost_products[0]),
+            "baseline_product": (os.path.abspath(control_products[0])
+                                 if control_products else None),
+            "target_metadata": prepost_info,
+            "baseline_metadata": (control_info if use_did else None),
+            "analysis_mask": (os.path.abspath(analysis_mask_path)
+                              if analysis_mask_path else None),
+            "background_mask": (os.path.abspath(background_mask_path)
+                                if background_mask_path else None),
+            "valid_pixel_count": running_count,
+            "median_score": self.median_dcoh,
+            "mean_score": self.mean_dcoh,
+            "target_coherence_median": target_median,
+            "baseline_coherence_median": control_median,
+            "threshold": threshold,
+            "threshold_mode": self.threshold_mode,
+            "median_filter_size": self.median_filter_size,
+            "smooth_size": self.smooth_size,
+            "min_pixels": self.min_pixels,
+            "water_mask_ignored": self.water_mask_ignored,
+            "scientific_status": "candidate_map_unvalidated",
+            "interpretation_warning": (
+                "A change in C-band coherence is not a specific windthrow "
+                "signature. Validate against independent damaged and "
+                "intact reference locations, including alternative "
+                "disturbances."),
+        }
+        with open(science_report_path, "w", encoding="utf-8") as out:
+            json.dump(science_report, out, ensure_ascii=False, indent=2)
         report(100.0, "Done")
         # v1.3.0: typed result (sources/types.py).  DetectionResult is a
         # read-only Mapping view over its legacy dict shape, so the GUI
@@ -662,6 +769,17 @@ class CoherenceDeltaDetector:
                                   if bg_mask_raster else None),
             forest_safeguard=safeguard,
             extras={
+                "coherence_mode": self.coherence_mode,
+                "science_report": os.path.abspath(science_report_path),
+                "signal_definition": ("control minus cross-event"
+                    if self.coherence_mode == EVENT_DROP else
+                    "post/post minus pre/pre"),
+                "valid_pixel_count": running_count,
+                "target_coherence_median": target_median,
+                "baseline_coherence_median": control_median,
+                "science_warning": (
+                    "Detected change is not proof of windthrow; "
+                    "independent reference validation is required"),
                 "mean_dcoh": self.mean_dcoh,
                 "median_dcoh": self.median_dcoh,
                 "control_used": use_did,

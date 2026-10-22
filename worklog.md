@@ -737,3 +737,45 @@ Stage Summary:
   для следующей волны Sentinel-1 DiD-валидации.
 - Исходный датасет в репо не коммитится (внешние данные); в репо — скрипты
   и результаты анализа.
+
+## 22.10.2026 — Task 37: релиз плагина v1.4.1 «engineering correctness pack» (внешнее ревью от 21.10)
+
+- Основание: внешнее ревью v1.4.0 (research preview) + our разбор
+  (РАЗБОР_РЕВЬЮ_v1.4.0_нашими_данными.md): инженерные фиксы подтверждены,
+  исследовательские дефолты (persistent_gain, a=0.05) отклонены по нашим
+  данным (PA 0.056 против PA 0.560 у event_drop; UA=0% на 466 объектах).
+- Полная замена дерева qgis_plugin/sentinel1_windthrow_plugin на v1.4.1
+  (base = наш v1.3.1): NaN-aware median (nanmedian, без гало ложных
+  объектов на границах NoData); _same_grid/_same_crs с проверкой CRS и
+  явным dstSRS у gdal.Warp + самопроверкой результата; nearest-neighbour
+  для категориальных масок (bilinear только для когерентности); area_ha
+  измеряется в равновеликой EPSG:6933; явные гипотезы event_drop
+  (ДЕФОЛТ, знак и параметры v1.2.2 заморожены) / persistent_gain
+  (эксперимент, требует pre/pre строго раньше post/post; safeguard
+  численно сохраняется с пометкой informational); preflight: GAMMA
+  orbit-code/поляризация, burst track, хронология пар
+  (validate_temporal_pair); per-run манифест *_science.json (schema 2,
+  scientific_status=candidate_map_unvalidated, plugin_version) +
+  tools/evaluate_coherence.py (rank-AUC с ties).
+- Тесты: +coherence_science и evaluate-тесты; test_pipeline корректно
+  скипается без osgeo (importorskip); контракт zip-without-corr учитывает
+  отсутствие GDAL (RuntimeError) vs его наличие (FileNotFoundError);
+  площадные тесты переключены на rel-толеранс 2e-3 (измерение в 6933
+  отличается от px*100 м^2 на <0.1%). Полн.: 197/197 (QGIS-GDAL env);
+  GDAL-free: 144 pass / 47 skip.
+- Сквозные прогоны (QGIS python, реальные продукты HyP3):
+  event_drop id579 -> 386 объектов против 390 у v1.3.1 при том же
+  адаптивном пороге 0.31715 (исчезли только гало-объекты); persistent_gain
+  pre/pre 2020-06-14..06-26 -> post/post 2020-07-08..07-20: отвержение
+  одинаковой пары (ProductMismatch) и 6410 объектов при a=0.05 —
+  подтверждение статуса «не дефолт».
+- plugin_dist/sentinel1_windthrow_plugin_v1.4.1.zip собран
+  build_plugin_zip.py (53 файла, 223 147 байт); метка версии 1.4.1.
+
+Stage Summary:
+- Плагин v1.4.1 — первый релиз, синхронизированный с внешним ревью:
+  все инженерные дефекты из ревью устранены, научные дефолты не тронуты
+  (event_drop, a=0.25, median 3x3, min_pixels 6, smooth_size OFF).
+- Офлайн-корпус пересчитывать не нужно: он считался с sentinel -999,
+  баг +1e6 касался только real-QGIS прогонов плагина.
+
