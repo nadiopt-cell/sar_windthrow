@@ -1,12 +1,15 @@
 # SAR Windthrow Detector (Sentinel-1 C-band + ALOS PALSAR L-band)
 
+[![plugin-tests](https://github.com/nadiopt-cell/sar_windthrow/actions/workflows/test-plugin.yml/badge.svg)](https://github.com/nadiopt-cell/sar_windthrow/actions/workflows/test-plugin.yml)
+[![Release](https://img.shields.io/badge/plugin%20release-v1.4.1-blue)](https://github.com/nadiopt-cell/sar_windthrow/releases/tag/v1.4.1)
+
 QGIS-плагин и исследовательский пайплайн для картирования ветровалов (сплошных вывалов леса бурями,
 шквалами и торнадо) по бистемпоральным SAR-снимкам. Базовый метод — индекс ветровала
 WI = ΔVV + ΔVH с адаптивным порогом x̄ + 2,9 дБ (Rüetschi et al. 2019); по ходу проекта конвейер
 расширен до мультисенсорного: **L-диапазон ALOS PALSAR** и **интерферометрическая когерентность
 C-диапазона** (ASF HyP3 INSAR-GAMMA) как альтернативные признаки детекции.
 
-**Статус:** плагин **v1.2.2** (150/150 теста) — три режима детекции: WI (C-band), `lband_decline`
+**Статус (текущий):** плагин **v1.4.1** (197/197 тестов с GDAL, 144 pass / 47 skip без; дефолты v1.2.2 заморожены: `event_drop`, a=0.25; когерентный режим помечен как карта-кандидат «candidate_map_unvalidated»; релиз — [v1.4.1](https://github.com/nadiopt-cell/sar_windthrow/releases/tag/v1.4.1)). **Историческая строка статуса v1.2.2:** плагин **v1.2.2** (150/150 теста) — три режима детекции: WI (C-band), `lband_decline`
 (PALSAR LDI) и `coh_delta` (DiD по когерентности HyP3); с v1.1 — лесная маска **GFW Hansen GFC
 на год, предшествующий событию** (правило эпохи, разд. 9 отчёта); с v1.2 — **бёрст-пары
 Burst InSAR 20/40/80 м** в режиме когерентности (валидация DiD-пары «тот же бёрст») и фикс
@@ -183,7 +186,21 @@ step12c: (а) след derecho загрязняет фон в ЛЮБОЙ пар�
 - `reports/Сводный_отчет_объекты_валидации_изд9_2026-09-06.pdf` — издание 9 (16 стр.): правило эпохи маски перенесено в плагин v1.1.0 (источник «GFW Hansen GFC» на год, предшествующий событию; в coh_delta фон чистится второй маской `background_mask_path`); обновлены разд. 9 (следствия) и дорожная карта; плагин 133 теста.
 - `results/wave2_coh_delta_results.json` — метрики coh_delta волны-2 (AUC/excess/TPR) + диагноз ID654 + заметка ID696; `gis/windthrow_sites_map_2026-09-04.geojson` — 13 фич (12 processed + 1 reserve) с блоком coh_delta.
 - `scripts_screening/` — конвейер отбора и обработки волны-2 (sites_step1–4, sites_cohort_final, hyp3_order_wave2, download_wave2, wave2_coh_delta, diag_id654, finalize_wave2, refresh_hyp3_links, build_report_ed5…ed9 + report_ed9_data + cover_ed9); `data_cache/` — кэши пайплайна; `hyp3/` — квитанция заказа (10 джоб) и presigned-ссылки (живут ~24 ч).
-- `worklog.md` — журнал работ (Task 1–29); подробные ворклоги — в `docs/`.
+- `worklog.md` — журнал работ (Task 1–37); подробные ворклоги — в `docs/`.
+
+## Обновление 22.10.2026 — релиз плагина v1.4.1 «engineering correctness pack»
+
+По итогам внешнего ревью (21.10.2026) и его проверки на собственном корпусе
+замеров: устранены инженерные дефекты (NaN-медиана без гало ложных объектов на
+границах NoData; CRS-выравнивание сеток и явный dstSRS при warp;
+nearest-neighbour для масок; площади объектов в равновеликой EPSG:6933),
+введены явные временные гипотезы когерентного режима (`event_drop` — дефолт,
+`persistent_gain` — эксперимент), preflight-проверки пар орбиты/поляризации/
+хронологии и манифест происхождения `*_science.json` со статусом
+`candidate_map_unvalidated`. Исследовательские дефолты ревью (persistent_gain
+по умолчанию, a=0.05) отвергнуты по данным корпуса: полигональная PA D/R =
+0.5604/0.056; UA = 0 % на 466 объектах (20 событий). Подробности в worklog
+Task 37 и [release notes](https://github.com/nadiopt-cell/sar_windthrow/releases/tag/v1.4.1).
 
 ## Данные и благодарности
 
