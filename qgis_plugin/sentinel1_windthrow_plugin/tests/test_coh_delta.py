@@ -764,12 +764,13 @@ def test_parse_custom_product_yields_none_family():
     assert info["granule"] == "my_pair_5748"
 
 
-# Real product of the 2026-06-22 Kushva tornado field run (cross-platform
-# S1D -> S1C pair, 42-day baseline; pid 8CCA real, control pid arbitrary):
-# v1.4.1 could not parse these names (family=None), which silently
-# skipped the DiD pair checks.
-GAMMA_S1DC = "S1DC_20260604T023156_20260716T023200_VVP042_INT80_G_weF_8CCA"
-GAMMA_S1CC = "S1CC_20260716T023200_20260728T023201_VVP042_INT80_G_weF_8CCB"
+# Real product names of the 2026-06-22 Kushva tornado field run
+# (cross-platform S1D -> S1C event pair, 42-day baseline, vs same-track
+# S1C control, 12-day baseline; from the run manifest
+# kushva_2026-06-22_realtest_2026-11-15.json): v1.4.1 could not parse
+# these names (family=None), which silently skipped the DiD pair checks.
+GAMMA_S1DC = "S1DC_20260604T021347_20260716T021335_VVP042_INT80_G_weF_8CCA"
+GAMMA_S1CC = "S1CC_20260716T021335_20260728T021336_VVP012_INT80_G_weF_997E"
 
 
 def test_parse_gamma_granule_s1c_s1d():
@@ -781,16 +782,20 @@ def test_parse_gamma_granule_s1c_s1d():
     assert info["orbit_code"] == "P042"
     assert info["spacing_m"] == 80
     assert info["pid"] == "8CCA"
-    assert info["date1"] == "20260604T023156"
-    assert info["date2"] == "20260716T023200"
+    assert info["date1"] == "20260604T021347"
+    assert info["date2"] == "20260716T021335"
     cc = parse_hyp3_product(f"/ctl/{GAMMA_S1CC}.zip")
     assert cc["family"] == "gamma"
     assert cc["platform"] == "C"
+    assert cc["orbit_code"] == "P012"
 
 
 def test_validate_did_pair_accepts_cross_platform_gamma():
-    # HyP3 accepts cross-platform pairs (S1D ref + S1C sec); DiD
-    # validation gates on family/burst/spacing, not platform letters.
+    # Real Kushva names: cross-platform (S1D ref + S1C sec) AND different
+    # baselines (VVP042 vs VVP012 — the digits are the pair baseline in
+    # days, not an orbit number). Both are legitimate: DiD validation
+    # gates on family/burst/spacing/polarization, and the baseline
+    # difference is only a warning (chronology checks it separately).
     prepost = parse_hyp3_product(f"/pp/{GAMMA_S1DC}.zip")
     control = parse_hyp3_product(f"/ctl/{GAMMA_S1CC}.zip")
     _validate_did_pair(prepost, control)  # must not raise

@@ -82,12 +82,17 @@ def test_temporal_baseline_mismatch_warning():
     assert "baseline mismatch" in issues[0].lower()
 
 
-def test_gamma_mismatched_orbit_rejected():
+def test_gamma_mismatched_orbit_code_warns_not_rejects():
+    # The 3-digit GAMMA block is the pair temporal baseline in days, not
+    # an orbit number (real Kushva 2026-06-22 products: S1DC_..._VVP042 =
+    # 42-day event pair vs S1CC_..._VVP012 = 12-day control, same track
+    # rel orbit 64). Different event/control baselines are legitimate for
+    # event-drop DiD: mismatch must WARN, not raise ProductMismatchError.
     a = parse_hyp3_product("S1AB_20171111T150004_20171117T145926_VVP006_INT80_G_ueF_4D09.zip")
-    b = parse_hyp3_product("S1AB_20171010T150004_20171016T145926_VVP025_INT80_G_ueF_4D09.zip")
+    b = parse_hyp3_product("S1AB_20171010T150004_20171022T145926_VVP012_INT80_G_ueF_4D09.zip")
     assert a["orbit_code"] == "P006"
-    with pytest.raises(ProductMismatchError, match="orbit"):
-        _validate_did_pair(a, b)
+    assert b["orbit_code"] == "P012"
+    _validate_did_pair(a, b)  # must not raise
 
 
 def test_same_pixels_different_crs_is_not_same_grid():

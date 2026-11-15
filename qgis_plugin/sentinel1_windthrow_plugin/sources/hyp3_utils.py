@@ -213,6 +213,13 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
       a mismatch degrades the DiD to edge noise.
     * different pixel spacing (e.g. 40 m pre/post vs 80 m control) —
       resampling makes the DiD statistically noisy; warn loudly.
+    * GAMMA orbit_code mismatch — the trailing digits of the block are
+      the pair temporal baseline in days (VVP006 = 6-day pair;
+      S1DC_..._VVP042 = 42-day, S1CC_..._VVP012 = 12-day in the Kushva
+      2026-06-22 run), not a relative orbit number. Different
+      event/control baselines are legitimate for event-drop DiD when no
+      12-day chain exists; chronology is checked separately by
+      :func:`validate_temporal_pair` — warn, do not reject.
     """
     if prepost_info["family"] != control_info["family"]:
         raise ProductMismatchError(
@@ -244,10 +251,17 @@ def _validate_did_pair(prepost_info: dict, control_info: dict) -> None:
     if prepost_info["family"] == "gamma":
         if prepost_info.get("pol") != control_info.get("pol"):
             raise ProductMismatchError("GAMMA polarization mismatch")
-        for key in ("orbit_code",):
-            if (prepost_info.get(key) and control_info.get(key)
-                    and prepost_info[key] != control_info[key]):
-                raise ProductMismatchError(f"GAMMA {key} mismatch: same orbit is required")
+        if (prepost_info.get("orbit_code") and control_info.get("orbit_code")
+                and prepost_info["orbit_code"] != control_info["orbit_code"]):
+            log_warning(
+                "GAMMA orbit_code mismatch: "
+                f"{prepost_info['orbit_code']} vs "
+                f"{control_info['orbit_code']} "
+                f"({prepost_info['granule']} / "
+                f"{control_info['granule']}). The trailing digits are the "
+                "pair temporal baseline in days, not a relative orbit; "
+                "event/control baselines may differ in the S1C/1D era "
+                "(chronology is validated separately).")
     if (prepost_info["spacing_m"] and control_info["spacing_m"]
             and prepost_info["spacing_m"] != control_info["spacing_m"]):
         log_warning(
