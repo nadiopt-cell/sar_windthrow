@@ -70,15 +70,18 @@ _CORR_SUFFIX = "_corr.tif"
 _WATER_SUFFIXES = ("_wm.tif", "_water_mask.tif")
 
 # ----------------------------------------------------------------------
-# HyP3 granule-name parsing (v1.2: burst support)
+# HyP3 granule-name parsing (v1.2: burst support; v1.4.2: S1C/S1D)
 # ----------------------------------------------------------------------
 #: GAMMA full-frame InSAR granule, e.g.
 #: ``S1AB_20171111T150004_20171117T145926_VVP006_INT80_G_ueF_4D09``
 #: (platforms of the pair — ``S1AB`` = ref S1A + sec S1B, ref/secondary
 #: dates, pol+pass+orbit, type+spacing, processor G = GAMMA, frame
-#: code, ASF product id).
+#: code, ASF product id).  Since 2026 the pair letters may also be
+#: ``C``/``D`` (Sentinel-1C/1D), including cross-platform pairs such as
+#: ``S1DC`` = ref S1D + sec S1C — HyP3 accepts them; DiD validation
+#: gates on family/burst/spacing, not on platform letters.
 _GAMMA_RE = re.compile(
-    r"^S1(?P<platform>[AB]?)[AB]?_"
+    r"^S1(?P<platform>[ABCD]?)[ABCD]?_"
     r"(?P<date1>\d{8}T\d{6})_(?P<date2>\d{8}T\d{6})_"
     r"(?P<pol>[VH][VH])(?P<orbit_code>[A-Z]\d{3})_INT(?P<spacing>\d{2})_G_"
     r"\w{3}_(?P<pid>[0-9A-Fa-f]{4})$")
@@ -88,7 +91,7 @@ _GAMMA_RE = re.compile(
 #: (platform, track, relative burst IDs per subswath, mode, ref/secondary
 #: dates, pol, type+spacing, ASF product id).
 _ISCE_RE = re.compile(
-    r"^S1(?P<platform>[AB]?)[AB]?_"
+    r"^S1(?P<platform>[ABCD]?)[ABCD]?_"
     r"(?P<track>\d{3})_"
     r"(?P<burst_ids>[0-9A-Za-z]+(?:-[0-9A-Za-z]+)*)_"
     r"(?P<mode>IW|EW)_"

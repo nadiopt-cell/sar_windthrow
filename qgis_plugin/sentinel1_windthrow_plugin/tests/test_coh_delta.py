@@ -26,6 +26,7 @@ from sentinel1_windthrow_plugin.sources.coh_delta import (
     parse_hyp3_product,
     sane_water_mask,
 )
+from sentinel1_windthrow_plugin.sources.hyp3_utils import validate_temporal_pair
 
 
 # ----------------------------------------------------------------------
@@ -761,6 +762,47 @@ def test_parse_custom_product_yields_none_family():
     info = parse_hyp3_product("/home/user/my_pair_5748_corr.tif")
     assert info["family"] is None
     assert info["granule"] == "my_pair_5748"
+
+
+# Real product of the 2026-06-22 Kushva tornado field run (cross-platform
+# S1D -> S1C pair, 42-day baseline; pid 8CCA real, control pid arbitrary):
+# v1.4.1 could not parse these names (family=None), which silently
+# skipped the DiD pair checks.
+GAMMA_S1DC = "S1DC_20260604T023156_20260716T023200_VVP042_INT80_G_weF_8CCA"
+GAMMA_S1CC = "S1CC_20260716T023200_20260728T023201_VVP042_INT80_G_weF_8CCB"
+
+
+def test_parse_gamma_granule_s1c_s1d():
+    info = parse_hyp3_product(f"/x/{GAMMA_S1DC}.zip")
+    assert info["family"] == "gamma"
+    assert info["granule"] == GAMMA_S1DC
+    assert info["platform"] == "D"
+    assert info["pol"] == "VV"
+    assert info["orbit_code"] == "P042"
+    assert info["spacing_m"] == 80
+    assert info["pid"] == "8CCA"
+    assert info["date1"] == "20260604T023156"
+    assert info["date2"] == "20260716T023200"
+    cc = parse_hyp3_product(f"/ctl/{GAMMA_S1CC}.zip")
+    assert cc["family"] == "gamma"
+    assert cc["platform"] == "C"
+
+
+def test_validate_did_pair_accepts_cross_platform_gamma():
+    # HyP3 accepts cross-platform pairs (S1D ref + S1C sec); DiD
+    # validation gates on family/burst/spacing, not platform letters.
+    prepost = parse_hyp3_product(f"/pp/{GAMMA_S1DC}.zip")
+    control = parse_hyp3_product(f"/ctl/{GAMMA_S1CC}.zip")
+    _validate_did_pair(prepost, control)  # must not raise
+
+
+def test_validate_temporal_pair_uses_parsed_dates():
+    # With S1C/S1D parsing restored the chronology check sees real
+    # baselines again (Kushva: 42-day event pair vs 12-day control).
+    target = parse_hyp3_product(f"/pp/{GAMMA_S1DC}.zip")
+    control = parse_hyp3_product(f"/ctl/{GAMMA_S1CC}.zip")
+    warns = validate_temporal_pair(target, control, mode="event_drop")
+    assert any("42 vs 12" in w for w in warns)
 
 
 def test_validate_did_pair_accepts_same_burst():
